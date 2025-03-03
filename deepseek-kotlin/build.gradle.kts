@@ -32,7 +32,11 @@ kotlin {
 
     linuxX64()
 
-    wasmJs()
+    wasmJs {
+        browser()
+        nodejs()
+        d8()
+    }
 
     sourceSets {
         val commonMain by getting {

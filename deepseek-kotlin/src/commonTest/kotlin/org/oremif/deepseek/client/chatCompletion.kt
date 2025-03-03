@@ -1,9 +1,11 @@
 package org.oremif.deepseek.client
 
 import kotlinx.coroutines.test.runTest
+import org.oremif.deepseek.api.chatCompletion
 import org.oremif.deepseek.models.ChatCompletionToolChoice
 import org.oremif.deepseek.models.ChatModel
 import org.oremif.deepseek.models.ResponseFormat
+import org.oremif.deepseek.models.chatCompletionParams
 import kotlin.test.Test
 
 class ChatCompletionTest {

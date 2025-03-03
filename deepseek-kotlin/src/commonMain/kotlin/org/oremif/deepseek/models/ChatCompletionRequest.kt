@@ -1,7 +1,6 @@
 package org.oremif.deepseek.models
 
 import kotlinx.serialization.Serializable
-import org.oremif.deepseek.client.ChatCompletionParams
 
 /**
  * Represents chat completion request
@@ -113,25 +112,26 @@ public class ChatCompletionRequest(
             params = ChatCompletionParams.Builder().apply(block).build()
         }
 
-        public fun build(): ChatCompletionRequest {
-            return ChatCompletionRequest(
-                messages = messages,
-                model = params.model,
-                frequencyPenalty = params.frequencyPenalty,
-                maxTokens = params.maxTokens,
-                presencePenalty = params.presencePenalty,
-                responseFormat = params.responseFormat,
-                stop = params.stop,
-                stream = false,
-                streamOptions = null,
-                temperature = params.temperature,
-                topP = params.topP,
-                tools = params.tools,
-                toolChoice = params.toolChoice,
-                logprobs = params.logprobs,
-                topLogprobs = params.topLogprobs,
-            )
+        public fun build(): ChatCompletionRequest =
+            params.createRequest(messages)
+    }
+
+    public class StreamBuilder {
+        private var messages = mutableListOf<ChatMessage>()
+        private var params: ChatCompletionParams = ChatCompletionParams(
+            model = ChatModel.DEEPSEEK_CHAT,
+        )
+
+        public fun messages(block: MessageBuilder.() -> Unit) {
+            messages.addAll(MessageBuilder().apply(block).build())
         }
+
+        public fun params(block: ChatCompletionParams.StreamBuilder.() -> Unit) {
+            params = ChatCompletionParams.StreamBuilder().apply(block).build()
+        }
+
+        public fun build(): ChatCompletionRequest =
+            params.createRequest(messages)
     }
 
     public class MessageBuilder {

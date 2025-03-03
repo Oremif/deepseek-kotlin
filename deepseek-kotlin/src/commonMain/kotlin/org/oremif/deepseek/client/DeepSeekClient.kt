@@ -1,42 +1,41 @@
 package org.oremif.deepseek.client
 
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
+import io.ktor.client.plugins.sse.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
-import org.oremif.deepseek.models.*
 import kotlin.random.Random
 
-public fun DeepSeekClient(token: String? = null, block: DeepSeekClient.Builder.() -> Unit): DeepSeekClient {
-    return DeepSeekClient.Builder(token).apply(block).build()
-}
+public fun DeepSeekClient(token: String? = null, block: DeepSeekClient.Builder.() -> Unit): DeepSeekClient =
+    DeepSeekClient.Builder(token).apply(block).build()
 
-public class DeepSeekClient internal constructor(
-    internal val client: HttpClient
+public fun DeepSeekClientStream(
+    token: String? = null, block: DeepSeekClientStream.Builder.() -> Unit
+): DeepSeekClientStream = DeepSeekClientStream.Builder(token).apply(block).build()
+
+public abstract class DeepSeekClientBase(
+    internal val client: HttpClient, internal val jsonConfig: Json = Json
 ) : AutoCloseable {
-
-    public class Builder(token: String? = null) {
-        private val deepSeekBaseUrl = "https://api.deepseek.com"
+    public abstract class Builder(token: String? = null) {
+        protected val deepSeekBaseUrl: String = "https://api.deepseek.com"
 
         @OptIn(ExperimentalSerializationApi::class)
-        private var jsonConfig: Json = Json {
+        protected var jsonConfig: Json = Json {
             prettyPrint = true
             isLenient = true
             ignoreUnknownKeys = true
             namingStrategy = JsonNamingStrategy.SnakeCase
         }
 
-        private var client: HttpClient = HttpClient {
+        protected open var client: HttpClient = HttpClient {
             install(Auth) {
                 if (token == null) return@install
                 bearer { loadTokens { BearerTokens(token, "") } }
@@ -78,10 +77,6 @@ public class DeepSeekClient internal constructor(
             client.apply(block)
             return client
         }
-
-        public fun build(): DeepSeekClient {
-            return DeepSeekClient(client = client)
-        }
     }
 
     override fun close() {
@@ -89,49 +84,28 @@ public class DeepSeekClient internal constructor(
     }
 }
 
-public suspend fun DeepSeekClient.chat(params: ChatCompletionParams, messages: List<ChatMessage>): ChatCompletion {
-    val request = ChatCompletionRequest(
-        messages = messages,
-        model = params.model,
-        frequencyPenalty = params.frequencyPenalty,
-        maxTokens = params.maxTokens,
-        presencePenalty = params.presencePenalty,
-        responseFormat = params.responseFormat,
-        stop = params.stop,
-        stream = false,
-        streamOptions = null,
-        temperature = params.temperature,
-        topP = params.topP,
-        tools = params.tools,
-        toolChoice = params.toolChoice,
-        logprobs = params.logprobs,
-        topLogprobs = params.topLogprobs,
-    )
+public class DeepSeekClient internal constructor(
+    client: HttpClient, jsonConfig: Json
+) : DeepSeekClientBase(client, jsonConfig) {
 
-    return client.post("chat/completions") {
-        setBody(request)
-    }.body<ChatCompletion>()
+    public class Builder(token: String? = null) : DeepSeekClientBase.Builder(token) {
+        public fun build(): DeepSeekClient {
+            return DeepSeekClient(client = client, jsonConfig = jsonConfig)
+        }
+    }
+
 }
 
-public suspend fun DeepSeekClient.chat(messages: List<ChatMessage>): ChatCompletion =
-    chat(ChatCompletionParams(ChatModel.DEEPSEEK_CHAT), messages)
+public class DeepSeekClientStream internal constructor(
+    client: HttpClient, jsonConfig: Json
+) : DeepSeekClientBase(client, jsonConfig) {
+    public class Builder(token: String? = null) : DeepSeekClientBase.Builder(token) {
+        override var client: HttpClient = super.client.config {
+            install(SSE)
+        }
 
-public suspend fun DeepSeekClient.chat(message: String): ChatCompletion =
-    chat(listOf(UserMessage(content = message)))
-
-public suspend fun DeepSeekClient.chat(
-    params: ChatCompletionParams,
-    blockMessage: ChatCompletionRequest.MessageBuilder.() -> Unit,
-): ChatCompletion = chat(params, ChatCompletionRequest.MessageBuilder().apply(blockMessage).build())
-
-public suspend fun DeepSeekClient.chat(blockMessage: ChatCompletionRequest.MessageBuilder.() -> Unit): ChatCompletion =
-    chat(ChatCompletionRequest.MessageBuilder().apply(blockMessage).build())
-
-public suspend fun DeepSeekClient.chatCompletion(block: ChatCompletionRequest.Builder.() -> Unit): ChatCompletion {
-    val request = ChatCompletionRequest.Builder().apply(block).build()
-    val response = client.post("chat/completions") {
-        setBody(request)
+        public fun build(): DeepSeekClientStream {
+            return DeepSeekClientStream(client = client, jsonConfig = jsonConfig)
+        }
     }
-    println(response.bodyAsText())
-    return response.body<ChatCompletion>()
 }
