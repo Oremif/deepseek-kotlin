@@ -1,11 +1,11 @@
 package org.oremif.deepseek.api
 
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.sse.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import org.oremif.deepseek.models.ChatCompletionParams
 import org.oremif.deepseek.client.DeepSeekClientBase
 import org.oremif.deepseek.client.DeepSeekClientStream
 import org.oremif.deepseek.errors.DeepSeekException
@@ -24,11 +24,14 @@ public suspend fun DeepSeekClientBase.chatCompletionStream(request: ChatCompleti
                         append(HttpHeaders.Connection, "keep-alive")
                     }
                     setBody(request)
+                    timeout {
+                        requestTimeoutMillis = config.chatCompletionTimeout
+                    }
                 }
             ) {
                 incoming.collect { event ->
                     event.data?.trim()?.takeIf { it != "[DONE]" }?.let { data ->
-                        val chatChunk = jsonConfig.decodeFromString<ChatCompletionChunk>(data)
+                        val chatChunk = config.jsonConfig.decodeFromString<ChatCompletionChunk>(data)
                         emit(chatChunk)
                     }
                 }

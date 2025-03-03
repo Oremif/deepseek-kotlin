@@ -15,14 +15,14 @@ import kotlinx.serialization.Serializable
  * @property index The index of the choice in the list of choices.
  */
 @Serializable
-public class ChoiceChunk(
+public class ChatChoiceChunk(
     public val delta: AssistantMessage,
     public val finishReason: FinishReason?,
     public val index: Long,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is ChoiceChunk) return false
+        if (other !is ChatChoiceChunk) return false
 
         return delta == other.delta && finishReason == other.finishReason && index == other.index
     }

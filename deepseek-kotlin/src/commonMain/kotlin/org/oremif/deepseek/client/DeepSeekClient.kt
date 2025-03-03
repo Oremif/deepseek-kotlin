@@ -14,15 +14,15 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
 import kotlin.random.Random
 
-public fun DeepSeekClient(token: String? = null, block: DeepSeekClient.Builder.() -> Unit): DeepSeekClient =
+public fun DeepSeekClient(token: String? = null, block: DeepSeekClient.Builder.() -> Unit = {}): DeepSeekClient =
     DeepSeekClient.Builder(token).apply(block).build()
 
 public fun DeepSeekClientStream(
-    token: String? = null, block: DeepSeekClientStream.Builder.() -> Unit
+    token: String? = null, block: DeepSeekClientStream.Builder.() -> Unit = {}
 ): DeepSeekClientStream = DeepSeekClientStream.Builder(token).apply(block).build()
 
 public abstract class DeepSeekClientBase(
-    internal val client: HttpClient, internal val jsonConfig: Json = Json
+    public val client: HttpClient, public val config: DeepSeekClientConfig,
 ) : AutoCloseable {
     public abstract class Builder(token: String? = null) {
         protected val deepSeekBaseUrl: String = "https://api.deepseek.com"
@@ -34,6 +34,9 @@ public abstract class DeepSeekClientBase(
             ignoreUnknownKeys = true
             namingStrategy = JsonNamingStrategy.SnakeCase
         }
+
+        protected var chatCompletionTimeout: Int = 45_000
+        protected var fimCompletionTimeout: Int = 60_000
 
         protected open var client: HttpClient = HttpClient {
             install(Auth) {
@@ -57,6 +60,10 @@ public abstract class DeepSeekClientBase(
                 }
             }
 
+            install(HttpTimeout) {
+                socketTimeoutMillis = 300_000L
+            }
+
             install(Logging) {
                 logger = Logger.DEFAULT
                 level = LogLevel.HEADERS
@@ -64,18 +71,28 @@ public abstract class DeepSeekClientBase(
             }
         }
 
-        public fun jsonConfig(block: Json.() -> Unit): Json {
+        public fun jsonConfig(block: Json.() -> Unit): Builder {
             jsonConfig.apply(block)
             client.config {
                 install(ContentNegotiation) { json(jsonConfig.apply(block)) }
 
             }
-            return jsonConfig
+            return this
         }
 
-        public fun httpClient(block: HttpClient.() -> Unit): HttpClient {
+        public fun chatCompletionTimeout(timeout: Int): Builder {
+            chatCompletionTimeout = timeout
+            return this
+        }
+
+        public fun fimCompletionTimeout(timeout: Int): Builder {
+            fimCompletionTimeout = timeout
+            return this
+        }
+
+        public fun httpClient(block: HttpClient.() -> Unit): Builder {
             client.apply(block)
-            return client
+            return this
         }
     }
 
@@ -85,27 +102,41 @@ public abstract class DeepSeekClientBase(
 }
 
 public class DeepSeekClient internal constructor(
-    client: HttpClient, jsonConfig: Json
-) : DeepSeekClientBase(client, jsonConfig) {
+    client: HttpClient, config: DeepSeekClientConfig
+) : DeepSeekClientBase(client, config) {
 
     public class Builder(token: String? = null) : DeepSeekClientBase.Builder(token) {
         public fun build(): DeepSeekClient {
-            return DeepSeekClient(client = client, jsonConfig = jsonConfig)
+            return DeepSeekClient(
+                client = client,
+                config = DeepSeekClientConfig(
+                    jsonConfig,
+                    chatCompletionTimeout.toLong(),
+                    fimCompletionTimeout.toLong()
+                )
+            )
         }
     }
 
 }
 
 public class DeepSeekClientStream internal constructor(
-    client: HttpClient, jsonConfig: Json
-) : DeepSeekClientBase(client, jsonConfig) {
+    client: HttpClient, config: DeepSeekClientConfig
+) : DeepSeekClientBase(client, config) {
     public class Builder(token: String? = null) : DeepSeekClientBase.Builder(token) {
         override var client: HttpClient = super.client.config {
             install(SSE)
         }
 
         public fun build(): DeepSeekClientStream {
-            return DeepSeekClientStream(client = client, jsonConfig = jsonConfig)
+            return DeepSeekClientStream(
+                client = client,
+                config = DeepSeekClientConfig(
+                    jsonConfig,
+                    chatCompletionTimeout.toLong(),
+                    fimCompletionTimeout.toLong()
+                )
+            )
         }
     }
 }

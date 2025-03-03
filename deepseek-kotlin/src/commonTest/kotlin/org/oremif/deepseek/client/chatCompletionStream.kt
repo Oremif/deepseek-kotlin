@@ -28,11 +28,7 @@ class ChatCompletionStreamTest {
             topLogprobs = null,
         )
 
-        val client = DeepSeekClientStream("DEEPSEEK_API_KEY") {
-            chatCompletionParams {
-                model = ChatModel.DEEPSEEK_CHAT
-            }
-        }
+        val client = DeepSeekClientStream("DEEPSEEK_API_KEY")
 
         client.chatCompletionStream(request).collect { chunk ->
             println(chunk)

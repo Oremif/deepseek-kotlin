@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
  * @property logprobs Log probability information for the choice.
  */
 @Serializable
-public class Choice(
+public class ChatChoice(
     public val finishReason: FinishReason,
     public val index: Long,
     public val message: ChatCompletionMessage,
@@ -22,7 +22,7 @@ public class Choice(
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Choice) return false
+        if (other !is ChatChoice) return false
 
         return index == other.index &&
                 finishReason == other.finishReason &&

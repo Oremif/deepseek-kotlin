@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 public class ChatCompletionChunk(
     public val id: String,
-    public val choices: List<ChoiceChunk>,
+    public val choices: List<ChatChoiceChunk>,
     public val created: Long,
     public val model: String,
     public val systemFingerprint: String,

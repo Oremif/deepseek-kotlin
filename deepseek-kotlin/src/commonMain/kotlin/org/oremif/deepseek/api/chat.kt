@@ -1,9 +1,9 @@
 package org.oremif.deepseek.api
 
 import io.ktor.client.call.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import org.oremif.deepseek.models.ChatCompletionParams
 import org.oremif.deepseek.client.DeepSeekClient
 import org.oremif.deepseek.client.DeepSeekClientBase
 import org.oremif.deepseek.errors.DeepSeekError
@@ -13,6 +13,9 @@ import org.oremif.deepseek.models.*
 public suspend fun DeepSeekClientBase.chatCompletion(request: ChatCompletionRequest): ChatCompletion {
     val response = client.post("chat/completions") {
         setBody(request)
+        timeout {
+            requestTimeoutMillis = config.chatCompletionTimeout
+        }
     }
     if (!response.status.isSuccess()) {
         val headers = response.headers

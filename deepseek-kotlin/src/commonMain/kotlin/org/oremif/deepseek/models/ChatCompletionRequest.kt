@@ -3,7 +3,7 @@ package org.oremif.deepseek.models
 import kotlinx.serialization.Serializable
 
 /**
- * Represents chat completion request
+ * Represents the Chat Completion request
  *
  * @property messages A list of messages comprising the conversation so far.
  * @property model ID of the model to use. You can use deepseek-chat.

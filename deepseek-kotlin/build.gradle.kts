@@ -30,8 +30,6 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
-    linuxX64()
-
     wasmJs {
         browser()
         nodejs()
@@ -41,15 +39,14 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(libs.serialization.core)
-                implementation(libs.serialization.json)
-                implementation(libs.coroutines.core)
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.auth)
+                api(libs.serialization.core)
+                api(libs.serialization.json)
+                api(libs.coroutines.core)
+                api(libs.ktor.client.core)
+                api(libs.ktor.client.auth)
+                api(libs.ktor.client.content.negotiation)
+                api(libs.ktor.client.serialization.json)
                 implementation(libs.ktor.client.logging)
-                implementation(libs.ktor.client.content.negotiation)
-                implementation(libs.ktor.client.serialization.json)
-                implementation(libs.kotlinx.datetime)
             }
         }
         val commonTest by getting {
@@ -61,7 +58,31 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                implementation(libs.ktor.client.okhttp)
+                api(libs.ktor.client.okhttp)
+            }
+        }
+
+        val jvmTest by getting {
+            dependencies {
+                implementation(libs.slf4j.simple)
+            }
+        }
+
+        val androidTargetMain by creating {
+            dependencies {
+                api(libs.ktor.client.okhttp)
+            }
+        }
+
+        val appleMain by creating {
+            dependencies {
+                api(libs.ktor.client.darwin)
+            }
+        }
+
+        val wasmJsMain by getting {
+            dependencies {
+                api(libs.ktor.client.js)
             }
         }
     }

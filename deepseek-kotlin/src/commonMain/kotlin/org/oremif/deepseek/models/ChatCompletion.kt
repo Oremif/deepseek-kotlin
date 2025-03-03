@@ -3,6 +3,8 @@ package org.oremif.deepseek.models
 import kotlinx.serialization.Serializable
 
 /**
+ * Represents the Chat Completion.
+ *
  * @property id A unique identifier for the chat completion.
  * @property choices A list of chat completion choices.
  * @property created The Unix timestamp (in seconds) of when the chat completion was created.
@@ -14,7 +16,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 public class ChatCompletion(
     public val id: String,
-    public val choices: List<Choice>,
+    public val choices: List<ChatChoice>,
     public val created: Long,
     public val model: String,
     public val systemFingerprint: String? = null,

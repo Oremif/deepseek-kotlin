@@ -105,7 +105,7 @@ class ChatCompletionTests {
         val response = ChatCompletion(
             id = "930c60df-bf64-41c9-a88e-3ec75f81e00e",
             choices = listOf(
-                Choice(
+                ChatChoice(
                     finishReason = FinishReason.STOP,
                     index = 0,
                     message = ChatCompletionMessage("Hello! How can I help you today?")

@@ -5,17 +5,12 @@ import org.oremif.deepseek.api.chatCompletion
 import org.oremif.deepseek.models.ChatCompletionToolChoice
 import org.oremif.deepseek.models.ChatModel
 import org.oremif.deepseek.models.ResponseFormat
-import org.oremif.deepseek.models.chatCompletionParams
 import kotlin.test.Test
 
 class ChatCompletionTest {
     @Test
     fun `test send chat completion request`() = runTest {
-        val client = DeepSeekClient("DEEPSEEK_API_KEY") {
-            chatCompletionParams {
-                model = ChatModel.DEEPSEEK_CHAT
-            }
-        }
+        val client = DeepSeekClient("DEEPSEEK_API_KEY") {}
 
         val response = client.chatCompletion {
             messages {

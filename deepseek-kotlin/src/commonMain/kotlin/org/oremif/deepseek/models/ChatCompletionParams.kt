@@ -160,26 +160,22 @@ public class ChatCompletionParams internal constructor(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other == null || this::class != other::class) return false
+        if (other !is ChatCompletionParams) return false
 
-        other as ChatCompletionParams
-
-        if (frequencyPenalty != other.frequencyPenalty) return false
-        if (maxTokens != other.maxTokens) return false
-        if (presencePenalty != other.presencePenalty) return false
-        if (stream != other.stream) return false
-        if (temperature != other.temperature) return false
-        if (topP != other.topP) return false
-        if (logprobs != other.logprobs) return false
-        if (topLogprobs != other.topLogprobs) return false
-        if (model != other.model) return false
-        if (responseFormat != other.responseFormat) return false
-        if (stop != other.stop) return false
-        if (streamOptions != other.streamOptions) return false
-        if (tools != other.tools) return false
-        if (toolChoice != other.toolChoice) return false
-
-        return true
+        return model == other.model &&
+                frequencyPenalty == other.frequencyPenalty &&
+                maxTokens == other.maxTokens &&
+                presencePenalty == other.presencePenalty &&
+                responseFormat == other.responseFormat &&
+                stop == other.stop &&
+                stream == other.stream &&
+                streamOptions == other.streamOptions &&
+                temperature == other.temperature &&
+                topP == other.topP &&
+                tools == other.tools &&
+                toolChoice == other.toolChoice &&
+                logprobs == other.logprobs &&
+                topLogprobs == other.topLogprobs
     }
 
     override fun hashCode(): Int {
