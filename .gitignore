@@ -17,7 +17,11 @@
 hs_err_pid*
 replay_pid*
 
+#Kotlin
 .kotlin/
+
+#Kotlin-JS
+yarn.lock
 
 # Ignore Gradle project-specific cache directory
 .gradle

@@ -33,15 +33,11 @@ class ChatCompletionTests {
                 "response_format": {
                     "type": "text"
                 },
-                "stop": null,
                 "stream": false,
-                "stream_options": null,
                 "temperature": 1.0,
                 "top_p": 1.0,
-                "tools": null,
                 "tool_choice": "none",
-                "logprobs": false,
-                "top_logprobs": null
+                "logprobs": false
             }
         """.trimIndent()
 
