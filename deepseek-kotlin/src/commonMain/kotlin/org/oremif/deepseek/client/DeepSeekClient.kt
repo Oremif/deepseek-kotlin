@@ -90,8 +90,8 @@ public abstract class DeepSeekClientBase(
             return this
         }
 
-        public fun httpClient(block: HttpClient.() -> Unit): Builder {
-            client.apply(block)
+        public fun httpClient(block: HttpClientConfig<*>.() -> Unit): Builder {
+            client = HttpClient { block(this) }
             return this
         }
     }
