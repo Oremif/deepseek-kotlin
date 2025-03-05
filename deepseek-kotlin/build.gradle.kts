@@ -17,7 +17,6 @@ plugins {
     alias(libs.plugins.jreleaser)
     `maven-publish`
     signing
-//    alias(libs.plugins.vanniktech.mavenPublish)
 }
 
 group = "org.oremif"
@@ -137,18 +136,15 @@ dokka {
     }
 }
 
-val mainSourcesJar = tasks.register<Jar>("mainSourcesJar") {
-    archiveClassifier = "sources"
-    from(kotlin.sourceSets.getByName("commonMain").kotlin)
+val javadocJar by tasks.registering(Jar::class) {
+    archiveClassifier.set("javadoc")
 }
 
 publishing {
-    val javadocJar = configureEmptyJavadocArtifact()
-
     publications.withType(MavenPublication::class).all {
+        artifact(javadocJar)
         pom.configureMavenCentralMetadata()
         signPublicationIfKeyPresent()
-        artifact(javadocJar)
     }
 
     repositories {
@@ -243,23 +239,14 @@ fun MavenPom.configureMavenCentralMetadata() {
     }
 }
 
-fun configureEmptyJavadocArtifact(): TaskProvider<Jar?> {
-    val javadocJar by project.tasks.registering(Jar::class) {
-        archiveClassifier.set("javadoc")
-        // contents are deliberately left empty
-        // https://central.sonatype.org/publish/requirements/#supply-javadoc-and-sources
-    }
-    return javadocJar
-}
-
 fun MavenPublication.signPublicationIfKeyPresent() {
-    val keyId = project.getSensitiveProperty("GPG_PUBLIC_KEY")
+//    val keyId = project.getSensitiveProperty("GPG_PUBLIC_KEY")
     val signingKey = project.getSensitiveProperty("GPG_SECRET_KEY")
     val signingKeyPassphrase = project.getSensitiveProperty("SIGNING_PASSPHRASE")
 
     if (!signingKey.isNullOrBlank()) {
         the<SigningExtension>().apply {
-            useInMemoryPgpKeys(keyId, signingKey, signingKeyPassphrase)
+            useInMemoryPgpKeys(signingKey, signingKeyPassphrase)
 
             sign(this@signPublicationIfKeyPresent)
         }
