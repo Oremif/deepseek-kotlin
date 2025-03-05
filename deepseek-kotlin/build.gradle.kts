@@ -252,37 +252,3 @@ fun Project.getSensitiveProperty(name: String?): String? {
 infix fun <T> Property<T>.by(value: T) {
     set(value)
 }
-
-//mavenPublishing {
-//    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
-//
-//    signAllPublications()
-//
-//    coordinates(group.toString(), "library", version.toString())
-//
-//    pom {
-//        name = "deepseek-kotlin"
-//        description = "DeepSeek Kotlin SDK"
-//        inceptionYear = "2025"
-//        url = "https://github.com/oremif/deepseek-kotlin/"
-//        licenses {
-//            license {
-//                name = "XXX"
-//                url = "YYY"
-//                distribution = "ZZZ"
-//            }
-//        }
-//        developers {
-//            developer {
-//                id = "devcrocod"
-//                name = "Pavel Gorgulov"
-//                url = "https://github.com/devcrocod"
-//            }
-//        }
-//        scm {
-//            url = "XXX" // TODO
-//            connection = "YYY"
-//            developerConnection = "ZZZ"
-//        }
-//    }
-//}
