@@ -226,8 +226,8 @@ fun configureEmptyJavadocArtifact(): TaskProvider<Jar?> {
 }
 
 fun MavenPublication.signPublicationIfKeyPresent() {
-    val keyId = project.getSensitiveProperty("SIGNING_KEY_ID")
-    val signingKey = project.getSensitiveProperty("SIGNING_KEY_PRIVATE")
+    val keyId = project.getSensitiveProperty("GPG_PUBLIC_KEY")
+    val signingKey = project.getSensitiveProperty("GPG_SECRET_KEY")
     val signingKeyPassphrase = project.getSensitiveProperty("SIGNING_PASSPHRASE")
 
     if (!signingKey.isNullOrBlank()) {
