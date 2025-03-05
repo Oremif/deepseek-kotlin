@@ -202,6 +202,12 @@ jreleaser {
             token = "none"
         }
     }
+
+    checksum {
+        individual = false
+        artifacts = false
+        files = false
+    }
 }
 
 fun MavenPom.configureMavenCentralMetadata() {
