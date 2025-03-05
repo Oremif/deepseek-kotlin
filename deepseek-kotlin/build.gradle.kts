@@ -142,7 +142,9 @@ val javadocJar by tasks.registering(Jar::class) {
 
 publishing {
     publications.withType(MavenPublication::class).all {
-        artifact(javadocJar)
+        if (name.contains("jvm", ignoreCase = true)) {
+            artifact(javadocJar)
+        }
         pom.configureMavenCentralMetadata()
         signPublicationIfKeyPresent()
     }
