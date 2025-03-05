@@ -1,9 +1,12 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
-import org.gradle.kotlin.dsl.register
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
+import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import org.jreleaser.model.Active
 
 plugins {
@@ -168,10 +171,24 @@ jreleaser {
             active.set(Active.ALWAYS)
             mavenCentral {
                 val ossrh by creating {
-                    applyMavenCentralRules = false
                     active.set(Active.ALWAYS)
                     url.set("https://central.sonatype.com/api/v1/publisher")
+                    applyMavenCentralRules = false
                     stagingRepository(layout.buildDirectory.dir("staging-deploy").get().asFile.path)
+                    kotlin.targets.forEach { target ->
+                        if (target !is KotlinJvmTarget && target !is KotlinAndroidTarget && target !is KotlinMetadataTarget) {
+                            val klibArtifactId = if (target.platformType == KotlinPlatformType.wasm) {
+                                "${name}-wasm-${target.name.lowercase().substringAfter("wasm")}"
+                            } else {
+                                "${name}-${target.name.lowercase()}"
+                            }
+                            artifactOverride {
+                                artifactId = klibArtifactId
+                                jar = false
+                                verifyPom = false
+                            }
+                        }
+                    }
                 }
             }
         }
