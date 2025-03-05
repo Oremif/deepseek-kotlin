@@ -39,7 +39,7 @@ jobs:
           JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
           JRELEASER_GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
           JRELEASER_GPG_PASSPHRASE: ${{ secrets.SIGNING_PASSPHRASE }}
-          JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #      - name: Verify publication configuration
 #        run: ./gradlew jreleaserConfig
@@ -49,7 +49,7 @@ jobs:
 #          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
 #          JRELEASER_GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
 #          JRELEASER_GPG_PASSPHRASE: ${{ secrets.SIGNING_PASSPHRASE }}
-#          JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #
 #      - name: Clean Build with Gradle
 #        run: ./gradlew clean build
@@ -68,4 +68,4 @@ jobs:
 #          JRELEASER_GPG_PUBLIC_KEY: ${{ secrets.GPG_PUBLIC_KEY }}
 #          JRELEASER_GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
 #          JRELEASER_GPG_PASSPHRASE: ${{ secrets.SIGNING_PASSPHRASE }}
-#          JRELEASER_GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+#          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
