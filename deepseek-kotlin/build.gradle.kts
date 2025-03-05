@@ -158,8 +158,8 @@ jreleaser {
 
     signing {
         active.set(Active.ALWAYS)
-        armored.set(true)
-//        artifacts.set(true)
+        armored = true
+        artifacts = true
     }
 
     deploy {
