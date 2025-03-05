@@ -177,7 +177,7 @@ jreleaser {
                     stagingRepository(layout.buildDirectory.dir("staging-deploy").get().asFile.path)
                     // workaround: https://github.com/jreleaser/jreleaser/issues/1784
                     kotlin.targets.forEach { target ->
-                        if (target !is KotlinJvmTarget && target !is KotlinAndroidTarget) {
+                        if (target !is KotlinJvmTarget && target !is KotlinAndroidTarget && target !is KotlinMetadataTarget) {
                             val klibArtifactId = if (target.platformType == KotlinPlatformType.wasm) {
                                 "${name}-wasm-${target.name.lowercase().substringAfter("wasm")}"
                             } else {
