@@ -16,6 +16,7 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.jreleaser)
     `maven-publish`
+    signing
 //    alias(libs.plugins.vanniktech.mavenPublish)
 }
 
