@@ -173,6 +173,7 @@ jreleaser {
                     active.set(Active.ALWAYS)
                     url.set("https://central.sonatype.com/api/v1/publisher")
                     applyMavenCentralRules = false
+                    maxRetries = 240
                     stagingRepository(layout.buildDirectory.dir("staging-deploy").get().asFile.path)
                     // workaround: https://github.com/jreleaser/jreleaser/issues/1784
                     kotlin.targets.forEach { target ->
