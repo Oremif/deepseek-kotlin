@@ -175,6 +175,7 @@ jreleaser {
                     url.set("https://central.sonatype.com/api/v1/publisher")
                     applyMavenCentralRules = false
                     stagingRepository(layout.buildDirectory.dir("staging-deploy").get().asFile.path)
+                    // workaround: https://github.com/jreleaser/jreleaser/issues/1784
                     kotlin.targets.forEach { target ->
                         if (target !is KotlinJvmTarget && target !is KotlinAndroidTarget && target !is KotlinMetadataTarget) {
                             val klibArtifactId = if (target.platformType == KotlinPlatformType.wasm) {
@@ -186,6 +187,8 @@ jreleaser {
                                 artifactId = klibArtifactId
                                 jar = false
                                 verifyPom = false
+                                sourceJar = false
+                                javadocJar = false
                             }
                         }
                     }
