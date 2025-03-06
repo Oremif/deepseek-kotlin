@@ -20,12 +20,16 @@ plugins {
 }
 
 group = "org.oremif"
-version = "0.1.0"
+version = "0.2.0"
 
 kotlin {
     explicitApi()
 
-    jvm()
+    jvm {
+       compilerOptions {
+           jvmTarget = JvmTarget.JVM_11
+       }
+    }
 
     androidTarget {
         publishLibraryVariants("release")

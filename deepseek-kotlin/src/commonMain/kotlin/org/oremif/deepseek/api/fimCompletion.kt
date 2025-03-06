@@ -3,14 +3,12 @@ package org.oremif.deepseek.api
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
-import io.ktor.http.*
 import org.oremif.deepseek.client.DeepSeekClient
 import org.oremif.deepseek.client.DeepSeekClientBase
-import org.oremif.deepseek.errors.DeepSeekError
-import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.models.FIMCompletion
 import org.oremif.deepseek.models.FIMCompletionParams
 import org.oremif.deepseek.models.FIMCompletionRequest
+import org.oremif.deepseek.utils.validateResponse
 
 public suspend fun DeepSeekClientBase.fimCompletion(request: FIMCompletionRequest): FIMCompletion {
     val response = client.post("beta/completions") {
@@ -19,16 +17,7 @@ public suspend fun DeepSeekClientBase.fimCompletion(request: FIMCompletionReques
             requestTimeoutMillis = config.fimCompletionTimeout
         }
     }
-    if (!response.status.isSuccess()) {
-        val headers = response.headers
-        val error = response.body<DeepSeekError>()
-        val description = response.status.description
-        throw if (description.isEmpty()) {
-            DeepSeekException.from(response.status.value, headers, error)
-        } else {
-            DeepSeekException.from(response.status.value, headers, error, description)
-        }
-    }
+    validateResponse(response)
     return response.body()
 }
 
