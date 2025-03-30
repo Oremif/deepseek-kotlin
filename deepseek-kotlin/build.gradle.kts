@@ -126,6 +126,11 @@ android {
 dokka {
     moduleName.set("DeepSeek Kotlin SDK")
 
+    pluginsConfiguration.html {
+        footerMessage = "© 2025 Oremif. All rights reserved."
+        customAssets.from(listOf(file("../dokka/images/logo-icon.svg")))
+    }
+
     dokkaSourceSets.configureEach {
         sourceLink {
             localDirectory.set(file("src/main/kotlin"))
