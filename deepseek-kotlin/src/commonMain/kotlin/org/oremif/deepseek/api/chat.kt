@@ -90,10 +90,7 @@ public suspend fun DeepSeekClient.chat(params: ChatCompletionParams, messages: L
  * @return A [ChatCompletion] containing the model's response
  */
 public suspend fun DeepSeekClient.chat(messages: List<ChatMessage>): ChatCompletion {
-    val params = if (config.params is ChatCompletionParams)
-        config.params
-    else
-        ChatCompletionParams(ChatModel.DEEPSEEK_CHAT)
+    val params = config.params as? ChatCompletionParams ?: ChatCompletionParams(ChatModel.DEEPSEEK_CHAT)
     return chat(params, messages)
 }
 

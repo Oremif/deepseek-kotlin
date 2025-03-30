@@ -84,10 +84,7 @@ public suspend fun DeepSeekClient.fim(params: FIMCompletionParams, prompt: Strin
  * @return A [FIMCompletion] containing the model's response
  */
 public suspend fun DeepSeekClient.fim(prompt: String): FIMCompletion {
-    val params = if (config.params is FIMCompletionParams)
-        config.params
-    else
-        FIMCompletionParams()
+    val params = config.params as? FIMCompletionParams ?: FIMCompletionParams()
     return fim(params, prompt)
 }
 
