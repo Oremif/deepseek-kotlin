@@ -57,7 +57,7 @@ jobs:
           fetch-depth: 0
 
       - name: Generate Dokka Documentation
-        run: ./gradlew generateDokka
+        run: ./gradlew deepseek-kotlin:generateDokka
 
       - name: Configure Git
         run: |
