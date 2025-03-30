@@ -97,7 +97,7 @@ public suspend fun DeepSeekClientStream.fim(
     params: FIMCompletionParams,
     prompt: String
 ): Flow<FIMCompletion> {
-    val request = (if (params.stream == false) params.copy(stream = true) else params).createRequest(prompt)
+    val request = (if (params.stream == null || !params.stream) params.copy(stream = true) else params).createRequest(prompt)
     return fimCompletionStream(request)
 }
 
@@ -118,10 +118,7 @@ public suspend fun DeepSeekClientStream.fim(
  * @return A [Flow] of [FIMCompletion] objects representing the streaming response
  */
 public suspend fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> {
-    val params = if (config.params is FIMCompletionParams)
-        config.params
-    else
-        FIMCompletionParams(stream = true)
+    val params = config.params as? FIMCompletionParams ?: FIMCompletionParams(stream = true)
     return fim(params, prompt)
 }
 

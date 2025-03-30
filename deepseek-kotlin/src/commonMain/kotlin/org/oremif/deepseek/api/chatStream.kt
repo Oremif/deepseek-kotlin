@@ -98,7 +98,7 @@ public suspend fun DeepSeekClientStream.chat(
     params: ChatCompletionParams,
     messages: List<ChatMessage>
 ): Flow<ChatCompletionChunk> {
-    val request = (if (params.stream == false) params.copy(stream = true) else params).createRequest(messages)
+    val request = (if (params.stream == null || !params.stream) params.copy(stream = true) else params).createRequest(messages)
     return chatCompletionStream(request)
 }
 
@@ -124,10 +124,7 @@ public suspend fun DeepSeekClientStream.chat(
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
  */
 public suspend fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<ChatCompletionChunk> {
-    val params = if (config.params is ChatCompletionParams)
-        config.params
-    else
-        ChatCompletionParams(ChatModel.DEEPSEEK_CHAT, stream = true)
+    val params = config.params as? ChatCompletionParams ?: ChatCompletionParams(ChatModel.DEEPSEEK_CHAT, stream = true)
     return chat(params, messages)
 }
 
