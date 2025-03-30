@@ -1,3 +1,6 @@
+[![Maven Central](https://img.shields.io/maven-central/v/org.oremif/deepseek-kotlin)](https://search.maven.org/artifact/org.oremif/deepseek-kotlin)
+[![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
+
 # DeepSeek Kotlin API Library
 
 The DeepSeek Multiplatform Kotlin SDK provides convenient access to the DeepSeek REST API from applications written in
