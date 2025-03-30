@@ -129,6 +129,7 @@ dokka {
     pluginsConfiguration.html {
         footerMessage = "© 2025 Oremif. All rights reserved."
         customAssets.from(listOf(file("../dokka/images/logo-icon.svg")))
+        customStyleSheets.from(listOf(file("../dokka/styles/logo-styles.css")))
     }
 
     dokkaSourceSets.configureEach {
