@@ -14,6 +14,29 @@ import org.oremif.deepseek.models.FIMCompletionParams
 import org.oremif.deepseek.models.FIMCompletionRequest
 import kotlin.time.Duration.Companion.minutes
 
+/**
+ * Streams Fill-In-the-Middle (FIM) completions chunk by chunk from the DeepSeek API.
+ *
+ * This function handles the low-level streaming communication with the API, allowing
+ * you to receive and process completions in real-time as they're generated.
+ *
+ * Example:
+ * ```kotlin
+ * val request = FIMCompletionRequest(
+ *     model = "deepseek-chat",
+ *     prompt = "function calculate(x, y) {",
+ *     suffix = "}",
+ *     stream = true
+ * )
+ *
+ * client.fimCompletionStream(request).collect { chunk ->
+ *     print(chunk.choices.firstOrNull()?.text ?: "")
+ * }
+ * ```
+ *
+ * @param request The FIM completion request with streaming enabled
+ * @return A [Flow] of [FIMCompletion] objects representing incremental updates
+ */
 public suspend fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletionRequest): Flow<FIMCompletion> {
     return flow {
         try {
@@ -47,6 +70,29 @@ public suspend fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletion
     }
 }
 
+/**
+ * Streams FIM completions using custom parameters and a prompt.
+ *
+ * This function gives you control over generation behavior while receiving
+ * streaming responses for Fill-In-the-Middle completions.
+ *
+ * Example:
+ * ```kotlin
+ * val params = fimCompletionStreamParams {
+ *     temperature = 0.7
+ *     maxTokens = 500
+ *     suffix = "}"
+ * }
+ *
+ * client.fim(params, "class Calculator {").collect { chunk ->
+ *     print(chunk.choices.firstOrNull()?.text ?: "")
+ * }
+ * ```
+ *
+ * @param params Parameters controlling the completion behavior
+ * @param prompt The text to start the completion from
+ * @return A [Flow] of [FIMCompletion] objects representing the streaming response
+ */
 public suspend fun DeepSeekClientStream.fim(
     params: FIMCompletionParams,
     prompt: String
@@ -55,9 +101,47 @@ public suspend fun DeepSeekClientStream.fim(
     return fimCompletionStream(request)
 }
 
+/**
+ * Streams FIM completions with default parameters.
+ *
+ * This simplified function streams completions with default settings,
+ * requiring only the prompt text to get started.
+ *
+ * Example:
+ * ```kotlin
+ * client.fim("def calculate_area(radius):").collect { chunk ->
+ *     print(chunk.choices.firstOrNull()?.text ?: "")
+ * }
+ * ```
+ *
+ * @param prompt The text to start the completion from
+ * @return A [Flow] of [FIMCompletion] objects representing the streaming response
+ */
 public suspend fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> =
     fim(FIMCompletionParams(stream = true), prompt)
 
+/**
+ * Streams a fully customizable FIM completion using a builder pattern.
+ *
+ * This approach gives you complete control over all aspects of the streaming
+ * FIM request through a dedicated builder pattern.
+ *
+ * Example:
+ * ```kotlin
+ * client.fimCompletion {
+ *     model = "deepseek-chat"
+ *     prompt = "public interface DataProcessor {"
+ *     suffix = "}"
+ *     temperature = 0.8
+ *     maxTokens = 300
+ * }.collect { chunk ->
+ *     print(chunk.choices.firstOrNull()?.text ?: "")
+ * }
+ * ```
+ *
+ * @param block A builder block for constructing the complete streaming request
+ * @return A [Flow] of [FIMCompletion] objects representing the streaming response
+ */
 public suspend fun DeepSeekClientStream.fimCompletion(
     block: FIMCompletionRequest.StreamBuilder.() -> Unit
 ): Flow<FIMCompletion> {

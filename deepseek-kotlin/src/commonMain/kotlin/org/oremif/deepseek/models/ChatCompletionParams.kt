@@ -1,13 +1,89 @@
 package org.oremif.deepseek.models
 
+/**
+ * Creates chat completion parameters using a builder pattern.
+ *
+ * This function provides a convenient way to configure non-streaming chat completion
+ * parameters using Kotlin's DSL-style builder syntax.
+ *
+ * Example:
+ * ```kotlin
+ * val params = chatCompletionParams {
+ *     model = ChatModel.DEEPSEEK_CHAT
+ *     temperature = 0.8
+ *     maxTokens = 500
+ *     presencePenalty = 0.3
+ *     responseFormat = ResponseFormat.JsonObject
+ * }
+ * ```
+ *
+ * @param block Configuration block for setting parameter values
+ * @return Configured [ChatCompletionParams] instance
+ */
 public fun chatCompletionParams(block: ChatCompletionParams.Builder.() -> Unit): ChatCompletionParams {
     return ChatCompletionParams.Builder().apply(block).build()
 }
 
+/**
+ * Creates streaming chat completion parameters using a builder pattern.
+ *
+ * This function provides a convenient way to configure streaming chat completion
+ * parameters using Kotlin's DSL-style builder syntax. The resulting parameters
+ * will have `stream` set to `true` automatically.
+ *
+ * Example:
+ * ```kotlin
+ * val streamParams = chatCompletionStreamParams {
+ *     model = ChatModel.DEEPSEEK_CHAT
+ *     temperature = 0.7
+ *     streamOptions = StreamOptions(chunkSize = 10)
+ * }
+ *
+ * client.chatStream(streamParams, messages).collect { chunk ->
+ *     print(chunk.choices.firstOrNull()?.delta?.content ?: "")
+ * }
+ * ```
+ *
+ * @param block Configuration block for setting parameter values
+ * @return Configured [ChatCompletionParams] instance with streaming enabled
+ */
 public fun chatCompletionStreamParams(block: ChatCompletionParams.StreamBuilder.() -> Unit): ChatCompletionParams {
     return ChatCompletionParams.StreamBuilder().apply(block).build()
 }
 
+/**
+ * Parameters for configuring chat completion requests to DeepSeek models.
+ *
+ * This class encapsulates all the options available when sending chat completion
+ * requests, allowing fine-grained control over the model's behavior and output.
+ *
+ * Example:
+ * ```kotlin
+ * val params = chatCompletionParams {
+ *     model = ChatModel.DEEPSEEK_CHAT
+ *     temperature = 0.7
+ *     maxTokens = 1000
+ *     presencePenalty = 0.5
+ * }
+ *
+ * client.chat(params, messages)
+ * ```
+ *
+ * @property model The DeepSeek model to use for chat completion
+ * @property frequencyPenalty Number between -2.0 and 2.0 that penalizes tokens based on their frequency in the text
+ * @property maxTokens Maximum number of tokens to generate, between 1 and 8192
+ * @property presencePenalty Number between -2.0 and 2.0 that penalizes tokens based on their presence in the text
+ * @property responseFormat Format specification for the model's output
+ * @property stop Custom stop sequences that will cause the model to stop generating further tokens
+ * @property stream Whether to stream the response back piece by piece
+ * @property streamOptions Configuration options for streaming responses
+ * @property temperature Controls randomness in responses, between 0.0 and 2.0 (lower is more deterministic)
+ * @property topP Controls diversity by limiting to top-p probability mass in token selection
+ * @property tools List of tools that the model may use during chat completion
+ * @property toolChoice Controls how the model selects tools to use
+ * @property logprobs Whether to return log probabilities of output tokens
+ * @property topLogprobs How many most likely tokens to return at each position (max 20)
+ */
 public class ChatCompletionParams internal constructor(
     public val model: ChatModel,
     public val frequencyPenalty: Double? = null,
@@ -24,6 +100,10 @@ public class ChatCompletionParams internal constructor(
     public val logprobs: Boolean? = null,
     public val topLogprobs: Int? = null,
 ) {
+
+    /**
+     * Builder for creating [ChatCompletionParams] with standard (non-streaming) configuration.
+     */
     public class Builder {
         public var model: ChatModel = ChatModel.DEEPSEEK_CHAT
         public var frequencyPenalty: Double? = null
@@ -62,6 +142,9 @@ public class ChatCompletionParams internal constructor(
         }
     }
 
+    /**
+     * Builder for creating [ChatCompletionParams] specifically configured for streaming responses.
+     */
     public class StreamBuilder {
         public var model: ChatModel = ChatModel.DEEPSEEK_CHAT
         public var frequencyPenalty: Double? = null
@@ -104,6 +187,12 @@ public class ChatCompletionParams internal constructor(
         }
     }
 
+    /**
+     * Creates a [ChatCompletionRequest] from these parameters and the provided messages.
+     *
+     * @param messages List of chat messages to include in the request
+     * @return A fully configured [ChatCompletionRequest]
+     */
     public fun createRequest(messages: List<ChatMessage>): ChatCompletionRequest =
         ChatCompletionRequest(
             messages = messages,
@@ -123,6 +212,31 @@ public class ChatCompletionParams internal constructor(
             topLogprobs = topLogprobs,
         )
 
+    /**
+     * Creates a copy of these parameters with optional changes to specific properties.
+     *
+     * Example:
+     * ```kotlin
+     * // Create a streaming version of existing parameters
+     * val streamParams = regularParams.copy(stream = true)
+     * ```
+     *
+     * @param model New chat model to use, or existing value if not specified
+     * @param frequencyPenalty New frequency penalty value, or existing value if not specified
+     * @param maxTokens New maximum token count, or existing value if not specified
+     * @param presencePenalty New presence penalty value, or existing value if not specified
+     * @param responseFormat New response format, or existing value if not specified
+     * @param stop New stop reason, or existing value if not specified
+     * @param stream New streaming setting, or existing value if not specified
+     * @param streamOptions New stream options, or existing value if not specified
+     * @param temperature New temperature value, or existing value if not specified
+     * @param topP New top-p value, or existing value if not specified
+     * @param tools New tools list, or existing value if not specified
+     * @param toolChoice New tool choice, or existing value if not specified
+     * @param logprobs New log probabilities setting, or existing value if not specified
+     * @param topLogprobs New top log probabilities count, or existing value if not specified
+     * @return A new [ChatCompletionParams] instance with the specified changes
+     */
     public fun copy(
         model: ChatModel = this.model,
         frequencyPenalty: Double? = this.frequencyPenalty,
