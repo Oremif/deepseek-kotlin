@@ -26,9 +26,9 @@ kotlin {
     explicitApi()
 
     jvm {
-       compilerOptions {
-           jvmTarget = JvmTarget.JVM_11
-       }
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
     }
 
     androidTarget {
@@ -62,13 +62,12 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(libs.serialization.core)
-                api(libs.serialization.json)
                 api(libs.coroutines.core)
                 api(libs.ktor.client.core)
                 api(libs.ktor.client.auth)
-                api(libs.ktor.client.content.negotiation)
-                api(libs.ktor.client.serialization.json)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.client.serialization.json)
+                implementation(libs.serialization.json)
                 implementation(libs.ktor.client.logging)
             }
         }
