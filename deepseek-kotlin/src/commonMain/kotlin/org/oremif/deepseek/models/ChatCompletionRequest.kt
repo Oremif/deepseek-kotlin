@@ -112,7 +112,7 @@ public class ChatCompletionRequest(
             params = ChatCompletionParams.Builder().apply(block).build()
         }
 
-        public fun build(): ChatCompletionRequest =
+        internal fun build(): ChatCompletionRequest =
             params.createRequest(messages)
     }
 
@@ -130,7 +130,7 @@ public class ChatCompletionRequest(
             params = ChatCompletionParams.StreamBuilder().apply(block).build()
         }
 
-        public fun build(): ChatCompletionRequest =
+        internal fun build(): ChatCompletionRequest =
             params.createRequest(messages)
     }
 
@@ -153,7 +153,7 @@ public class ChatCompletionRequest(
             messages.add(ToolMessage(content, toolCallId))
         }
 
-        public fun build(): List<ChatMessage> = messages.toList()
+        internal fun build(): List<ChatMessage> = messages.toList()
     }
 
     override fun equals(other: Any?): Boolean {

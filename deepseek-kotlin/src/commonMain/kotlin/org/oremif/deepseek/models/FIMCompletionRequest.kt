@@ -89,7 +89,7 @@ public class FIMCompletionRequest(
             params = FIMCompletionParams.Builder().apply(block).build()
         }
 
-        public fun build(): FIMCompletionRequest =
+        internal fun build(): FIMCompletionRequest =
             params.createRequest(prompt ?: "Once upon a time, ")
     }
 
@@ -105,7 +105,7 @@ public class FIMCompletionRequest(
             params = FIMCompletionParams.StreamBuilder().apply(block).build()
         }
 
-        public fun build(): FIMCompletionRequest =
+        internal fun build(): FIMCompletionRequest =
             params.createRequest(prompt ?: "Once upon a time, ")
     }
 
@@ -128,7 +128,7 @@ public class FIMCompletionRequest(
             messages.add(ToolMessage(content, toolCallId))
         }
 
-        public fun build(): List<ChatMessage> = messages.toList()
+        internal fun build(): List<ChatMessage> = messages.toList()
     }
 
     override fun equals(other: Any?): Boolean {

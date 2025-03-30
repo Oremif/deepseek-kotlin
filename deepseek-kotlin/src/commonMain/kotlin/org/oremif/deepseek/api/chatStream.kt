@@ -123,8 +123,13 @@ public suspend fun DeepSeekClientStream.chat(
  * @param messages The conversation history as a list of messages
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
  */
-public suspend fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<ChatCompletionChunk> =
-    chat(ChatCompletionParams(ChatModel.DEEPSEEK_CHAT, stream = true), messages)
+public suspend fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<ChatCompletionChunk> {
+    val params = if (config.params is ChatCompletionParams)
+        config.params
+    else
+        ChatCompletionParams(ChatModel.DEEPSEEK_CHAT, stream = true)
+    return chat(params, messages)
+}
 
 /**
  * Streams chat responses for a single user message.

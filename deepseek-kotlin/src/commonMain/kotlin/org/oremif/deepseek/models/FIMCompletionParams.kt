@@ -84,17 +84,17 @@ public fun fimCompletionStreamParams(block: FIMCompletionParams.StreamBuilder.()
  */
 public class FIMCompletionParams internal constructor(
     public val echo: Boolean? = null,
-    public val frequencyPenalty: Double? = null,
+    frequencyPenalty: Double? = null,
     public val logprobs: Int? = null,
-    public val maxTokens: Int? = null,
-    public val presencePenalty: Double? = null,
-    public val stop: StopReason? = null,
+    maxTokens: Int? = null,
+    presencePenalty: Double? = null,
+    stop: StopReason? = null,
     public val stream: Boolean? = null,
     public val streamOptions: StreamOptions? = null,
     public val suffix: String? = null,
-    public val temperature: Double? = null,
-    public val topP: Double? = null,
-) {
+    temperature: Double? = null,
+    topP: Double? = null,
+) : DeepSeekParams(frequencyPenalty, maxTokens, presencePenalty, stop, temperature, topP) {
     /**
      * Builder for creating [FIMCompletionParams] with standard (non-streaming) configuration.
      */

@@ -12,6 +12,7 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
+import org.oremif.deepseek.models.DeepSeekParams
 import kotlin.random.Random
 
 /**
@@ -88,7 +89,7 @@ public abstract class DeepSeekClientBase(
         /**
          * Base URL for the DeepSeek API.
          */
-        protected val deepSeekBaseUrl: String = "https://api.deepseek.com"
+        protected var deepSeekBaseUrl: String = "https://api.deepseek.com"
 
         /**
          * JSON configuration for serialization and deserialization.
@@ -147,6 +148,23 @@ public abstract class DeepSeekClientBase(
             }
         }
 
+        protected var params: DeepSeekParams? = null
+
+        public fun baseUrl(url: String): Builder {
+            deepSeekBaseUrl = url
+            return this
+        }
+
+        public fun params(block: DeepSeekParams.() -> DeepSeekParams): Builder {
+            this.params = DeepSeekParams().block()
+            return this
+        }
+
+        public fun params(params: DeepSeekParams): Builder {
+            this.params = params
+            return this
+        }
+
         /**
          * Configures the JSON serialization and deserialization settings.
          *
@@ -164,9 +182,18 @@ public abstract class DeepSeekClientBase(
          * @return This builder for chaining
          */
         public fun jsonConfig(block: Json.() -> Unit): Builder {
-            jsonConfig.apply(block)
+            jsonConfig = jsonConfig.apply(block)
             client.config {
-                install(ContentNegotiation) { json(jsonConfig.apply(block)) }
+                install(ContentNegotiation) { json(jsonConfig) }
+
+            }
+            return this
+        }
+
+        public fun jsonConfig(json: Json): Builder {
+            jsonConfig = json
+            client.config {
+                install(ContentNegotiation) { json(jsonConfig) }
 
             }
             return this
@@ -217,6 +244,11 @@ public abstract class DeepSeekClientBase(
             client = HttpClient { block(this) }
             return this
         }
+
+        public fun httpClient(client: HttpClient): Builder {
+            this.client = client
+            return this
+        }
     }
 
     /**
@@ -248,10 +280,11 @@ public class DeepSeekClient internal constructor(
          *
          * @return A new DeepSeekClient instance
          */
-        public fun build(): DeepSeekClient {
+        internal fun build(): DeepSeekClient {
             return DeepSeekClient(
                 client = client,
                 config = DeepSeekClientConfig(
+                    params,
                     jsonConfig,
                     chatCompletionTimeout.toLong(),
                     fimCompletionTimeout.toLong()
@@ -290,10 +323,11 @@ public class DeepSeekClientStream internal constructor(
          *
          * @return A new DeepSeekClientStream instance
          */
-        public fun build(): DeepSeekClientStream {
+        internal fun build(): DeepSeekClientStream {
             return DeepSeekClientStream(
                 client = client,
                 config = DeepSeekClientConfig(
+                    params,
                     jsonConfig,
                     chatCompletionTimeout.toLong(),
                     fimCompletionTimeout.toLong()

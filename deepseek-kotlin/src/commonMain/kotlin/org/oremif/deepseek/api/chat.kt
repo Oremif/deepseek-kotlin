@@ -89,8 +89,13 @@ public suspend fun DeepSeekClient.chat(params: ChatCompletionParams, messages: L
  * @param messages The conversation history as a list of messages
  * @return A [ChatCompletion] containing the model's response
  */
-public suspend fun DeepSeekClient.chat(messages: List<ChatMessage>): ChatCompletion =
-    chat(ChatCompletionParams(ChatModel.DEEPSEEK_CHAT), messages)
+public suspend fun DeepSeekClient.chat(messages: List<ChatMessage>): ChatCompletion {
+    val params = if (config.params is ChatCompletionParams)
+        config.params
+    else
+        ChatCompletionParams(ChatModel.DEEPSEEK_CHAT)
+    return chat(params, messages)
+}
 
 /**
  * Sends a single user message to the chat API.
