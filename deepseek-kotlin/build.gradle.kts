@@ -135,7 +135,7 @@ dokka {
         }
     }
     dokkaPublications.html {
-        outputDirectory = project.rootProject.layout.projectDirectory.dir("docs/dokka")
+        outputDirectory = project.rootProject.layout.projectDirectory.dir("docs")
     }
 }
 
