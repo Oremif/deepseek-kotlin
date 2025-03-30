@@ -86,20 +86,20 @@ public fun chatCompletionStreamParams(block: ChatCompletionParams.StreamBuilder.
  */
 public class ChatCompletionParams internal constructor(
     public val model: ChatModel,
-    public val frequencyPenalty: Double? = null,
-    public val maxTokens: Int? = null,
-    public val presencePenalty: Double? = null,
+    frequencyPenalty: Double? = null,
+    maxTokens: Int? = null,
+    presencePenalty: Double? = null,
     public val responseFormat: ResponseFormat? = null,
-    public val stop: StopReason? = null,
+    stop: StopReason? = null,
     public val stream: Boolean? = null,
     public val streamOptions: StreamOptions? = null,
-    public val temperature: Double? = null,
-    public val topP: Double? = null,
+    temperature: Double? = null,
+    topP: Double? = null,
     public val tools: List<Tool>? = null,
     public val toolChoice: ToolChoice? = null,
     public val logprobs: Boolean? = null,
     public val topLogprobs: Int? = null,
-) {
+) : DeepSeekParams(frequencyPenalty, maxTokens, presencePenalty, stop, temperature, topP) {
 
     /**
      * Builder for creating [ChatCompletionParams] with standard (non-streaming) configuration.

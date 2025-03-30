@@ -117,8 +117,13 @@ public suspend fun DeepSeekClientStream.fim(
  * @param prompt The text to start the completion from
  * @return A [Flow] of [FIMCompletion] objects representing the streaming response
  */
-public suspend fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> =
-    fim(FIMCompletionParams(stream = true), prompt)
+public suspend fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> {
+    val params = if (config.params is FIMCompletionParams)
+        config.params
+    else
+        FIMCompletionParams(stream = true)
+    return fim(params, prompt)
+}
 
 /**
  * Streams a fully customizable FIM completion using a builder pattern.
