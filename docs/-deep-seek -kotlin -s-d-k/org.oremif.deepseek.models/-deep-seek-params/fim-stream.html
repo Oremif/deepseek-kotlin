@@ -2,7 +2,7 @@
 <html class="no-js">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>temperature</title>
+    <title>fimStream</title>
     <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
     <script>var pathToRoot = "../../../";</script>
     <script>document.documentElement.classList.replace("no-js","js");</script>
@@ -48,7 +48,7 @@
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
         <div class="library-version" id="library-version">
-0.2.0        </div>
+0.3.0        </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
                 <button class="platform-tag platform-selector common-like" data-active=""
@@ -106,12 +106,12 @@
                 </div>
             </div>
             <div id="main">
-<div class="main-content" data-page-type="member" id="content" pageIds="DeepSeek Kotlin SDK::org.oremif.deepseek.models/ChatCompletionParams/temperature/#/PointingToDeclaration//-518724221">
-  <div class="breadcrumbs"><a href="../../../index.html">DeepSeek Kotlin SDK</a><span class="delimiter">/</span><a href="../index.html">org.oremif.deepseek.models</a><span class="delimiter">/</span><a href="index.html">ChatCompletionParams</a><span class="delimiter">/</span><span class="current">temperature</span></div>
+<div class="main-content" data-page-type="member" id="content" pageIds="DeepSeek Kotlin SDK::org.oremif.deepseek.models/DeepSeekParams/fimStream/#kotlin.Function1[org.oremif.deepseek.models.FIMCompletionParams.StreamBuilder,kotlin.Unit]/PointingToDeclaration//-518724221">
+  <div class="breadcrumbs"><a href="../../../index.html">DeepSeek Kotlin SDK</a><span class="delimiter">/</span><a href="../index.html">org.oremif.deepseek.models</a><span class="delimiter">/</span><a href="index.html">DeepSeekParams</a><span class="delimiter">/</span><span class="current">fimStream</span></div>
   <div class="cover ">
-    <h1 class="cover"><span><span>temperature</span></span></h1>
+    <h1 class="cover"><span>fim</span><wbr></wbr><span><span>Stream</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":deepseek-kotlin/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="temperature.html">temperature</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-double/index.html">Double</a><span class="token operator">?</span><span class="token operator"> = </span>null</div></div></div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":deepseek-kotlin/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="fim-stream.html"><span class="token function">fimStream</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">block<span class="token operator">: </span><a href="../-f-i-m-completion-params/-stream-builder/index.html">FIMCompletionParams.StreamBuilder</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-f-i-m-completion-params/index.html">FIMCompletionParams</a></div><p class="paragraph">Creates file-in-the-middle (FIM) completion stream parameters with custom settings.</p><p class="paragraph">This function provides a convenient way to create parameters specifically for FIM completion requests using a builder pattern.</p><p class="paragraph">Example:</p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">params {<br>    fim {<br>        prefix = &quot;def calculate_total(&quot;<br>        suffix = &quot;    return result&quot;<br>        temperature = 0.5<br>    }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><span class="kdoc-tag"><h4 class="">Return</h4><p class="paragraph">Configured <a href="../-f-i-m-completion-params/index.html">FIMCompletionParams</a> for use with FIM endpoints</p></span><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":deepseek-kotlin/commonMain" data-filterable-set=":deepseek-kotlin/commonMain"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>block</span></span></u></div></span></div><div><div class="title"><p class="paragraph">Configuration block for building FIM parameters</p></div></div></div></div></div></div></div>
 </div>
     <div class="footer">
         <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>

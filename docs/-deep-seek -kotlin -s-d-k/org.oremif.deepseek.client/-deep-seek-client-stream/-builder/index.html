@@ -48,7 +48,7 @@
         </button>
         <div class="navigation-controls--break ui-kit_mobile-only"></div>
         <div class="library-version" id="library-version">
-0.2.0        </div>
+0.3.0        </div>
         <div class="navigation-controls">
         <div class="filter-section filter-section_loading" id="filter-section">
                 <button class="platform-tag platform-selector common-like" data-active=""
@@ -136,17 +136,17 @@
       </div>
       <div data-togglable="FUNCTION">
         <h2 class="">Functions</h2>
-        <div class="table"><a data-name="1195484428%2FFunctions%2F-518724221" anchor-label="build" id="1195484428%2FFunctions%2F-518724221" data-filterable-set=":deepseek-kotlin/commonMain"></a>
+        <div class="table"><a data-name="417322745%2FFunctions%2F-518724221" anchor-label="baseUrl" id="417322745%2FFunctions%2F-518724221" data-filterable-set=":deepseek-kotlin/commonMain"></a>
           <div class="table-row" data-filterable-current=":deepseek-kotlin/commonMain" data-filterable-set=":deepseek-kotlin/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
-                  <div><a href="build.html"><span><span>build</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1195484428%2FFunctions%2F-518724221"></span>
+                  <div><a href="../../-deep-seek-client-base/-builder/base-url.html"><span>base</span><wbr></wbr><span><span>Url</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="417322745%2FFunctions%2F-518724221"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":deepseek-kotlin/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="build.html"><span class="token function">build</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../index.html">DeepSeekClientStream</a></div><div class="brief "><p class="paragraph">Builds and returns a new DeepSeekClientStream instance with the configured settings.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":deepseek-kotlin/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../-deep-seek-client-base/-builder/base-url.html"><span class="token function">baseUrl</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">url<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-deep-seek-client-base/-builder/index.html">DeepSeekClientBase.Builder</a></div></div></div>
                 </div>
               </div>
             </div>
@@ -181,32 +181,47 @@
               </div>
             </div>
           </div>
-<a data-name="1618359973%2FFunctions%2F-518724221" anchor-label="httpClient" id="1618359973%2FFunctions%2F-518724221" data-filterable-set=":deepseek-kotlin/commonMain"></a>
+<a data-name="1668552009%2FFunctions%2F-518724221" anchor-label="httpClient" id="1668552009%2FFunctions%2F-518724221" data-filterable-set=":deepseek-kotlin/commonMain"></a>
           <div class="table-row" data-filterable-current=":deepseek-kotlin/commonMain" data-filterable-set=":deepseek-kotlin/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../../-deep-seek-client-base/-builder/http-client.html"><span>http</span><wbr></wbr><span><span>Client</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1618359973%2FFunctions%2F-518724221"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1668552009%2FFunctions%2F-518724221"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":deepseek-kotlin/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../-deep-seek-client-base/-builder/http-client.html"><span class="token function">httpClient</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">block<span class="token operator">: </span><span data-unresolved-link="io.ktor.client/HttpClientConfig///PointingToDeclaration/">HttpClientConfig</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-deep-seek-client-base/-builder/index.html">DeepSeekClientBase.Builder</a></div><div class="brief "><p class="paragraph">Configures the underlying HTTP client with custom settings.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":deepseek-kotlin/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../-deep-seek-client-base/-builder/http-client.html"><span class="token function">httpClient</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">client<span class="token operator">: </span><span data-unresolved-link="io.ktor.client/HttpClient///PointingToDeclaration/">HttpClient</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-deep-seek-client-base/-builder/index.html">DeepSeekClientBase.Builder</a></div><br><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../-deep-seek-client-base/-builder/http-client.html"><span class="token function">httpClient</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">block<span class="token operator">: </span><span data-unresolved-link="io.ktor.client/HttpClientConfig///PointingToDeclaration/">HttpClientConfig</span><span class="token operator">&lt;</span><span class="token operator">*</span><span class="token operator">&gt;</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-deep-seek-client-base/-builder/index.html">DeepSeekClientBase.Builder</a></div><div class="brief "><p class="paragraph">Configures the underlying HTTP client with custom settings.</p></div></div></div>
                 </div>
               </div>
             </div>
           </div>
-<a data-name="-1278791923%2FFunctions%2F-518724221" anchor-label="jsonConfig" id="-1278791923%2FFunctions%2F-518724221" data-filterable-set=":deepseek-kotlin/commonMain"></a>
+<a data-name="1291938083%2FFunctions%2F-518724221" anchor-label="jsonConfig" id="1291938083%2FFunctions%2F-518724221" data-filterable-set=":deepseek-kotlin/commonMain"></a>
           <div class="table-row" data-filterable-current=":deepseek-kotlin/commonMain" data-filterable-set=":deepseek-kotlin/commonMain">
             <div class="main-subrow keyValue ">
               <div class=""><span class="inline-flex">
                   <div><a href="../../-deep-seek-client-base/-builder/json-config.html"><span>json</span><wbr></wbr><span><span>Config</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1278791923%2FFunctions%2F-518724221"></span>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1291938083%2FFunctions%2F-518724221"></span>
                     <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
                   </span></span></div>
               <div>
                 <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":deepseek-kotlin/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../-deep-seek-client-base/-builder/json-config.html"><span class="token function">jsonConfig</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">block<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization.json/Json///PointingToDeclaration/">Json</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-deep-seek-client-base/-builder/index.html">DeepSeekClientBase.Builder</a></div><div class="brief "><p class="paragraph">Configures the JSON serialization and deserialization settings.</p></div></div></div>
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":deepseek-kotlin/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../-deep-seek-client-base/-builder/json-config.html"><span class="token function">jsonConfig</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">block<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization.json/Json///PointingToDeclaration/">Json</span><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-unit/index.html">Unit</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-deep-seek-client-base/-builder/index.html">DeepSeekClientBase.Builder</a></div><div class="brief "><p class="paragraph">Configures the JSON serialization and deserialization settings.</p></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../-deep-seek-client-base/-builder/json-config.html"><span class="token function">jsonConfig</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">json<span class="token operator">: </span><span data-unresolved-link="kotlinx.serialization.json/Json///PointingToDeclaration/">Json</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-deep-seek-client-base/-builder/index.html">DeepSeekClientBase.Builder</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="759125962%2FFunctions%2F-518724221" anchor-label="params" id="759125962%2FFunctions%2F-518724221" data-filterable-set=":deepseek-kotlin/commonMain"></a>
+          <div class="table-row" data-filterable-current=":deepseek-kotlin/commonMain" data-filterable-set=":deepseek-kotlin/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../-deep-seek-client-base/-builder/params.html"><span><span>params</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="759125962%2FFunctions%2F-518724221"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":deepseek-kotlin/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../-deep-seek-client-base/-builder/params.html"><span class="token function">params</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">block<span class="token operator">: </span><a href="../../../org.oremif.deepseek.models/-deep-seek-params/index.html">DeepSeekParams</a><span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator"> -&gt; </span><a href="../../../org.oremif.deepseek.models/-deep-seek-params/index.html">DeepSeekParams</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-deep-seek-client-base/-builder/index.html">DeepSeekClientBase.Builder</a></div><div class="symbol monospace"><span class="token keyword">fun </span><a href="../../-deep-seek-client-base/-builder/params.html"><span class="token function">params</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">params<span class="token operator">: </span><a href="../../../org.oremif.deepseek.models/-deep-seek-params/index.html">DeepSeekParams</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../-deep-seek-client-base/-builder/index.html">DeepSeekClientBase.Builder</a></div></div></div>
                 </div>
               </div>
             </div>
