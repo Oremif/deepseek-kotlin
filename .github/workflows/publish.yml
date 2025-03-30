@@ -50,8 +50,14 @@ jobs:
           GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
           SIGNING_PASSPHRASE: ${{ secrets.SIGNING_PASSPHRASE }}
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
       - name: Generate Dokka Documentation
-        run: ./gradlew deepseek-kotlin:dokkaGenerate
+        run: ./gradlew generateDokka
 
       - name: Configure Git
         run: |
@@ -62,7 +68,7 @@ jobs:
         run: |
           git add docs/
           git diff --quiet && git diff --staged --quiet || git commit -m "Update documentation for release [skip ci]"
-          git push
+          git push origin ${{ github.ref_name }}
 
       - name: Publish to OSSRH repository
         run: ./gradlew publish jreleaserFullRelease
