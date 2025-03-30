@@ -21,7 +21,7 @@ public class ChatCompletionChunk(
     public val model: String,
     public val systemFingerprint: String,
     public val `object`: String,
-    public val usage: Usage?,
+    public val usage: Usage? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
