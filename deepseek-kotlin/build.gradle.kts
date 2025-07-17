@@ -3,10 +3,6 @@
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformType
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinAndroidTarget
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinMetadataTarget
-import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import org.jreleaser.model.Active
 
 plugins {
@@ -20,7 +16,7 @@ plugins {
 }
 
 group = "org.oremif"
-version = "0.3.2"
+version = "0.3.2-dev1"
 
 kotlin {
     explicitApi()
@@ -185,19 +181,29 @@ jreleaser {
                     maxRetries = 240
                     stagingRepository(layout.buildDirectory.dir("staging-deploy").get().asFile.path)
                     // workaround: https://github.com/jreleaser/jreleaser/issues/1784
-                    kotlin.targets.forEach { target ->
-                        if (target !is KotlinJvmTarget && target !is KotlinAndroidTarget && target !is KotlinMetadataTarget) {
-                            val klibArtifactId = if (target.platformType == KotlinPlatformType.wasm) {
-                                "${name}-wasm-${target.name.lowercase().substringAfter("wasm")}"
-                            } else {
-                                "${name}-${target.name.lowercase()}"
-                            }
-                            artifactOverride {
-                                artifactId = klibArtifactId
-                                jar = false
-                                verifyPom = false
-                                sourceJar = false
-                                javadocJar = false
+                    afterEvaluate {
+                        publishing.publications.forEach { publication ->
+                            if (publication is MavenPublication) {
+                                val pubName = publication.name
+
+                                if (!pubName.contains("jvm", ignoreCase = true)
+                                    && !pubName.contains("metadata", ignoreCase = true)
+                                    && !pubName.contains("kotlinMultiplatform", ignoreCase = true)
+                                ) {
+
+                                    artifactOverride {
+                                        artifactId = when {
+                                            pubName.contains("wasm", ignoreCase = true) ->
+                                                "${project.name}-wasm-${pubName.lowercase().substringAfter("wasm")}"
+
+                                            else -> "${project.name}-${pubName.lowercase()}"
+                                        }
+                                        jar = false
+                                        verifyPom = false
+                                        sourceJar = false
+                                        javadocJar = false
+                                    }
+                                }
                             }
                         }
                     }
