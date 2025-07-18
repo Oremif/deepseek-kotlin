@@ -16,7 +16,7 @@ plugins {
 }
 
 group = "org.oremif"
-version = "0.3.2-dev1"
+version = "0.3.2-dev2"
 
 kotlin {
     explicitApi()
@@ -56,7 +56,7 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
+        commonMain {
             dependencies {
                 api(libs.coroutines.core)
                 api(libs.ktor.client.core)
@@ -67,38 +67,38 @@ kotlin {
                 implementation(libs.ktor.client.logging)
             }
         }
-        val commonTest by getting {
+        commonTest {
             dependencies {
                 implementation(libs.kotlin.test)
                 implementation(libs.coroutines.test)
             }
         }
 
-        val jvmMain by getting {
+        jvmMain {
             dependencies {
                 api(libs.ktor.client.okhttp)
             }
         }
 
-        val jvmTest by getting {
+        jvmTest {
             dependencies {
                 implementation(libs.slf4j.simple)
             }
         }
 
-        val androidMain by getting {
+        androidMain {
             dependencies {
                 api(libs.ktor.client.okhttp)
             }
         }
 
-        val appleMain by creating {
+        appleMain {
             dependencies {
                 api(libs.ktor.client.darwin)
             }
         }
 
-        val wasmJsMain by getting {
+        wasmJsMain {
             dependencies {
                 api(libs.ktor.client.js)
             }
