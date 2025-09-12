@@ -3,20 +3,17 @@
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jreleaser.model.Active
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.dokka)
-    alias(libs.plugins.jreleaser)
-    `maven-publish`
-    signing
+    alias(libs.plugins.maven.publish)
 }
 
 group = "org.oremif"
-version = "0.3.2-dev2"
+version = "0.3.2"
 
 kotlin {
     explicitApi()
@@ -141,146 +138,37 @@ dokka {
     }
 }
 
-val javadocJar by tasks.registering(Jar::class) {
-    archiveClassifier.set("javadoc")
-}
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = true)
+    signAllPublications()
 
-publishing {
-    publications.withType(MavenPublication::class).all {
-        if (name.contains("jvm", ignoreCase = true)) {
-            artifact(javadocJar)
-        }
-        pom.configureMavenCentralMetadata()
-        signPublicationIfKeyPresent()
-    }
+    pom {
+        name = "DeepSeek Kotlin SDK"
+        description = "DeepSeek Multiplatform Kotlin SDK"
+        inceptionYear = "2025"
+        url = "https://github.com/Oremif/deepseek-kotlin"
 
-    repositories {
-        maven(url = layout.buildDirectory.dir("staging-deploy"))
-    }
-}
-
-jreleaser {
-    gitRootSearch = true
-    strict.set(true)
-
-    signing {
-        active.set(Active.ALWAYS)
-        armored = true
-        artifacts = true
-    }
-
-    deploy {
-        active.set(Active.ALWAYS)
-        maven {
-            active.set(Active.ALWAYS)
-            mavenCentral {
-                val ossrh by creating {
-                    active.set(Active.ALWAYS)
-                    url.set("https://central.sonatype.com/api/v1/publisher")
-                    applyMavenCentralRules = false
-                    maxRetries = 240
-                    stagingRepository(layout.buildDirectory.dir("staging-deploy").get().asFile.path)
-                    // workaround: https://github.com/jreleaser/jreleaser/issues/1784
-                    afterEvaluate {
-                        publishing.publications.forEach { publication ->
-                            if (publication is MavenPublication) {
-                                val pubName = publication.name
-
-                                if (!pubName.contains("jvm", ignoreCase = true)
-                                    && !pubName.contains("metadata", ignoreCase = true)
-                                    && !pubName.contains("kotlinMultiplatform", ignoreCase = true)
-                                ) {
-
-                                    artifactOverride {
-                                        artifactId = when {
-                                            pubName.contains("wasm", ignoreCase = true) ->
-                                                "${project.name}-wasm-${pubName.lowercase().substringAfter("wasm")}"
-
-                                            else -> "${project.name}-${pubName.lowercase()}"
-                                        }
-                                        jar = false
-                                        verifyPom = false
-                                        sourceJar = false
-                                        javadocJar = false
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+        licenses {
+            license {
+                name = "The Apache Software License, Version 2.0"
+                url = "https://github.com/Oremif/deepseek-kotlin/blob/master/LICENSE"
+                distribution = "repo"
             }
         }
-    }
 
-    release {
-        github {
-            skipRelease = true
-            skipTag = true
-            overwrite = false
-            token = "none"
+        developers {
+            developer {
+                id = "devcrocod"
+                name = "Pavel Gorgulov"
+                organization = "Oremif"
+                organizationUrl = "https://oremif.org"
+            }
+        }
+
+        scm {
+            url = "https://github.com/Oremif/deepseek-kotlin"
+            connection = "scm:git:git://github.com/Oremif/deepseek-kotlin.git"
+            developerConnection = "scm:git:git@github.com/Oremif/deepseek-kotlin.git"
         }
     }
-
-    checksum {
-        individual = false
-        artifacts = false
-        files = false
-    }
-}
-
-fun MavenPom.configureMavenCentralMetadata() {
-    name by project.name
-    description by "DeepSeek Multiplatform Kotlin SDK"
-    url by "https://github.com/Oremif/deepseek-kotlin"
-
-    licenses {
-        license {
-            name by "The Apache Software License, Version 2.0"
-            url by "https://github.com/Oremif/deepseek-kotlin/blob/master/LICENSE"
-            distribution by "repo"
-        }
-    }
-
-    developers {
-        developer {
-            id by "devcrocod"
-            name by "Pavel Gorgulov"
-            organization by "Oremif"
-            organizationUrl by "https://oremif.org"
-        }
-    }
-
-    scm {
-        url by "https://github.com/Oremif/deepseek-kotlin"
-        connection by "scm:git:git://github.com/Oremif/deepseek-kotlin.git"
-        developerConnection by "scm:git:git@github.com/Oremif/deepseek-kotlin.git"
-    }
-}
-
-fun MavenPublication.signPublicationIfKeyPresent() {
-//    val keyId = project.getSensitiveProperty("GPG_PUBLIC_KEY")
-    val signingKey = project.getSensitiveProperty("GPG_SECRET_KEY")
-    val signingKeyPassphrase = project.getSensitiveProperty("SIGNING_PASSPHRASE")
-
-    if (!signingKey.isNullOrBlank()) {
-        the<SigningExtension>().apply {
-            useInMemoryPgpKeys(signingKey, signingKeyPassphrase)
-
-            sign(this@signPublicationIfKeyPresent)
-        }
-    }
-}
-
-fun Project.getSensitiveProperty(name: String?): String? {
-    if (name == null) {
-        error("Expected not null property '$name' for publication repository config")
-    }
-
-    return project.findProperty(name) as? String
-        ?: System.getenv(name)
-        ?: System.getProperty(name)
-}
-
-infix fun <T> Property<T>.by(value: T) {
-    set(value)
 }
