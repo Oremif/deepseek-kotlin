@@ -35,6 +35,12 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
+    macosX64()
+    macosArm64()
+    linuxX64()
+    linuxArm64()
+    mingwX64()
+
     wasmJs {
         nodejs() {
             testTask {
@@ -93,6 +99,18 @@ kotlin {
             dependencies {
                 api(libs.ktor.client.darwin)
             }
+        }
+
+        linuxMain.dependencies {
+            api(libs.ktor.client.cio)
+        }
+
+        macosMain.dependencies {
+            api(libs.ktor.client.cio)
+        }
+
+        mingwMain.dependencies {
+            api(libs.ktor.client.cio)
         }
 
         wasmJsMain {
