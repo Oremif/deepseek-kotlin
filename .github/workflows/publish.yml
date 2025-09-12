@@ -8,6 +8,12 @@ jobs:
   publish:
     name: Release build and publish
     runs-on: macOS-latest
+    environment: release
+
+    permissions:
+      contents: write
+      packages: write
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
