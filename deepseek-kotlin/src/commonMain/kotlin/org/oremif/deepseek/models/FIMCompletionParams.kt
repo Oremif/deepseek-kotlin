@@ -36,7 +36,7 @@ public fun fimCompletionParams(block: FIMCompletionParams.Builder.() -> Unit): F
  * ```kotlin
  * val streamParams = fimCompletionStreamParams {
  *     temperature = 0.7
- *     streamOptions = StreamOptions(chunkSize = 10)
+ *     streamOptions = StreamOptions(includeUsage = true)
  *     suffix = "}"
  * }
  *

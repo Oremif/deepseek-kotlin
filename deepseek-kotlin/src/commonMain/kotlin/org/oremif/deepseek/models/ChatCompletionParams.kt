@@ -36,7 +36,7 @@ public fun chatCompletionParams(block: ChatCompletionParams.Builder.() -> Unit):
  * val streamParams = chatCompletionStreamParams {
  *     model = ChatModel.DEEPSEEK_CHAT
  *     temperature = 0.7
- *     streamOptions = StreamOptions(chunkSize = 10)
+ *     streamOptions = StreamOptions(includeUsage = true)
  * }
  *
  * client.chatStream(streamParams, messages).collect { chunk ->
