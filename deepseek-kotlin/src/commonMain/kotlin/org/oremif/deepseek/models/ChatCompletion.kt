@@ -41,7 +41,7 @@ public class ChatCompletion(
         result = 31 * result + choices.hashCode()
         result = 31 * result + created.hashCode()
         result = 31 * result + model.hashCode()
-        result = 31 * result + systemFingerprint.hashCode()
+        result = 31 * result + (systemFingerprint?.hashCode() ?: 0)
         result = 31 * result + `object`.hashCode()
         result = 31 * result + usage.hashCode()
         return result

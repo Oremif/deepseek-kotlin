@@ -85,7 +85,7 @@ public class FIMLogProbs(
         var result = textOffset.hashCode()
         result = 31 * result + tokenLogprobs.hashCode()
         result = 31 * result + tokens.hashCode()
-        result = 31 * result + topLogprobs.hashCode()
+        result = 31 * result + (topLogprobs?.hashCode() ?: 0)
         return result
     }
 

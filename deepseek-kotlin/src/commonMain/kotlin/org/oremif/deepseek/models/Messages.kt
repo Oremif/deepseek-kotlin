@@ -54,7 +54,7 @@ public class UserMessage(override val content: String?, public val name: String?
     }
 
     override fun hashCode(): Int {
-        var result = content.hashCode()
+        var result = content?.hashCode() ?: 0
         result = 31 * result + (name?.hashCode() ?: 0)
         return result
     }
