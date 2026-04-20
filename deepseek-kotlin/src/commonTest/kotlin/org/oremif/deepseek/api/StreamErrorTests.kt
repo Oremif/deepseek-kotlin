@@ -120,6 +120,7 @@ class StreamErrorTests {
         val ex = assertFailsWith<DeepSeekException.OverloadServerException> {
             client.chatCompletionStream(chatRequest).toList()
         }
+        assertEquals(503, ex.statusCode)
         assertEquals("Server overloaded", ex.error?.error?.message)
     }
 
