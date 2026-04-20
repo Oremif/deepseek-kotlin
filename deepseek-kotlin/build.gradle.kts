@@ -172,7 +172,7 @@ mavenPublishing {
         scm {
             url = "https://github.com/Oremif/deepseek-kotlin"
             connection = "scm:git:git://github.com/Oremif/deepseek-kotlin.git"
-            developerConnection = "scm:git:git@github.com/Oremif/deepseek-kotlin.git"
+            developerConnection = "scm:git:git@github.com:Oremif/deepseek-kotlin.git"
         }
     }
 }
