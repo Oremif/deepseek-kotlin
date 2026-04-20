@@ -134,7 +134,7 @@ class ChatCompletionTests {
     }
 
     @Test
-    fun `streaming delta tool_calls first chunk parses with id, name and empty arguments`() {
+    fun `streaming delta tool_calls first chunk parses with id and name and empty arguments`() {
         val json = """
             {
                 "id": "chunk-1",
