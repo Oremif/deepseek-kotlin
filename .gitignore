@@ -45,3 +45,7 @@ Thumbs.db
 
 # Local Properties
 local.properties
+
+# Coding agents
+.claude
+.junie
