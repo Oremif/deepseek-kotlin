@@ -41,11 +41,7 @@ val chatCompletion = client.chat("Say this is a test")
 Configure the client:
 
 ```kotlin
-import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
-import io.ktor.client.plugins.logging.Logger
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.plugins.sse.SSE
 import org.oremif.deepseek.client.DeepSeekClient
 
 val deepseekApiKey = System.getenv("DEEPSEEK_API_KEY")
@@ -54,13 +50,12 @@ val client = DeepSeekClient(deepseekApiKey) {
         ignoreUnknownKeys = true
         prettyPrint = false
     }
-    httpClient {
-        install(SSE)
-        install(Logging) {
-            logger = Logger.DEFAULT
-            level = LogLevel.HEADERS
-            sanitizeHeader { header -> header == "Authorization" }
-        }
+
+    // Logging is opt-in. `Authorization` is always redacted; add your own
+    // predicates with `sanitizeHeader { }` for any other sensitive headers.
+    logging {
+        level = LogLevel.HEADERS
+        sanitizeHeader { header -> header == "Cookie" }
     }
 
     chatCompletionTimeout(10_000)
