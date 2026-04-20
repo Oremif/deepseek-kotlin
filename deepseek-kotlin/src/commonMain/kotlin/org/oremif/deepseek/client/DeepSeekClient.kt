@@ -266,6 +266,8 @@ public abstract class DeepSeekClientBase(
             }
 
             install(HttpTimeout) {
+                requestTimeoutMillis = 600_000L
+                connectTimeoutMillis = 30_000L
                 socketTimeoutMillis = 300_000L
             }
 
