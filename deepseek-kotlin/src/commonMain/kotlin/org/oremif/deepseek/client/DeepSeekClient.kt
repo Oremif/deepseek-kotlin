@@ -9,6 +9,7 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.sse.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlinx.coroutines.job
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonBuilder
@@ -298,10 +299,28 @@ public abstract class DeepSeekClientBase(
      * releases threads and connections if they remain idle. Call this only if you need to
      * aggressively free resources (e.g. during application shutdown).
      *
+     * **Blocking:** on some Ktor engines (notably CIO) this may block the calling thread
+     * while in-flight requests and the engine's internal coroutines finish. Prefer
+     * [closeAndJoin] from a coroutine context to avoid blocking.
+     *
      * The client cannot be reused after [close] is called.
      */
     public open fun close() {
         client.close()
+    }
+
+    /**
+     * Closes the underlying HTTP client and suspends until its coroutine scope completes.
+     *
+     * Prefer this over [close] when called from a coroutine context: it avoids blocking
+     * the calling thread while in-flight requests and the engine's internal coroutines
+     * finish.
+     *
+     * The client cannot be reused after [closeAndJoin] is called.
+     */
+    public open suspend fun closeAndJoin() {
+        client.close()
+        client.coroutineContext.job.join()
     }
 }
 
