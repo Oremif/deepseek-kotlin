@@ -1,12 +1,12 @@
 package org.oremif.deepseek.models
 
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 class ChatCompletionTests {
 
@@ -91,11 +91,11 @@ class ChatCompletionTests {
         )
 
         val expected = jsonConfig.decodeFromString<ChatCompletionRequest>(jsonRequest)
-        assertEquals(2, expected.messages.size)
-        assertEquals(2048, expected.maxTokens)
-        assertEquals(ResponseFormat.text, expected.responseFormat)
+        expected.messages.size shouldBe 2
+        expected.maxTokens shouldBe 2048
+        expected.responseFormat shouldBe ResponseFormat.text
 
-        assertEquals(jsonRequest, jsonConfig.encodeToString(request).trimIndent())
+        jsonConfig.encodeToString(request).trimIndent() shouldBe jsonRequest
     }
 
     @Test
@@ -120,11 +120,11 @@ class ChatCompletionTests {
         )
 
         val expected = jsonConfig.decodeFromString<ChatCompletion>(jsonResponse)
-        assertEquals(1, expected.choices.size)
-        assertEquals(FinishReason.STOP, expected.choices[0].finishReason)
-        assertEquals("Hello! How can I help you today?", expected.choices[0].message.content)
-        assertEquals(1705651092L, expected.created)
-        assertEquals(jsonResponse, jsonConfig.encodeToString(response).trimIndent())
+        expected.choices.size shouldBe 1
+        expected.choices[0].finishReason shouldBe FinishReason.STOP
+        expected.choices[0].message.content shouldBe "Hello! How can I help you today?"
+        expected.created shouldBe 1705651092L
+        jsonConfig.encodeToString(response).trimIndent() shouldBe jsonResponse
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -164,14 +164,14 @@ class ChatCompletionTests {
 
         val chunk = streamingJsonConfig.decodeFromString<ChatCompletionChunk>(json)
         val delta = chunk.choices.single().delta
-        assertEquals("assistant", delta.role)
-        assertNull(delta.content)
-        val toolCall = assertNotNull(delta.toolCalls).single()
-        assertEquals(0, toolCall.index)
-        assertEquals("call_abc", toolCall.id)
-        assertEquals(ToolCallType.FUNCTION, toolCall.type)
-        assertEquals("get_weather", toolCall.function?.name)
-        assertEquals("", toolCall.function?.arguments)
+        delta.role shouldBe "assistant"
+        delta.content.shouldBeNull()
+        val toolCall = delta.toolCalls.shouldNotBeNull().single()
+        toolCall.index shouldBe 0
+        toolCall.id shouldBe "call_abc"
+        toolCall.type shouldBe ToolCallType.FUNCTION
+        toolCall.function?.name shouldBe "get_weather"
+        toolCall.function?.arguments shouldBe ""
     }
 
     @Test
@@ -200,11 +200,11 @@ class ChatCompletionTests {
         """.trimIndent()
 
         val chunk = streamingJsonConfig.decodeFromString<ChatCompletionChunk>(json)
-        val toolCall = assertNotNull(chunk.choices.single().delta.toolCalls).single()
-        assertEquals(0, toolCall.index)
-        assertNull(toolCall.id)
-        assertNull(toolCall.type)
-        assertEquals("""{"location":""", toolCall.function?.arguments)
+        val toolCall = chunk.choices.single().delta.toolCalls.shouldNotBeNull().single()
+        toolCall.index shouldBe 0
+        toolCall.id.shouldBeNull()
+        toolCall.type.shouldBeNull()
+        toolCall.function?.arguments shouldBe """{"location":"""
     }
 
     @Test
@@ -227,9 +227,9 @@ class ChatCompletionTests {
 
         val chunk = streamingJsonConfig.decodeFromString<ChatCompletionChunk>(json)
         val choice = chunk.choices.single()
-        assertEquals(FinishReason.TOOL_CALLS, choice.finishReason)
-        assertNull(choice.delta.content)
-        assertNull(choice.delta.toolCalls)
+        choice.finishReason shouldBe FinishReason.TOOL_CALLS
+        choice.delta.content.shouldBeNull()
+        choice.delta.toolCalls.shouldBeNull()
     }
 
     @Test
@@ -251,7 +251,7 @@ class ChatCompletionTests {
         """.trimIndent()
 
         val chunk = streamingJsonConfig.decodeFromString<ChatCompletionChunk>(json)
-        assertEquals("thinking...", chunk.choices.single().delta.reasoningContent)
+        chunk.choices.single().delta.reasoningContent shouldBe "thinking..."
     }
 
     @Test
@@ -264,8 +264,8 @@ class ChatCompletionTests {
         """.trimIndent()
 
         val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
-        assertEquals("Hello!", message.content)
-        assertNull(message.toolCalls)
+        message.content shouldBe "Hello!"
+        message.toolCalls.shouldBeNull()
     }
 
     @Test
@@ -279,8 +279,8 @@ class ChatCompletionTests {
         """.trimIndent()
 
         val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
-        assertEquals("Hello!", message.content)
-        assertNull(message.toolCalls)
+        message.content shouldBe "Hello!"
+        message.toolCalls.shouldBeNull()
     }
 
     @Test
@@ -300,9 +300,9 @@ class ChatCompletionTests {
         """.trimIndent()
 
         val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
-        val toolCalls = assertNotNull(message.toolCalls)
-        assertEquals(1, toolCalls.size)
-        assertEquals("call_abc", toolCalls[0].id)
-        assertEquals("get_weather", toolCalls[0].function.name)
+        val toolCalls = message.toolCalls.shouldNotBeNull()
+        toolCalls.size shouldBe 1
+        toolCalls[0].id shouldBe "call_abc"
+        toolCalls[0].function.name shouldBe "get_weather"
     }
 }

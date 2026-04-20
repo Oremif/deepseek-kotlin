@@ -1,9 +1,9 @@
 package org.oremif.deepseek.client
 
+import io.kotest.matchers.booleans.shouldBeTrue
 import kotlinx.coroutines.job
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
 class DeepSeekClientLifecycleTests {
 
@@ -12,7 +12,7 @@ class DeepSeekClientLifecycleTests {
         val client = DeepSeekClient("test-token")
         val job = client.client.coroutineContext.job
         client.closeAndJoin()
-        assertTrue(job.isCompleted, "Client coroutine scope must complete after closeAndJoin")
+        job.isCompleted.shouldBeTrue()
     }
 
     @Test
@@ -20,9 +20,6 @@ class DeepSeekClientLifecycleTests {
         val client = DeepSeekClientStream("test-token")
         val job = client.client.coroutineContext.job
         client.closeAndJoin()
-        assertTrue(
-            job.isCompleted,
-            "Stream client coroutine scope must complete after closeAndJoin"
-        )
+        job.isCompleted.shouldBeTrue()
     }
 }
