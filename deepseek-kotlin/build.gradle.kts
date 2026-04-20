@@ -3,6 +3,7 @@
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.time.Year
 
 plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -136,7 +137,7 @@ dokka {
     moduleName.set("DeepSeek Kotlin SDK")
 
     pluginsConfiguration.html {
-        footerMessage = "© 2025 Oremif. All rights reserved."
+        footerMessage = "© 2025-${Year.now()} Oremif. All rights reserved."
         customAssets.from(listOf(file("../dokka/images/logo-icon.svg")))
         customStyleSheets.from(listOf(file("../dokka/styles/logo-styles.css")))
     }
