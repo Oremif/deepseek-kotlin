@@ -14,6 +14,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonBuilder
 import kotlinx.serialization.json.JsonNamingStrategy
 import org.oremif.deepseek.models.DeepSeekParams
+import org.oremif.deepseek.utils.isRetryableStatus
 import kotlin.random.Random
 
 /**
@@ -266,7 +267,8 @@ public abstract class DeepSeekClientBase(
 
             install(HttpRequestRetry) {
                 maxRetries = 3
-                retryIf { _, response -> !response.status.isSuccess() }
+                retryIf { _, response -> isRetryableStatus(response.status.value) }
+                retryOnException(maxRetries = 3, retryOnTimeout = true)
                 delayMillis { retry ->
                     val delay = (retry * 0.2).toLong().coerceAtLeast(1L)
                     retry + Random.nextLong(delay)
