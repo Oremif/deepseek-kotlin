@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.dokka)
@@ -24,8 +24,10 @@ kotlin {
         }
     }
 
-    androidTarget {
-        publishLibraryVariants("release")
+    android {
+        namespace = "org.oremif.deepseek"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -35,21 +37,20 @@ kotlin {
     iosArm64()
     iosSimulatorArm64()
 
-    macosX64()
     macosArm64()
     linuxX64()
     linuxArm64()
     mingwX64()
 
     wasmJs {
-        nodejs() {
+        nodejs {
             testTask {
                 useMocha {
                     timeout = "30s"
                 }
             }
         }
-        browser() {
+        browser {
             testTask {
                 useMocha {
                     timeout = "30s"
@@ -120,19 +121,6 @@ kotlin {
         }
     }
 }
-
-android {
-    namespace = "org.oremif.deepseek"
-    defaultConfig {
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-}
-
 
 dokka {
     moduleName.set("DeepSeek Kotlin SDK")
