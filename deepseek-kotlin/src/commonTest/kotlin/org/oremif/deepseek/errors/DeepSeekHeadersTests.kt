@@ -1,60 +1,61 @@
 package org.oremif.deepseek.errors
 
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.ktor.http.HeadersBuilder
 import io.ktor.http.headersOf
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
 
 class DeepSeekHeadersTests {
 
     @Test
     fun `get returns first value case-insensitively`() {
         val headers = DeepSeekHeaders(mapOf("Content-Type" to listOf("application/json")))
-        assertEquals("application/json", headers["Content-Type"])
-        assertEquals("application/json", headers["content-type"])
-        assertEquals("application/json", headers["CONTENT-TYPE"])
+        headers["Content-Type"] shouldBe "application/json"
+        headers["content-type"] shouldBe "application/json"
+        headers["CONTENT-TYPE"] shouldBe "application/json"
     }
 
     @Test
     fun `get returns null when header is absent`() {
         val headers = DeepSeekHeaders(mapOf("X-Request-Id" to listOf("abc")))
-        assertNull(headers["Content-Type"])
+        headers["Content-Type"].shouldBeNull()
     }
 
     @Test
     fun `getAll returns every value for a multi-valued header`() {
         val headers = DeepSeekHeaders(mapOf("Set-Cookie" to listOf("a=1", "b=2")))
-        assertEquals(listOf("a=1", "b=2"), headers.getAll("set-cookie"))
+        headers.getAll("set-cookie") shouldBe listOf("a=1", "b=2")
     }
 
     @Test
     fun `getAll returns empty list when header is absent`() {
         val headers = DeepSeekHeaders(emptyMap())
-        assertEquals(emptyList(), headers.getAll("Content-Type"))
+        headers.getAll("Content-Type") shouldBe emptyList()
     }
 
     @Test
     fun `contains is case-insensitive`() {
         val headers = DeepSeekHeaders(mapOf("Retry-After" to listOf("30")))
-        assertTrue("retry-after" in headers)
-        assertFalse("X-Missing" in headers)
+        ("retry-after" in headers).shouldBeTrue()
+        ("X-Missing" in headers).shouldBeFalse()
     }
 
     @Test
     fun `Empty reports isEmpty and has no names`() {
-        assertTrue(DeepSeekHeaders.Empty.isEmpty())
-        assertEquals(emptySet(), DeepSeekHeaders.Empty.names())
+        DeepSeekHeaders.Empty.isEmpty().shouldBeTrue()
+        DeepSeekHeaders.Empty.names() shouldBe emptySet()
     }
 
     @Test
     fun `equals and hashCode match when entries match`() {
         val a = DeepSeekHeaders(mapOf("X-A" to listOf("1")))
         val b = DeepSeekHeaders(mapOf("X-A" to listOf("1")))
-        assertEquals(a, b)
-        assertEquals(a.hashCode(), b.hashCode())
+        a shouldBe b
+        a.hashCode() shouldBe b.hashCode()
     }
 
     @Test
@@ -64,8 +65,8 @@ class DeepSeekHeadersTests {
             "X-Request-Id" to listOf("abc-123"),
         )
         val mapped = ktorHeaders.toDeepSeekHeaders()
-        assertEquals("application/json", mapped["content-type"])
-        assertEquals("abc-123", mapped["x-request-id"])
+        mapped["content-type"] shouldBe "application/json"
+        mapped["x-request-id"] shouldBe "abc-123"
     }
 
     @Test
@@ -75,12 +76,12 @@ class DeepSeekHeadersTests {
             append("Set-Cookie", "b=2")
         }.build()
         val mapped = ktorHeaders.toDeepSeekHeaders()
-        assertEquals(listOf("a=1", "b=2"), mapped.getAll("Set-Cookie"))
+        mapped.getAll("Set-Cookie") shouldBe listOf("a=1", "b=2")
     }
 
     @Test
     fun `toDeepSeekHeaders on empty returns the shared Empty instance`() {
         val mapped = io.ktor.http.Headers.Empty.toDeepSeekHeaders()
-        assertTrue(mapped === DeepSeekHeaders.Empty)
+        mapped shouldBeSameInstanceAs DeepSeekHeaders.Empty
     }
 }

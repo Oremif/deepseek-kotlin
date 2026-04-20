@@ -1,5 +1,10 @@
 package org.oremif.deepseek.client
 
+import io.kotest.matchers.booleans.shouldBeFalse
+import io.kotest.matchers.booleans.shouldBeTrue
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
@@ -12,12 +17,6 @@ import io.ktor.client.plugins.sse.SSE
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
-import kotlin.test.assertNotNull
-import kotlin.test.assertNull
-import kotlin.test.assertSame
-import kotlin.test.assertTrue
 
 private inline fun <T : DeepSeekClientBase, R> T.use(block: (T) -> R): R =
     try {
@@ -34,16 +33,10 @@ class DeepSeekClientBuilderTests {
             httpClient { /* additive configuration — intentionally empty */ }
         }.use { client ->
             val http = client.client
-            assertNotNull(http.pluginOrNull(Auth), "Auth must survive httpClient { }")
-            assertNotNull(
-                http.pluginOrNull(ContentNegotiation),
-                "ContentNegotiation must survive httpClient { }"
-            )
-            assertNotNull(
-                http.pluginOrNull(HttpRequestRetry),
-                "HttpRequestRetry must survive httpClient { }"
-            )
-            assertNotNull(http.pluginOrNull(HttpTimeout), "HttpTimeout must survive httpClient { }")
+            http.pluginOrNull(Auth).shouldNotBeNull()
+            http.pluginOrNull(ContentNegotiation).shouldNotBeNull()
+            http.pluginOrNull(HttpRequestRetry).shouldNotBeNull()
+            http.pluginOrNull(HttpTimeout).shouldNotBeNull()
         }
     }
 
@@ -53,30 +46,18 @@ class DeepSeekClientBuilderTests {
             httpClient { /* additive configuration — intentionally empty */ }
         }.use { client ->
             val http = client.client
-            assertNotNull(http.pluginOrNull(SSE), "SSE must survive httpClient { } on stream client")
-            assertNotNull(http.pluginOrNull(Auth), "Auth must survive on stream client")
-            assertNotNull(
-                http.pluginOrNull(ContentNegotiation),
-                "ContentNegotiation must survive on stream client"
-            )
-            assertNotNull(
-                http.pluginOrNull(HttpRequestRetry),
-                "HttpRequestRetry must survive on stream client"
-            )
-            assertNotNull(
-                http.pluginOrNull(HttpTimeout),
-                "HttpTimeout must survive on stream client"
-            )
+            http.pluginOrNull(SSE).shouldNotBeNull()
+            http.pluginOrNull(Auth).shouldNotBeNull()
+            http.pluginOrNull(ContentNegotiation).shouldNotBeNull()
+            http.pluginOrNull(HttpRequestRetry).shouldNotBeNull()
+            http.pluginOrNull(HttpTimeout).shouldNotBeNull()
         }
     }
 
     @Test
     fun `logging is not installed by default`() {
         DeepSeekClient("test-token").use { client ->
-            assertNull(
-                client.client.pluginOrNull(Logging),
-                "Logging plugin must be opt-in — nothing should be logged by default"
-            )
+            client.client.pluginOrNull(Logging).shouldBeNull()
         }
     }
 
@@ -85,10 +66,7 @@ class DeepSeekClientBuilderTests {
         DeepSeekClient("test-token") {
             logging { level = LogLevel.BODY }
         }.use { client ->
-            assertNotNull(
-                client.client.pluginOrNull(Logging),
-                "logging { } must install the Logging plugin"
-            )
+            client.client.pluginOrNull(Logging).shouldNotBeNull()
         }
     }
 
@@ -97,10 +75,7 @@ class DeepSeekClientBuilderTests {
         DeepSeekClient("test-token") {
             logging()
         }.use { client ->
-            assertNotNull(
-                client.client.pluginOrNull(Logging),
-                "logging() with no block must still install the plugin"
-            )
+            client.client.pluginOrNull(Logging).shouldNotBeNull()
         }
     }
 
@@ -110,20 +85,13 @@ class DeepSeekClientBuilderTests {
             logging { level = LogLevel.HEADERS }
             httpClient { /* additive configuration — intentionally empty */ }
         }.use { client ->
-            assertNotNull(
-                client.client.pluginOrNull(Logging),
-                "Logging from logging { } must survive layered httpClient { } on stream client"
-            )
-            assertNotNull(
-                client.client.pluginOrNull(SSE),
-                "SSE must survive alongside logging { } on stream client"
-            )
+            client.client.pluginOrNull(Logging).shouldNotBeNull()
+            client.client.pluginOrNull(SSE).shouldNotBeNull()
         }
     }
 
     @Test
     fun `logging block can be called multiple times and accumulates sanitizers`() {
-        var calls = 0
         DeepSeekClient("test-token") {
             logging { level = LogLevel.BODY }
             logging {
@@ -131,10 +99,8 @@ class DeepSeekClientBuilderTests {
                 sanitizeHeader { header -> header == "X-Trace-Id" }
             }
         }.use { client ->
-            calls++
-            assertNotNull(client.client.pluginOrNull(Logging))
+            client.client.pluginOrNull(Logging).shouldNotBeNull()
         }
-        assertEquals(1, calls)
     }
 
     @Test
@@ -143,10 +109,7 @@ class DeepSeekClientBuilderTests {
         DeepSeekClient("test-token") {
             httpClient(replacement)
         }.use { client ->
-            assertNull(
-                client.client.pluginOrNull(Auth),
-                "Replacement overload must not silently re-add Auth"
-            )
+            client.client.pluginOrNull(Auth).shouldBeNull()
         }
     }
 
@@ -160,9 +123,9 @@ class DeepSeekClientBuilderTests {
             }
         }.use { client ->
             val cfg = client.config.jsonConfig.configuration
-            assertFalse(cfg.prettyPrint, "prettyPrint must reflect user setting")
-            assertFalse(cfg.ignoreUnknownKeys, "ignoreUnknownKeys must reflect user setting")
-            assertFalse(cfg.isLenient, "isLenient must reflect user setting")
+            cfg.prettyPrint.shouldBeFalse()
+            cfg.ignoreUnknownKeys.shouldBeFalse()
+            cfg.isLenient.shouldBeFalse()
         }
     }
 
@@ -175,9 +138,9 @@ class DeepSeekClientBuilderTests {
             }
         }.use { client ->
             val cfg = client.config.jsonConfig.configuration
-            assertFalse(cfg.prettyPrint, "prettyPrint must be flipped")
-            assertTrue(cfg.ignoreUnknownKeys, "ignoreUnknownKeys default must survive")
-            assertNotNull(cfg.namingStrategy, "SnakeCase namingStrategy default must survive")
+            cfg.prettyPrint.shouldBeFalse()
+            cfg.ignoreUnknownKeys.shouldBeTrue()
+            cfg.namingStrategy.shouldNotBeNull()
         }
     }
 
@@ -190,10 +153,7 @@ class DeepSeekClientBuilderTests {
         DeepSeekClient("test-token") {
             jsonConfig(custom)
         }.use { client ->
-            assertSame(
-                custom, client.config.jsonConfig,
-                "Json overload must store the exact instance provided"
-            )
+            client.config.jsonConfig shouldBeSameInstanceAs custom
         }
     }
 
@@ -204,18 +164,9 @@ class DeepSeekClientBuilderTests {
                 prettyPrint = false
             }
         }.use { client ->
-            assertFalse(
-                client.config.jsonConfig.configuration.prettyPrint,
-                "Stream client must honour jsonConfig { } block"
-            )
-            assertNotNull(
-                client.client.pluginOrNull(SSE),
-                "SSE must survive with custom jsonConfig on stream client"
-            )
-            assertNotNull(
-                client.client.pluginOrNull(ContentNegotiation),
-                "ContentNegotiation must be installed with custom jsonConfig on stream client"
-            )
+            client.config.jsonConfig.configuration.prettyPrint.shouldBeFalse()
+            client.client.pluginOrNull(SSE).shouldNotBeNull()
+            client.client.pluginOrNull(ContentNegotiation).shouldNotBeNull()
         }
     }
 }

@@ -1,25 +1,25 @@
 package org.oremif.deepseek.models
 
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 class FIMCompletionRequestBuilderTests {
 
     @Test
     fun builderFailsWhenPromptIsNotCalled() {
-        val ex = assertFailsWith<IllegalArgumentException> {
+        val ex = shouldThrow<IllegalArgumentException> {
             FIMCompletionRequest.Builder().build()
         }
-        assertEquals("prompt(...) must be called", ex.message)
+        ex.message shouldBe "prompt(...) must be called"
     }
 
     @Test
     fun streamBuilderFailsWhenPromptIsNotCalled() {
-        val ex = assertFailsWith<IllegalArgumentException> {
+        val ex = shouldThrow<IllegalArgumentException> {
             FIMCompletionRequest.StreamBuilder().build()
         }
-        assertEquals("prompt(...) must be called", ex.message)
+        ex.message shouldBe "prompt(...) must be called"
     }
 
     @Test
@@ -27,7 +27,7 @@ class FIMCompletionRequestBuilderTests {
         val request = FIMCompletionRequest.Builder().apply {
             prompt("def fib(n):")
         }.build()
-        assertEquals("def fib(n):", request.prompt)
+        request.prompt shouldBe "def fib(n):"
     }
 
     @Test
@@ -35,6 +35,6 @@ class FIMCompletionRequestBuilderTests {
         val request = FIMCompletionRequest.StreamBuilder().apply {
             prompt("def fib(n):")
         }.build()
-        assertEquals("def fib(n):", request.prompt)
+        request.prompt shouldBe "def fib(n):"
     }
 }
