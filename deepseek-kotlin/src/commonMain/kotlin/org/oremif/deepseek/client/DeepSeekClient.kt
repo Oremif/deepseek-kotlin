@@ -102,7 +102,6 @@ public abstract class DeepSeekClientBase(
         @OptIn(ExperimentalSerializationApi::class)
         protected var jsonConfig: Json = Json {
             prettyPrint = true
-            isLenient = true
             ignoreUnknownKeys = true
             namingStrategy = JsonNamingStrategy.SnakeCase
         }
