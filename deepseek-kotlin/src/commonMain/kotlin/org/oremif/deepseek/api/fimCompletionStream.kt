@@ -24,12 +24,8 @@ import org.oremif.deepseek.models.FIMCompletionRequest
  *
  * Example:
  * ```kotlin
- * val request = FIMCompletionRequest(
- *     model = "deepseek-chat",
- *     prompt = "function calculate(x, y) {",
- *     suffix = "}",
- *     stream = true
- * )
+ * val params = fimCompletionStreamParams { suffix = "}" }
+ * val request = params.createRequest("function calculate(x, y) {")
  *
  * client.fimCompletionStream(request).collect { chunk ->
  *     print(chunk.choices.firstOrNull()?.text ?: "")

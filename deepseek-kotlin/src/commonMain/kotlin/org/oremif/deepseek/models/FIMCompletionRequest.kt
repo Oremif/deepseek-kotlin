@@ -61,7 +61,7 @@ import kotlinx.serialization.Serializable
  * **Default value: `1`.**
  */
 @Serializable
-public class FIMCompletionRequest(
+public class FIMCompletionRequest internal constructor(
     public val model: ChatModel,
     public val prompt: String,
     public val echo: Boolean? = null,
