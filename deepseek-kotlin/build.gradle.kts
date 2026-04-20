@@ -151,9 +151,6 @@ dokka {
             documentedVisibilities(VisibilityModifier.Public)
         }
     }
-    dokkaPublications.html {
-        outputDirectory = project.rootProject.layout.projectDirectory.dir("docs")
-    }
 }
 
 mavenPublishing {
