@@ -19,7 +19,7 @@ public class ChatCompletionChunk(
     public val choices: List<ChatChoiceChunk>,
     public val created: Long,
     public val model: String,
-    public val systemFingerprint: String,
+    public val systemFingerprint: String? = null,
     public val `object`: String,
     public val usage: Usage? = null,
 ) {
@@ -41,7 +41,7 @@ public class ChatCompletionChunk(
         result = 31 * result + id.hashCode()
         result = 31 * result + choices.hashCode()
         result = 31 * result + model.hashCode()
-        result = 31 * result + systemFingerprint.hashCode()
+        result = 31 * result + (systemFingerprint?.hashCode() ?: 0)
         result = 31 * result + `object`.hashCode()
         result = 31 * result + (usage?.hashCode() ?: 0)
         return result
