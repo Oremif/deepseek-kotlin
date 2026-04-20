@@ -5,9 +5,12 @@ import kotlinx.serialization.Serializable
 
 /**
  * @property completionTokens Number of tokens in the generated completion.
- * @property promptTokens Number of tokens in the prompt. It equals [promptCacheHitTokens] + [promptCacheMissTokens].
+ * @property promptTokens Number of tokens in the prompt. When context caching applies,
+ * this equals [promptCacheHitTokens] + [promptCacheMissTokens].
  * @property promptCacheHitTokens Number of tokens in the prompt that hits the context cache.
+ * May be `null` for models or requests where context caching does not apply.
  * @property promptCacheMissTokens Number of tokens in the prompt that misses the context cache.
+ * May be `null` for models or requests where context caching does not apply.
  * @property totalTokens Total number of tokens used in the request (prompt + completion).
  * @property completionTokensDetails Breakdown of tokens used in a completion.
  */
