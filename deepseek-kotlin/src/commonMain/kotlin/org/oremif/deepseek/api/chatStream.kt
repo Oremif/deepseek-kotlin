@@ -25,7 +25,7 @@ import org.oremif.deepseek.models.*
  * ```kotlin
  * val request = ChatCompletionRequest(
  *     model = "deepseek-chat",
- *     messages = listOf(UseMessage("Write a story")),
+ *     messages = listOf(UserMessage("Write a story")),
  *     stream = true
  * )
  *
