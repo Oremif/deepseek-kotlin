@@ -5,11 +5,8 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldNotBeInstanceOf
-import io.ktor.client.engine.mock.respond
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
+import io.ktor.client.engine.mock.*
+import io.ktor.http.*
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.oremif.deepseek.errors.DeepSeekException

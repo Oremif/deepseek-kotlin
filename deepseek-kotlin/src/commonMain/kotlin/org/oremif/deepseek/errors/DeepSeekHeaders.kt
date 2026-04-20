@@ -1,6 +1,6 @@
 package org.oremif.deepseek.errors
 
-import io.ktor.http.Headers
+import io.ktor.http.*
 
 /**
  * Immutable, Ktor-free snapshot of HTTP response headers attached to a [DeepSeekException].

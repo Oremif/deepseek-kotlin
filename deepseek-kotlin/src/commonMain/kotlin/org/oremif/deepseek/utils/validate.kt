@@ -1,8 +1,8 @@
 package org.oremif.deepseek.utils
 
-import io.ktor.client.call.body
-import io.ktor.client.statement.HttpResponse
-import io.ktor.http.isSuccess
+import io.ktor.client.call.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import org.oremif.deepseek.errors.DeepSeekError
 import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.errors.toDeepSeekHeaders

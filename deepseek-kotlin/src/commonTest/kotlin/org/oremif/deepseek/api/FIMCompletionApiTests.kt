@@ -6,13 +6,8 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldEndWith
-import io.ktor.client.engine.mock.respond
-import io.ktor.client.engine.mock.toByteArray
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.headersOf
+import io.ktor.client.engine.mock.*
+import io.ktor.http.*
 import kotlinx.coroutines.test.runTest
 import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.models.FinishReason

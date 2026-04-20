@@ -13,5 +13,5 @@ import kotlinx.serialization.Serializable
 public enum class ToolCallType {
     /** A function tool described by [FunctionRequest]. Serializes to the string `function`. */
     @SerialName("function")
-   FUNCTION,
+    FUNCTION,
 }

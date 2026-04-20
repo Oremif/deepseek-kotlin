@@ -37,7 +37,7 @@ import org.oremif.deepseek.models.FIMCompletionRequest
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletionRequest): Flow<FIMCompletion> {
+public fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletionRequest): Flow<FIMCompletion> {
     return flow {
         try {
             client.sse(
@@ -97,11 +97,12 @@ public suspend fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletion
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientStream.fim(
+public fun DeepSeekClientStream.fim(
     params: FIMCompletionParams,
     prompt: String
 ): Flow<FIMCompletion> {
-    val request = (if (params.stream == null || !params.stream) params.copy(stream = true) else params).createRequest(prompt)
+    val request =
+        (if (params.stream == null || !params.stream) params.copy(stream = true) else params).createRequest(prompt)
     return fimCompletionStream(request)
 }
 
@@ -123,7 +124,7 @@ public suspend fun DeepSeekClientStream.fim(
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> =
+public fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> =
     fim(FIMCompletionParams(stream = true), prompt)
 
 /**
@@ -151,7 +152,7 @@ public suspend fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion>
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientStream.fimCompletion(
+public fun DeepSeekClientStream.fimCompletion(
     block: FIMCompletionRequest.StreamBuilder.() -> Unit
 ): Flow<FIMCompletion> {
     val request = FIMCompletionRequest.StreamBuilder().apply(block).build()

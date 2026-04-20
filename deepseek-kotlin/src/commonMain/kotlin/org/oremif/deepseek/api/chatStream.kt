@@ -36,7 +36,7 @@ import org.oremif.deepseek.models.*
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientBase.chatCompletionStream(request: ChatCompletionRequest): Flow<ChatCompletionChunk> {
+public fun DeepSeekClientBase.chatCompletionStream(request: ChatCompletionRequest): Flow<ChatCompletionChunk> {
     return flow {
         try {
             client.sse(
@@ -100,11 +100,12 @@ public suspend fun DeepSeekClientBase.chatCompletionStream(request: ChatCompleti
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientStream.chat(
+public fun DeepSeekClientStream.chat(
     params: ChatCompletionParams,
     messages: List<ChatMessage>
 ): Flow<ChatCompletionChunk> {
-    val request = (if (params.stream == null || !params.stream) params.copy(stream = true) else params).createRequest(messages)
+    val request =
+        (if (params.stream == null || !params.stream) params.copy(stream = true) else params).createRequest(messages)
     return chatCompletionStream(request)
 }
 
@@ -131,7 +132,7 @@ public suspend fun DeepSeekClientStream.chat(
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<ChatCompletionChunk> =
+public fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<ChatCompletionChunk> =
     chat(ChatCompletionParams(ChatModel.DEEPSEEK_CHAT, stream = true), messages)
 
 /**
@@ -152,7 +153,7 @@ public suspend fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientStream.chat(message: String): Flow<ChatCompletionChunk> =
+public fun DeepSeekClientStream.chat(message: String): Flow<ChatCompletionChunk> =
     chat(listOf(UserMessage(content = message)))
 
 /**
@@ -182,7 +183,7 @@ public suspend fun DeepSeekClientStream.chat(message: String): Flow<ChatCompleti
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientStream.chat(
+public fun DeepSeekClientStream.chat(
     params: ChatCompletionParams,
     blockMessage: ChatCompletionRequest.MessageBuilder.() -> Unit,
 ): Flow<ChatCompletionChunk> =
@@ -209,7 +210,7 @@ public suspend fun DeepSeekClientStream.chat(
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientStream.chat(
+public fun DeepSeekClientStream.chat(
     blockMessage: ChatCompletionRequest.MessageBuilder.() -> Unit
 ): Flow<ChatCompletionChunk> =
     chat(ChatCompletionRequest.MessageBuilder().apply(blockMessage).build())
@@ -242,7 +243,7 @@ public suspend fun DeepSeekClientStream.chat(
  * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
  * non-2xx status
  */
-public suspend fun DeepSeekClientStream.chatCompletion(
+public fun DeepSeekClientStream.chatCompletion(
     block: ChatCompletionRequest.StreamBuilder.() -> Unit
 ): Flow<ChatCompletionChunk> {
     val request = ChatCompletionRequest.StreamBuilder().apply(block).build()
