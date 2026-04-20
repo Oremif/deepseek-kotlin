@@ -123,6 +123,7 @@ public class ChatCompletionParams internal constructor(
             maxTokens?.let { require(it in 1..8192) { "maxTokens must be between 1 and 8192" } }
             presencePenalty?.let { require(it in -2.0..2.0) { "presencePenalty must be between -2.0 and 2.0" } }
             temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
+            topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             topLogprobs?.let { require(it <= 20) { "topLogprobs must be <= 20" } }
 
             return ChatCompletionParams(
@@ -166,6 +167,7 @@ public class ChatCompletionParams internal constructor(
             maxTokens?.let { require(it in 1..8192) { "maxTokens must be between 1 and 8192" } }
             presencePenalty?.let { require(it in -2.0..2.0) { "presencePenalty must be between -2.0 and 2.0" } }
             temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
+            topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             topLogprobs?.let { require(it <= 20) { "topLogprobs must be <= 20" } }
 
             return ChatCompletionParams(
