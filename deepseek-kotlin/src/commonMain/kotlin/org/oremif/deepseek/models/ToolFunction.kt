@@ -7,11 +7,29 @@ import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 
+/**
+ * A function referenced by a tool.
+ *
+ * Has two concrete forms: [FunctionRequest] — the signature the model may call, sent in
+ * the request — and [FunctionResponse] — the call the model actually emitted, received in
+ * the response. The [ToolFunctionSerializer] picks the right form at deserialization
+ * based on the presence of `parameters` vs. `arguments`.
+ *
+ * @property name Function name, shared by both variants.
+ */
 @Serializable(with = ToolFunctionSerializer::class)
 public sealed interface ToolFunction {
     public val name: String
 }
 
+/**
+ * Function signature declared in a chat completion request.
+ *
+ * @property name Function name the model can call.
+ * @property description Natural-language description of what the function does; helps the
+ * model decide when to call it.
+ * @property parameters JSON-Schema description of the arguments the function accepts.
+ */
 @Serializable
 public class FunctionRequest(
     override val name: String,
@@ -35,6 +53,13 @@ public class FunctionRequest(
         "FunctionRequest(name='$name', description=$description, parameters=$parameters)"
 }
 
+/**
+ * Function invocation emitted by the model inside a [ToolCall].
+ *
+ * @property name Name of the function the model asked to call.
+ * @property arguments JSON-encoded arguments produced by the model, matching the schema
+ * declared in the corresponding [FunctionRequest.parameters].
+ */
 @Serializable
 public class FunctionResponse(
     override val name: String,

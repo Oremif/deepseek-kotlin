@@ -3,32 +3,29 @@ package org.oremif.deepseek.api
 import io.ktor.client.call.*
 import io.ktor.client.request.*
 import org.oremif.deepseek.client.DeepSeekClientBase
+import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.models.UserBalance
 import org.oremif.deepseek.utils.validateResponse
 
 /**
- * Retrieves the current user's available API credits and usage information.
+ * Retrieves the current user's available API balance.
  *
- * This function checks your account balance, including remaining credits, usage statistics,
- * and any applicable limits on your account.
+ * Returns a snapshot of whether the account has sufficient funds for further API calls
+ * and a per-currency breakdown (granted vs. topped-up balance).
  *
  * Example:
  * ```kotlin
- * // Check available balance
  * val balance = client.userBalance()
- *
- * // Display balance information
- * println("Total credits: ${balance.totalCredits}")
- * println("Used credits: ${balance.usedCredits}")
- * println("Remaining: ${balance.remainingCredits}")
- *
- * // Check if credits are running low
- * if (balance.remainingCredits < 1000) {
- *     println("Warning: Credits running low!")
+ * if (!balance.isAvailable) {
+ *     println("Top up at https://platform.deepseek.com/top_up")
+ * }
+ * balance.balanceInfos.forEach { info ->
+ *     println("${info.currency}: total=${info.totalBalance}, granted=${info.grantedBalance}")
  * }
  * ```
  *
- * @return A [UserBalance] object containing information about the user's account balance
+ * @return A [UserBalance] object describing the user's account balance
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClientBase.userBalance(): UserBalance {
     val response = client.get("user/balance")

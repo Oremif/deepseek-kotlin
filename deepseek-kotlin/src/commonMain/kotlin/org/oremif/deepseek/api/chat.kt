@@ -5,6 +5,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import org.oremif.deepseek.client.DeepSeekClient
 import org.oremif.deepseek.client.DeepSeekClientBase
+import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.models.*
 import org.oremif.deepseek.utils.validateResponse
 
@@ -16,15 +17,14 @@ import org.oremif.deepseek.utils.validateResponse
  *
  * Example:
  * ```kotlin
- * val request = ChatCompletionRequest(
- *     model = "deepseek-chat",
- *     messages = listOf(UserMessage("Hello!"))
- * )
+ * val request = chatCompletionParams { model = ChatModel.DEEPSEEK_CHAT }
+ *     .createRequest(listOf(UserMessage("Hello!")))
  * val response = client.chatCompletion(request)
  * ```
  *
  * @param request The fully configured request object containing all parameters for the API call
  * @return A [ChatCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClientBase.chatCompletion(request: ChatCompletionRequest): ChatCompletion {
     val response = client.post("chat/completions") {
@@ -65,6 +65,7 @@ public suspend fun DeepSeekClientBase.chatCompletion(request: ChatCompletionRequ
  * @param params Configuration parameters that control the model's behavior
  * @param messages The conversation history as a list of messages
  * @return A [ChatCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.chat(params: ChatCompletionParams, messages: List<ChatMessage>): ChatCompletion {
     val request = (if (params.stream == true) params.copy(stream = false) else params).createRequest(messages)
@@ -88,6 +89,7 @@ public suspend fun DeepSeekClient.chat(params: ChatCompletionParams, messages: L
  *
  * @param messages The conversation history as a list of messages
  * @return A [ChatCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.chat(messages: List<ChatMessage>): ChatCompletion =
     chat(ChatCompletionParams(ChatModel.DEEPSEEK_CHAT), messages)
@@ -106,6 +108,7 @@ public suspend fun DeepSeekClient.chat(messages: List<ChatMessage>): ChatComplet
  *
  * @param message The message text to send to the model
  * @return A [ChatCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.chat(message: String): ChatCompletion =
     chat(listOf(UserMessage(content = message)))
@@ -132,6 +135,7 @@ public suspend fun DeepSeekClient.chat(message: String): ChatCompletion =
  * @param params Configuration parameters that control the model's behavior
  * @param blockMessage A builder block for constructing the conversation
  * @return A [ChatCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.chat(
     params: ChatCompletionParams,
@@ -156,6 +160,7 @@ public suspend fun DeepSeekClient.chat(
  *
  * @param blockMessage A builder block for constructing the conversation
  * @return A [ChatCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.chat(blockMessage: ChatCompletionRequest.MessageBuilder.() -> Unit): ChatCompletion =
     chat(ChatCompletionRequest.MessageBuilder().apply(blockMessage).build())
@@ -169,19 +174,22 @@ public suspend fun DeepSeekClient.chat(blockMessage: ChatCompletionRequest.Messa
  * Example:
  * ```kotlin
  * val response = client.chatCompletion {
- *     model = "deepseek-chat"
+ *     params {
+ *         model = ChatModel.DEEPSEEK_CHAT
+ *         temperature = 0.7
+ *         maxTokens = 2000
+ *         frequencyPenalty = 0.5
+ *     }
  *     messages {
  *         system("You are a Kotlin expert")
  *         user("How do I use flow in Kotlin?")
  *     }
- *     temperature = 0.7
- *     maxTokens = 2000
- *     frequencyPenalty = 0.5
  * }
  * ```
  *
  * @param block A builder block for constructing the complete request
  * @return A [ChatCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.chatCompletion(block: ChatCompletionRequest.Builder.() -> Unit): ChatCompletion {
     val request = ChatCompletionRequest.Builder().apply(block).build()

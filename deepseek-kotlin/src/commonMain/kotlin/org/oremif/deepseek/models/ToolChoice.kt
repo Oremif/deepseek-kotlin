@@ -8,21 +8,47 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonObject
 
+/**
+ * Controls how the model picks a tool to call.
+ *
+ * Implementations:
+ * - [ChatCompletionToolChoice] — coarse strategies (`none`, `auto`, `required`).
+ * - [ChatCompletionNamedToolChoice] — pin the model to a specific tool by name.
+ *
+ * When omitted, the DeepSeek API defaults to `auto` if tools are provided and `none`
+ * otherwise.
+ */
 @Serializable(with = ToolChoiceSerializer::class)
 public sealed interface ToolChoice
 
+/**
+ * Coarse tool-selection strategy.
+ */
 @Serializable
 public enum class ChatCompletionToolChoice : ToolChoice {
+    /** The model must not call any tool and must instead produce a message. */
     @SerialName("none")
     NONE,
 
+    /** The model decides whether to produce a message or call tools. This is the default when tools are provided. */
     @SerialName("auto")
     AUTO,
 
+    /** The model must call one or more of the provided tools. */
     @SerialName("required")
     REQUIRED
 }
 
+/**
+ * Forces the model to call a specific tool.
+ *
+ * Construct via the JSON the DeepSeek API expects, e.g.
+ * `{"type": "function", "function": {"name": "my_function"}}`.
+ *
+ * @property type Tool type discriminator; currently always [ToolCallType.FUNCTION].
+ * @property function Reference to the tool that must be called; only the `name` field is
+ * consumed by the API.
+ */
 @Serializable
 public class ChatCompletionNamedToolChoice internal constructor(
     public val type: ToolCallType,

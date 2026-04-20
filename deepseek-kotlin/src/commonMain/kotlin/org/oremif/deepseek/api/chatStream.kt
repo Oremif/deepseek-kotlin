@@ -23,11 +23,8 @@ import org.oremif.deepseek.models.*
  *
  * Example:
  * ```kotlin
- * val request = ChatCompletionRequest(
- *     model = "deepseek-chat",
- *     messages = listOf(UserMessage("Write a story")),
- *     stream = true
- * )
+ * val request = chatCompletionStreamParams { model = ChatModel.DEEPSEEK_CHAT }
+ *     .createRequest(listOf(UserMessage("Write a story")))
  *
  * client.chatCompletionStream(request).collect { chunk ->
  *     print(chunk.choices.firstOrNull()?.delta?.content ?: "")
@@ -36,6 +33,8 @@ import org.oremif.deepseek.models.*
  *
  * @param request The chat completion request with streaming enabled
  * @return A [Flow] of [ChatCompletionChunk] objects representing incremental updates
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
 public suspend fun DeepSeekClientBase.chatCompletionStream(request: ChatCompletionRequest): Flow<ChatCompletionChunk> {
     return flow {
@@ -98,6 +97,8 @@ public suspend fun DeepSeekClientBase.chatCompletionStream(request: ChatCompleti
  * @param params Parameters controlling the model's behavior
  * @param messages The conversation history as a list of messages
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
 public suspend fun DeepSeekClientStream.chat(
     params: ChatCompletionParams,
@@ -127,6 +128,8 @@ public suspend fun DeepSeekClientStream.chat(
  *
  * @param messages The conversation history as a list of messages
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
 public suspend fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<ChatCompletionChunk> =
     chat(ChatCompletionParams(ChatModel.DEEPSEEK_CHAT, stream = true), messages)
@@ -146,6 +149,8 @@ public suspend fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<
  *
  * @param message The message text to send to the model
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
 public suspend fun DeepSeekClientStream.chat(message: String): Flow<ChatCompletionChunk> =
     chat(listOf(UserMessage(content = message)))
@@ -174,6 +179,8 @@ public suspend fun DeepSeekClientStream.chat(message: String): Flow<ChatCompleti
  * @param params Parameters controlling the model's behavior
  * @param blockMessage A builder block for constructing the conversation
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
 public suspend fun DeepSeekClientStream.chat(
     params: ChatCompletionParams,
@@ -199,6 +206,8 @@ public suspend fun DeepSeekClientStream.chat(
  *
  * @param blockMessage A builder block for constructing the conversation
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
 public suspend fun DeepSeekClientStream.chat(
     blockMessage: ChatCompletionRequest.MessageBuilder.() -> Unit
@@ -214,13 +223,15 @@ public suspend fun DeepSeekClientStream.chat(
  * Example:
  * ```kotlin
  * client.chatCompletion {
- *     model = "deepseek-chat"
+ *     params {
+ *         model = ChatModel.DEEPSEEK_CHAT
+ *         temperature = 0.7
+ *         maxTokens = 2000
+ *     }
  *     messages {
  *         system("You are an expert programmer")
  *         user("Show me how to implement a binary search tree in Kotlin")
  *     }
- *     temperature = 0.7
- *     maxTokens = 2000
  * }.collect { chunk ->
  *     print(chunk.choices.firstOrNull()?.delta?.content ?: "")
  * }
@@ -228,6 +239,8 @@ public suspend fun DeepSeekClientStream.chat(
  *
  * @param block A builder block for constructing the complete streaming request
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
 public suspend fun DeepSeekClientStream.chatCompletion(
     block: ChatCompletionRequest.StreamBuilder.() -> Unit

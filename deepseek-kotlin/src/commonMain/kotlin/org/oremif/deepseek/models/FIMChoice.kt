@@ -3,16 +3,18 @@ package org.oremif.deepseek.models
 import kotlinx.serialization.Serializable
 
 /**
- * @property finishReason The reason the model stopped generating tokens.
- * This will be `stop` if the model hit a natural stop point or a provided stop sequence,
- * `length` if the maximum number of tokens specified in the request was reached,
- * `content_filter` if content was omitted due to a flag from our content filters,
- * or `insufficient_system_resource` if the request is interrupted due to insufficient resource of the inference system.
+ * One completion alternative returned inside a [FIMCompletion].
  *
- * **Possible values: {`stop`, `length`, `content_filter`, `insufficient_system_resource`}**
- * @property index
- * @property logprobs
- * @property text
+ * For streamed FIM responses each emitted [FIMCompletion] typically carries a single
+ * [FIMChoice] whose [text] contains only the tokens produced since the previous chunk.
+ *
+ * @property text Generated text for this choice. In streaming mode this contains only
+ * the incremental tokens for the current chunk.
+ * @property index Position of the choice in [FIMCompletion.choices].
+ * @property finishReason Reason the model stopped generating tokens, or `null` while the
+ * stream is still in progress.
+ * @property logprobs Log-probability information for the generated tokens, if requested
+ * via the `logprobs` parameter.
  */
 @Serializable
 public class FIMChoice(

@@ -24,7 +24,14 @@ import io.ktor.client.plugins.logging.Logger
  * @property logger Destination for log lines. Defaults to [Logger.DEFAULT].
  */
 public class LoggingConfig internal constructor() {
+    /**
+     * Log level controlling what is logged. Defaults to [LogLevel.HEADERS].
+     */
     public var level: LogLevel = LogLevel.HEADERS
+
+    /**
+     * Destination for log lines. Defaults to [Logger.DEFAULT].
+     */
     public var logger: Logger = Logger.DEFAULT
 
     internal val sanitizers: MutableList<(String) -> Boolean> = mutableListOf()
@@ -35,6 +42,15 @@ public class LoggingConfig internal constructor() {
      * Can be called multiple times to register several predicates — a header is redacted if
      * any predicate returns `true`. The `Authorization` header is always redacted regardless
      * of the configured predicates.
+     *
+     * Example:
+     * ```kotlin
+     * logging {
+     *     level = LogLevel.BODY
+     *     sanitizeHeader { it.equals("Cookie", ignoreCase = true) }
+     *     sanitizeHeader { it.startsWith("X-Secret-", ignoreCase = true) }
+     * }
+     * ```
      *
      * @param predicate Returns `true` to redact the header with the given name
      */

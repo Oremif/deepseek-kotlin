@@ -10,6 +10,16 @@ import io.ktor.http.Headers
  *
  * Lookups are case-insensitive, matching RFC 7230 semantics. The order of [names] reflects
  * the insertion order of the backing map.
+ *
+ * Example:
+ * ```kotlin
+ * try {
+ *     client.chat("hello")
+ * } catch (e: DeepSeekException.RateLimitException) {
+ *     val retryAfterSeconds = e.headers["Retry-After"]?.toLongOrNull()
+ *     // honor retryAfterSeconds before retrying
+ * }
+ * ```
  */
 public class DeepSeekHeaders(
     private val entries: Map<String, List<String>>,

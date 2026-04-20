@@ -3,15 +3,20 @@ package org.oremif.deepseek.models
 import kotlinx.serialization.Serializable
 
 /**
- * @property id A unique identifier for the chat completion. Each chunk has the same ID.
- * @property choices A list of chat completion choices.
- * @property created The Unix timestamp (in seconds) of when the chat completion was created.
- * Each chunk has the same timestamp.
- * @property model The model to generate the completion.
- * @property systemFingerprint This fingerprint represents the backend configuration that the model runs with.
- * @property object The object type, which is always `chat.completion.chunk`.
+ * One chunk of a streamed chat completion response.
  *
- * **Possible values: {`chat.completion.chunk`}**
+ * Streaming chat endpoints emit a [kotlinx.coroutines.flow.Flow] of these chunks; all
+ * chunks from the same response share [id] and [created]. Clients typically concatenate
+ * [ChatCompletionDelta.content] across chunks to reconstruct the full assistant message.
+ *
+ * @property id Unique identifier shared by every chunk of a single response.
+ * @property choices List of incremental choice updates produced on this step.
+ * @property created Unix timestamp (seconds) of the response; identical across chunks.
+ * @property model Model that produced the response.
+ * @property systemFingerprint Backend configuration fingerprint, if the API returned one.
+ * @property object Object type discriminator; always `chat.completion.chunk`.
+ * @property usage Token usage statistics. Only populated on the final usage chunk when
+ * `streamOptions.includeUsage` is set; `null` on regular content chunks.
  */
 @Serializable
 public class ChatCompletionChunk(

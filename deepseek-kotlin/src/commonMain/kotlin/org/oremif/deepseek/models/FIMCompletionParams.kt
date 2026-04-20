@@ -40,7 +40,7 @@ public fun fimCompletionParams(block: FIMCompletionParams.Builder.() -> Unit): F
  *     suffix = "}"
  * }
  *
- * client.fimStream("function calculate() {", streamParams).collect { chunk ->
+ * streamClient.fim(streamParams, "function calculate() {").collect { chunk ->
  *     print(chunk.choices.firstOrNull()?.text ?: "")
  * }
  * ```
@@ -66,7 +66,7 @@ public fun fimCompletionStreamParams(block: FIMCompletionParams.StreamBuilder.()
  *     suffix = "}"  // The code should end with a closing bracket
  * }
  *
- * val completion = client.fim("function calculateArea(radius) {", params)
+ * val completion = client.fim(params, "function calculateArea(radius) {")
  * println(completion.choices.first().text)
  * ```
  *

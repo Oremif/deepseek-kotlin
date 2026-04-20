@@ -13,7 +13,7 @@ package org.oremif.deepseek.models
  *     temperature = 0.8
  *     maxTokens = 500
  *     presencePenalty = 0.3
- *     responseFormat = ResponseFormat.JsonObject
+ *     responseFormat = ResponseFormat.jsonObject
  * }
  * ```
  *

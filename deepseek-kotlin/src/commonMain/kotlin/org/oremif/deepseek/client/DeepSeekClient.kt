@@ -120,6 +120,22 @@ public abstract class DeepSeekClientBase(
         private var httpClientOverride: HttpClient? = null
         private var loggingConfig: LoggingConfig? = null
 
+        /**
+         * Overrides the base URL of the DeepSeek API.
+         *
+         * Defaults to `https://api.deepseek.com`. Supply a different URL to target a proxy,
+         * a mock server, or a region-specific endpoint.
+         *
+         * Example:
+         * ```kotlin
+         * val client = DeepSeekClient("token") {
+         *     baseUrl("https://proxy.internal/deepseek")
+         * }
+         * ```
+         *
+         * @param url Fully-qualified base URL used by every request
+         * @return This builder for chaining
+         */
         public fun baseUrl(url: String): Builder {
             deepSeekBaseUrl = url
             return this
@@ -360,26 +376,36 @@ public abstract class DeepSeekClientBase(
 }
 
 /**
- * Client for interacting with the DeepSeek API.
+ * Client for unary (non-streaming) interactions with the DeepSeek API.
  *
- * This client provides methods for all DeepSeek API endpoints, including
- * chat completions, embeddings, and other AI capabilities.
+ * Use the [DeepSeekClient] top-level function to create instances. The client exposes
+ * chat completion, Fill-In-the-Middle completion, user balance, and model listing
+ * endpoints as extension functions declared in the `org.oremif.deepseek.api` package.
+ *
+ * The client is designed to be long-lived — create one instance and reuse it. Calling
+ * [close] is usually unnecessary.
+ *
+ * Example:
+ * ```kotlin
+ * val client = DeepSeekClient(System.getenv("DEEPSEEK_API_KEY"))
+ * val response = client.chat("Hello!")
+ * println(response.choices.first().message.content)
+ * ```
  */
 public class DeepSeekClient internal constructor(
     client: HttpClient, config: DeepSeekClientConfig
 ) : DeepSeekClientBase(client, config) {
 
     /**
-     * Builder for configuring and creating DeepSeekClient instances.
+     * Builder for configuring and creating [DeepSeekClient] instances.
      *
-     * @param token The DeepSeek API token for authentication
+     * Prefer the [DeepSeekClient] top-level function, which creates this builder, applies
+     * the configuration block, and calls [build] for you.
+     *
+     * @param token The DeepSeek API token for authentication; `null` skips the `Auth` plugin
+     * setup and is typically only useful when [httpClient] replaces the underlying client
      */
     public class Builder(token: String? = null) : DeepSeekClientBase.Builder(token) {
-        /**
-         * Builds and returns a new DeepSeekClient instance with the configured settings.
-         *
-         * @return A new DeepSeekClient instance
-         */
         internal fun build(): DeepSeekClient {
             return DeepSeekClient(
                 client = buildHttpClient(),
@@ -397,31 +423,37 @@ public class DeepSeekClient internal constructor(
 /**
  * Client for streaming interactions with the DeepSeek API.
  *
- * This client specializes in handling streaming responses for real-time
- * processing of DeepSeek API outputs, particularly useful for chat completions.
+ * Use the [DeepSeekClientStream] top-level function to create instances. The client layers
+ * the Ktor `SSE` plugin on top of the default HTTP client configuration and exposes
+ * streaming chat and FIM endpoints as extension functions that return a [kotlinx.coroutines.flow.Flow]
+ * of response chunks.
+ *
+ * Example:
+ * ```kotlin
+ * val client = DeepSeekClientStream(System.getenv("DEEPSEEK_API_KEY"))
+ * client.chat("Write a haiku").collect { chunk ->
+ *     print(chunk.choices.firstOrNull()?.delta?.content ?: "")
+ * }
+ * ```
  */
 public class DeepSeekClientStream internal constructor(
     client: HttpClient, config: DeepSeekClientConfig
 ) : DeepSeekClientBase(client, config) {
 
     /**
-     * Builder for configuring and creating DeepSeekClientStream instances.
+     * Builder for configuring and creating [DeepSeekClientStream] instances.
      *
-     * @param token The DeepSeek API token for authentication
+     * Prefer the [DeepSeekClientStream] top-level function, which creates this builder,
+     * applies the configuration block, and calls [build] for you.
+     *
+     * @param token The DeepSeek API token for authentication; `null` skips the `Auth` plugin
+     * setup and is typically only useful when [httpClient] replaces the underlying client
      */
     public class Builder(token: String? = null) : DeepSeekClientBase.Builder(token) {
-        /**
-         * Layers [SSE] on top of the base default client so streaming endpoints can be used.
-         */
         override fun defaultHttpClient(): HttpClient = super.defaultHttpClient().config {
             install(SSE)
         }
 
-        /**
-         * Builds and returns a new DeepSeekClientStream instance with the configured settings.
-         *
-         * @return A new DeepSeekClientStream instance
-         */
         internal fun build(): DeepSeekClientStream {
             return DeepSeekClientStream(
                 client = buildHttpClient(),

@@ -2,6 +2,13 @@ package org.oremif.deepseek.models
 
 import kotlinx.serialization.Serializable
 
+/**
+ * Response payload of [org.oremif.deepseek.api.models] — a list of DeepSeek models
+ * available to the current API key.
+ *
+ * @property object Object type discriminator; always `list`.
+ * @property data Available [ModelInfo] entries.
+ */
 @Serializable
 public class ListsModels(
     public val `object`: String,

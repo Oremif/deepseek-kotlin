@@ -98,16 +98,35 @@ public class ChatCompletionRequest(
     public val topLogprobs: Int? = null,
 ) {
 
+    /**
+     * Builder for non-streaming chat completion requests.
+     *
+     * Used by `DeepSeekClient.chatCompletion { ... }`; compose [messages] and [params]
+     * inside the block.
+     */
     public class Builder {
         private var messages = mutableListOf<ChatMessage>()
         private var params: ChatCompletionParams = ChatCompletionParams(
             model = ChatModel.DEEPSEEK_CHAT,
         )
 
+        /**
+         * Builds the conversation history via a [MessageBuilder] DSL.
+         *
+         * @param block Builder block that appends messages using [MessageBuilder.system],
+         * [MessageBuilder.user], etc.
+         */
         public fun messages(block: MessageBuilder.() -> Unit) {
             messages.addAll(MessageBuilder().apply(block).build())
         }
 
+        /**
+         * Configures request parameters (model, temperature, tools, etc.).
+         *
+         * Replaces any previously-configured parameters.
+         *
+         * @param block Builder block applied to a fresh [ChatCompletionParams.Builder]
+         */
         public fun params(block: ChatCompletionParams.Builder.() -> Unit) {
             params = ChatCompletionParams.Builder().apply(block).build()
         }
@@ -116,16 +135,35 @@ public class ChatCompletionRequest(
             params.createRequest(messages)
     }
 
+    /**
+     * Builder for streaming chat completion requests.
+     *
+     * Used by `DeepSeekClientStream.chatCompletion { ... }`; compose [messages] and
+     * [params] inside the block. The resulting request has `stream = true`.
+     */
     public class StreamBuilder {
         private var messages = mutableListOf<ChatMessage>()
         private var params: ChatCompletionParams = ChatCompletionParams(
             model = ChatModel.DEEPSEEK_CHAT,
         )
 
+        /**
+         * Builds the conversation history via a [MessageBuilder] DSL.
+         *
+         * @param block Builder block that appends messages using [MessageBuilder.system],
+         * [MessageBuilder.user], etc.
+         */
         public fun messages(block: MessageBuilder.() -> Unit) {
             messages.addAll(MessageBuilder().apply(block).build())
         }
 
+        /**
+         * Configures streaming request parameters.
+         *
+         * Replaces any previously-configured parameters.
+         *
+         * @param block Builder block applied to a fresh [ChatCompletionParams.StreamBuilder]
+         */
         public fun params(block: ChatCompletionParams.StreamBuilder.() -> Unit) {
             params = ChatCompletionParams.StreamBuilder().apply(block).build()
         }
@@ -134,21 +172,56 @@ public class ChatCompletionRequest(
             params.createRequest(messages)
     }
 
+    /**
+     * DSL for building a conversation history.
+     *
+     * Appends messages to an internal list in call order. Each helper adds the matching
+     * concrete [ChatMessage] subtype.
+     *
+     * Example:
+     * ```kotlin
+     * client.chat {
+     *     system("You are a Kotlin expert")
+     *     user("What are coroutines?")
+     * }
+     * ```
+     */
     public class MessageBuilder {
         private val messages = mutableListOf<ChatMessage>()
 
+        /**
+         * Appends a [SystemMessage] with the given [content].
+         *
+         * @param content System instructions for the assistant
+         */
         public fun system(content: String) {
             messages.add(SystemMessage(content))
         }
 
+        /**
+         * Appends a [UserMessage] with the given [content].
+         *
+         * @param content User's text input
+         */
         public fun user(content: String) {
             messages.add(UserMessage(content))
         }
 
+        /**
+         * Appends an [AssistantMessage] with the given [content].
+         *
+         * @param content Assistant text to replay as context
+         */
         public fun assistant(content: String) {
             messages.add(AssistantMessage(content))
         }
 
+        /**
+         * Appends a [ToolMessage] carrying the result of executing a prior [ToolCall].
+         *
+         * @param content Tool execution result (typically JSON-encoded)
+         * @param toolCallId Identifier of the [ToolCall] this message responds to
+         */
         public fun tool(content: String, toolCallId: String) {
             messages.add(ToolMessage(content, toolCallId))
         }
