@@ -18,11 +18,8 @@ import org.oremif.deepseek.utils.validateResponse
  *
  * Example:
  * ```kotlin
- * val request = FIMCompletionRequest(
- *     model = "deepseek-chat",
- *     prompt = "def calculate_area(radius):",
- *     suffix = "# End of function"
- * )
+ * val params = fimCompletionParams { suffix = "# End of function" }
+ * val request = params.createRequest("def calculate_area(radius):")
  * val completion = client.fimCompletion(request)
  * println(completion.choices.first().text)
  * ```

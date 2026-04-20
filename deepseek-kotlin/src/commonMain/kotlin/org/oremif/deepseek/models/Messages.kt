@@ -15,6 +15,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonClassDiscriminator
 import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -54,7 +55,7 @@ public class UserMessage(override val content: String?, public val name: String?
     }
 
     override fun hashCode(): Int {
-        var result = content.hashCode()
+        var result = content?.hashCode() ?: 0
         result = 31 * result + (name?.hashCode() ?: 0)
         return result
     }
@@ -141,7 +142,7 @@ public object ChatCompletionMessageSerializer : KSerializer<ChatCompletionMessag
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("ChatCompletionMessage") {
         element<String?>("content")
         element<String?>("reasoning_content")
-        element("tool_calls", ListSerializer(ToolCall.serializer()).descriptor)
+        element<List<ToolCall>?>("tool_calls")
         element("role", String.serializer().descriptor)
     }
 
@@ -152,12 +153,12 @@ public object ChatCompletionMessageSerializer : KSerializer<ChatCompletionMessag
         return ChatCompletionMessage(
             content = json["content"]?.jsonPrimitive?.content,
             reasoningContent = json["reasoning_content"]?.jsonPrimitive?.content,
-            toolCalls = json["tool_calls"]?.let {
+            toolCalls = json["tool_calls"]?.takeIf { it !is JsonNull }?.let {
                 jsonInput.json.decodeFromJsonElement(
                     ListSerializer(ToolCall.serializer()),
                     it
                 )
-            } ?: listOf()
+            }
         )
     }
 
@@ -167,10 +168,10 @@ public object ChatCompletionMessageSerializer : KSerializer<ChatCompletionMessag
             descriptor, 0, String.serializer(), value.content
         )
         value.reasoningContent?.let {
-            composite.encodeSerializableElement(descriptor, 1, String.serializer(), it)
+            composite.encodeNullableSerializableElement(descriptor, 1, String.serializer(), it)
         }
         value.toolCalls?.let {
-            composite.encodeSerializableElement(
+            composite.encodeNullableSerializableElement(
                 descriptor, 2, ListSerializer(ToolCall.serializer()), it
             )
         }

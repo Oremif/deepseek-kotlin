@@ -9,8 +9,6 @@ import kotlinx.serialization.Serializable
  *
  * **Possible values: {`deepseek-chat`}**
  * @property prompt The prompt to generate completions for.
- *
- * **Default value: `Once upon a time, `**
  * @property echo Echo back the prompt in addition to the completion
  * @property frequencyPenalty  Number between -2.0 and 2.0.
  * Positive values penalize new tokens based on their existing frequency in the text so far,
@@ -61,7 +59,7 @@ import kotlinx.serialization.Serializable
  * **Default value: `1`.**
  */
 @Serializable
-public class FIMCompletionRequest(
+public class FIMCompletionRequest internal constructor(
     public val model: ChatModel,
     public val prompt: String,
     public val echo: Boolean? = null,
@@ -89,8 +87,10 @@ public class FIMCompletionRequest(
             params = FIMCompletionParams.Builder().apply(block).build()
         }
 
-        internal fun build(): FIMCompletionRequest =
-            params.createRequest(prompt ?: "Once upon a time, ")
+        internal fun build(): FIMCompletionRequest {
+            val prompt = requireNotNull(prompt) { "prompt(...) must be called" }
+            return params.createRequest(prompt)
+        }
     }
 
     public class StreamBuilder {
@@ -105,30 +105,10 @@ public class FIMCompletionRequest(
             params = FIMCompletionParams.StreamBuilder().apply(block).build()
         }
 
-        internal fun build(): FIMCompletionRequest =
-            params.createRequest(prompt ?: "Once upon a time, ")
-    }
-
-    public class MessageBuilder {
-        private val messages = mutableListOf<ChatMessage>()
-
-        public fun system(content: String) {
-            messages.add(SystemMessage(content))
+        internal fun build(): FIMCompletionRequest {
+            val prompt = requireNotNull(prompt) { "prompt(...) must be called" }
+            return params.createRequest(prompt)
         }
-
-        public fun user(content: String) {
-            messages.add(UserMessage(content))
-        }
-
-        public fun assistant(content: String) {
-            messages.add(AssistantMessage(content))
-        }
-
-        public fun tool(content: String, toolCallId: String) {
-            messages.add(ToolMessage(content, toolCallId))
-        }
-
-        internal fun build(): List<ChatMessage> = messages.toList()
     }
 
     override fun equals(other: Any?): Boolean {
