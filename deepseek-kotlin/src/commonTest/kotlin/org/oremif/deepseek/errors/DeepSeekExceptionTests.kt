@@ -10,14 +10,16 @@ class DeepSeekExceptionTests {
 
     @Test
     fun `DeepSeekError deserializes string param as String`() {
-        val json = """{"error":{"message":"Invalid value","type":"invalid_request_error","param":"max_tokens","code":"bad_request"}}"""
+        val json =
+            """{"error":{"message":"Invalid value","type":"invalid_request_error","param":"max_tokens","code":"bad_request"}}"""
         val error = Json.decodeFromString(DeepSeekError.serializer(), json)
         error.error.param shouldBe "max_tokens"
     }
 
     @Test
     fun `DeepSeekError deserializes null param as null`() {
-        val json = """{"error":{"message":"Something failed","type":"server_error","param":null,"code":"internal_error"}}"""
+        val json =
+            """{"error":{"message":"Something failed","type":"server_error","param":null,"code":"internal_error"}}"""
         val error = Json.decodeFromString(DeepSeekError.serializer(), json)
         error.error.param.shouldBeNull()
     }

@@ -75,14 +75,31 @@ public class FIMCompletionRequest internal constructor(
     public val topP: Double? = null,
 ) {
 
+    /**
+     * Builder for non-streaming FIM completion requests.
+     *
+     * Used by `DeepSeekClient.fimCompletion { ... }`; [prompt] is required.
+     */
     public class Builder {
         private var prompt: String? = null
         private var params: FIMCompletionParams = FIMCompletionParams()
 
+        /**
+         * Sets the prompt the model should complete.
+         *
+         * @param str Prefix text the model will extend. Required before [build].
+         */
         public fun prompt(str: String) {
             prompt = str
         }
 
+        /**
+         * Configures FIM request parameters (suffix, temperature, etc.).
+         *
+         * Replaces any previously-configured parameters.
+         *
+         * @param block Builder block applied to a fresh [FIMCompletionParams.Builder]
+         */
         public fun params(block: FIMCompletionParams.Builder.() -> Unit) {
             params = FIMCompletionParams.Builder().apply(block).build()
         }
@@ -93,14 +110,32 @@ public class FIMCompletionRequest internal constructor(
         }
     }
 
+    /**
+     * Builder for streaming FIM completion requests.
+     *
+     * Used by `DeepSeekClientStream.fimCompletion { ... }`; [prompt] is required. The
+     * resulting request has `stream = true`.
+     */
     public class StreamBuilder {
         private var prompt: String? = null
         private var params: FIMCompletionParams = FIMCompletionParams()
 
+        /**
+         * Sets the prompt the model should complete.
+         *
+         * @param str Prefix text the model will extend. Required before [build].
+         */
         public fun prompt(str: String) {
             prompt = str
         }
 
+        /**
+         * Configures streaming FIM request parameters.
+         *
+         * Replaces any previously-configured parameters.
+         *
+         * @param block Builder block applied to a fresh [FIMCompletionParams.StreamBuilder]
+         */
         public fun params(block: FIMCompletionParams.StreamBuilder.() -> Unit) {
             params = FIMCompletionParams.StreamBuilder().apply(block).build()
         }

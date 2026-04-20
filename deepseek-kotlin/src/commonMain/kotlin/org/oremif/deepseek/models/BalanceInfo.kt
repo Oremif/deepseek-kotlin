@@ -3,12 +3,14 @@ package org.oremif.deepseek.models
 import kotlinx.serialization.Serializable
 
 /**
- * @property currency **Possible values: {`CNY`, `USD`}**
+ * Per-currency balance breakdown returned inside a [UserBalance].
  *
- * The currency of the balance.
- * @property totalBalance The total available balance, including the granted balance and the topped-up balance.
- * @property grantedBalance The total not expired granted balance.
- * @property toppedUpBalance The total topped-up balance.
+ * Monetary amounts are kept as strings to preserve the exact precision reported by the API.
+ *
+ * @property currency Currency that denominates the balance. Possible values: `CNY`, `USD`.
+ * @property totalBalance Total available balance (granted + topped-up).
+ * @property grantedBalance Non-expired granted balance portion.
+ * @property toppedUpBalance Topped-up balance portion.
  */
 @Serializable
 public class BalanceInfo(

@@ -3,17 +3,21 @@ package org.oremif.deepseek.models
 import kotlinx.serialization.Serializable
 
 /**
- * Represents the FIM (Fill-In-the-Middle) Completion.
+ * Response payload of a Fill-In-the-Middle completion.
  *
- * @property id A unique identifier for the completion.
- * @property choices The list of completion choices the model generated for the input prompt.
- * @property created The Unix timestamp (in seconds) of when the completion was created.
- * @property model The model used for completion.
- * @property systemFingerprint This fingerprint represents the backend configuration that the model runs with.
- * @property object The object type, which is always "text_completion"
+ * Streaming FIM endpoints emit a [kotlinx.coroutines.flow.Flow] of [FIMCompletion] chunks;
+ * all chunks from the same response share [id] and [created]. For non-streaming calls the
+ * single returned instance contains the full completion.
  *
- * **Possible values: {`text_completion`}**
- * @property usage Usage statistics for the completion request.
+ * @property id Unique identifier for the completion. Identical across all chunks of a
+ * streamed response.
+ * @property choices Completion alternatives generated for the input prompt.
+ * @property created Unix timestamp (seconds) of when the completion was created.
+ * @property model Model that produced the completion.
+ * @property systemFingerprint Backend configuration fingerprint, if the API returned one.
+ * @property object Object type discriminator; always `text_completion`.
+ * @property usage Token usage statistics. Only populated on the final usage chunk when
+ * `streamOptions.includeUsage` is set for streaming requests.
  */
 @Serializable
 public class FIMCompletion(

@@ -5,8 +5,7 @@ import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
-import io.ktor.http.HeadersBuilder
-import io.ktor.http.headersOf
+import io.ktor.http.*
 import kotlin.test.Test
 
 class DeepSeekHeadersTests {
@@ -81,7 +80,7 @@ class DeepSeekHeadersTests {
 
     @Test
     fun `toDeepSeekHeaders on empty returns the shared Empty instance`() {
-        val mapped = io.ktor.http.Headers.Empty.toDeepSeekHeaders()
+        val mapped = Headers.Empty.toDeepSeekHeaders()
         mapped shouldBeSameInstanceAs DeepSeekHeaders.Empty
     }
 }

@@ -14,6 +14,22 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonPrimitive
 
+/**
+ * Custom stop sequences that cause the model to stop generating further tokens.
+ *
+ * A single string or up to 16 strings are accepted. The wire representation collapses a
+ * single-element list into a plain JSON string and serializes larger lists as a JSON array,
+ * matching the DeepSeek API contract.
+ *
+ * Example:
+ * ```kotlin
+ * val params = chatCompletionParams {
+ *     stop = StopReason(listOf("\nUser:", "\nAssistant:"))
+ * }
+ * ```
+ *
+ * @property reasons One or more stop strings; empty list serializes as JSON `null`.
+ */
 @Serializable(with = StopReasoningSerializer::class)
 public class StopReason(
     public val reasons: List<String>

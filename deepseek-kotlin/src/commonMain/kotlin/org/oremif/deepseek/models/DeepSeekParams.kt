@@ -1,19 +1,23 @@
 package org.oremif.deepseek.models
 
 /**
- * Base class for DeepSeek API parameters.
+ * Shared sampling parameters for the DeepSeek chat and FIM endpoints.
  *
- * This class provides common parameters used across different DeepSeek API endpoints,
- * serving as a foundation for more specific parameter classes like [ChatCompletionParams]
- * and [FIMCompletionParams].
+ * This class carries the fields common to both endpoints and acts as the base of
+ * [ChatCompletionParams] and [FIMCompletionParams]. It also exposes shortcut factory
+ * methods ([chat], [chatStream], [fim], [fimStream]) so any existing param instance can
+ * be used as an entry point to produce a differently-typed one.
  *
- *
- * @property frequencyPenalty Reduces repetition by penalizing tokens based on their frequency in the text
- * @property maxTokens Maximum number of tokens to generate in the response
- * @property presencePenalty Reduces repetition by penalizing tokens that have appeared in the text
- * @property stop Custom stop sequence that causes the model to stop generating further tokens
- * @property temperature Controls randomness in output generation (higher = more random)
- * @property topP Controls diversity via nucleus sampling (consider only tokens with top_p probability mass)
+ * @property frequencyPenalty Reduces repetition by penalizing tokens based on their frequency in the text.
+ * Expected range: `-2.0..2.0`.
+ * @property maxTokens Maximum number of tokens to generate in the response. Expected range: `1..8192`.
+ * @property presencePenalty Reduces repetition by penalizing tokens that have appeared in the text.
+ * Expected range: `-2.0..2.0`.
+ * @property stop Custom stop sequences that cause the model to stop generating further tokens.
+ * @property temperature Controls randomness in output generation (higher = more random).
+ * Expected range: `0.0..2.0`.
+ * @property topP Controls diversity via nucleus sampling (consider only tokens with top_p probability mass).
+ * Expected range: `0.0..1.0`.
  */
 public open class DeepSeekParams internal constructor(
     public val frequencyPenalty: Double? = null,
@@ -25,19 +29,14 @@ public open class DeepSeekParams internal constructor(
 ) {
 
     /**
-     * Creates chat completion parameters with custom settings.
-     *
-     * This function provides a convenient way to create parameters specifically
-     * for chat completion requests using a builder pattern.
+     * Shortcut to [chatCompletionParams], available on any existing [DeepSeekParams].
      *
      * Example:
      * ```kotlin
-     * params {
-     *     chat {
-     *         model = ChatModel.DEEPSEEK_CHAT
-     *         temperature = 0.8
-     *         maxTokens = 2000
-     *    }
+     * val params = existingParams.chat {
+     *     model = ChatModel.DEEPSEEK_CHAT
+     *     temperature = 0.8
+     *     maxTokens = 2000
      * }
      * ```
      *
@@ -48,42 +47,30 @@ public open class DeepSeekParams internal constructor(
         chatCompletionParams(block)
 
     /**
-     * Creates chat completion stream parameters with custom settings.
-     *
-     * This function provides a convenient way to create parameters specifically
-     * for chat completion requests using a builder pattern.
+     * Shortcut to [chatCompletionStreamParams], available on any existing [DeepSeekParams].
      *
      * Example:
      * ```kotlin
-     * params {
-     *     chat {
-     *         model = ChatModel.DEEPSEEK_CHAT
-     *         temperature = 0.8
-     *         maxTokens = 2000
-     *    }
+     * val streamParams = existingParams.chatStream {
+     *     model = ChatModel.DEEPSEEK_CHAT
+     *     temperature = 0.8
      * }
      * ```
      *
-     * @param block Configuration block for building chat parameters
-     * @return Configured [ChatCompletionParams] for use with chat endpoints
+     * @param block Configuration block for building streaming chat parameters
+     * @return Configured [ChatCompletionParams] with `stream = true`
      */
     public fun chatStream(block: ChatCompletionParams.StreamBuilder.() -> Unit): ChatCompletionParams =
         chatCompletionStreamParams(block)
 
     /**
-     * Creates file-in-the-middle (FIM) completion parameters with custom settings.
-     *
-     * This function provides a convenient way to create parameters specifically
-     * for FIM completion requests using a builder pattern.
+     * Shortcut to [fimCompletionParams], available on any existing [DeepSeekParams].
      *
      * Example:
      * ```kotlin
-     * params {
-     *     fim {
-     *         prefix = "def calculate_total("
-     *         suffix = "    return result"
-     *         temperature = 0.5
-     *     }
+     * val fimParams = existingParams.fim {
+     *     suffix = "    return result"
+     *     temperature = 0.5
      * }
      * ```
      *
@@ -93,24 +80,18 @@ public open class DeepSeekParams internal constructor(
     public fun fim(block: FIMCompletionParams.Builder.() -> Unit): FIMCompletionParams = fimCompletionParams(block)
 
     /**
-     * Creates file-in-the-middle (FIM) completion stream parameters with custom settings.
-     *
-     * This function provides a convenient way to create parameters specifically
-     * for FIM completion requests using a builder pattern.
+     * Shortcut to [fimCompletionStreamParams], available on any existing [DeepSeekParams].
      *
      * Example:
      * ```kotlin
-     * params {
-     *     fim {
-     *         prefix = "def calculate_total("
-     *         suffix = "    return result"
-     *         temperature = 0.5
-     *     }
+     * val streamFimParams = existingParams.fimStream {
+     *     suffix = "    return result"
+     *     temperature = 0.5
      * }
      * ```
      *
-     * @param block Configuration block for building FIM parameters
-     * @return Configured [FIMCompletionParams] for use with FIM endpoints
+     * @param block Configuration block for building streaming FIM parameters
+     * @return Configured [FIMCompletionParams] with `stream = true`
      */
     public fun fimStream(block: FIMCompletionParams.StreamBuilder.() -> Unit): FIMCompletionParams =
         fimCompletionStreamParams(block)

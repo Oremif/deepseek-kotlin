@@ -9,13 +9,13 @@ public final class org/oremif/deepseek/api/ChatKt {
 }
 
 public final class org/oremif/deepseek/api/ChatStreamKt {
-	public static final fun chat (Lorg/oremif/deepseek/client/DeepSeekClientStream;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun chat (Lorg/oremif/deepseek/client/DeepSeekClientStream;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun chat (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun chat (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lorg/oremif/deepseek/models/ChatCompletionParams;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun chat (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lorg/oremif/deepseek/models/ChatCompletionParams;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun chatCompletion (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun chatCompletionStream (Lorg/oremif/deepseek/client/DeepSeekClientBase;Lorg/oremif/deepseek/models/ChatCompletionRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun chat (Lorg/oremif/deepseek/client/DeepSeekClientStream;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun chat (Lorg/oremif/deepseek/client/DeepSeekClientStream;Ljava/util/List;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun chat (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun chat (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lorg/oremif/deepseek/models/ChatCompletionParams;Ljava/util/List;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun chat (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lorg/oremif/deepseek/models/ChatCompletionParams;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun chatCompletion (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun chatCompletionStream (Lorg/oremif/deepseek/client/DeepSeekClientBase;Lorg/oremif/deepseek/models/ChatCompletionRequest;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class org/oremif/deepseek/api/FimCompletionKt {
@@ -26,10 +26,10 @@ public final class org/oremif/deepseek/api/FimCompletionKt {
 }
 
 public final class org/oremif/deepseek/api/FimCompletionStreamKt {
-	public static final fun fim (Lorg/oremif/deepseek/client/DeepSeekClientStream;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun fim (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lorg/oremif/deepseek/models/FIMCompletionParams;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun fimCompletion (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
-	public static final fun fimCompletionStream (Lorg/oremif/deepseek/client/DeepSeekClientBase;Lorg/oremif/deepseek/models/FIMCompletionRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun fim (Lorg/oremif/deepseek/client/DeepSeekClientStream;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun fim (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lorg/oremif/deepseek/models/FIMCompletionParams;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun fimCompletion (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun fimCompletionStream (Lorg/oremif/deepseek/client/DeepSeekClientBase;Lorg/oremif/deepseek/models/FIMCompletionRequest;)Lkotlinx/coroutines/flow/Flow;
 }
 
 public final class org/oremif/deepseek/api/ModelsKt {

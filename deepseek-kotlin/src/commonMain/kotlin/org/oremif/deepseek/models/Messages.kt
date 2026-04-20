@@ -13,19 +13,41 @@ import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.JsonClassDiscriminator
-import kotlinx.serialization.json.JsonDecoder
-import kotlinx.serialization.json.JsonNull
-import kotlinx.serialization.json.jsonObject
-import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.*
 
 
+/**
+ * One turn in a chat conversation.
+ *
+ * Concrete subtypes — [SystemMessage], [UserMessage], [AssistantMessage], [ToolMessage] —
+ * are distinguished on the wire by the `role` discriminator.
+ *
+ * The `MessageBuilder` DSL (available via `client.chat { ... }`) offers shorter syntax
+ * for building a list of [ChatMessage] than instantiating these classes directly.
+ *
+ * @property content Message text; `null` is allowed for assistant/user messages that
+ * only carry tool calls.
+ */
 @Serializable
 @JsonClassDiscriminator("role")
 public sealed interface ChatMessage {
     public val content: String?
 }
 
+/**
+ * System-role message — sets the assistant's behavior for the rest of the conversation.
+ *
+ * Example:
+ * ```kotlin
+ * val messages = listOf(
+ *     SystemMessage("You are a concise Kotlin expert."),
+ *     UserMessage("Explain extension functions."),
+ * )
+ * ```
+ *
+ * @property content Instructions for the assistant.
+ * @property name Optional participant name forwarded to the model.
+ */
 @Serializable
 @SerialName("system")
 public class SystemMessage(override val content: String, public val name: String? = null) : ChatMessage {
@@ -45,6 +67,13 @@ public class SystemMessage(override val content: String, public val name: String
         "SystemMessage(content='$content', name=$name)"
 }
 
+/**
+ * User-role message — the end-user's input to the conversation.
+ *
+ * @property content User's message text. May be `null` only in unusual cases such as a
+ * follow-up turn that carries no new text.
+ * @property name Optional participant name forwarded to the model.
+ */
 @Serializable
 @SerialName("user")
 public class UserMessage(override val content: String?, public val name: String? = null) : ChatMessage {
@@ -64,6 +93,21 @@ public class UserMessage(override val content: String?, public val name: String?
         "UserMessage(content='$content', name=$name)"
 }
 
+/**
+ * Assistant-role message — either a prior model response replayed as context, or a
+ * prefix-completion seed for the `deepseek-chat` prefix mode.
+ *
+ * Model responses returned by the API are represented by the specialised
+ * [ChatCompletionMessage] subclass, which additionally carries [ToolCall]s.
+ *
+ * @property content Assistant message text; may be `null` when the message only carries
+ * tool calls.
+ * @property name Optional participant name forwarded to the model.
+ * @property prefix When `true`, marks this message as a partial assistant response that
+ * the model should continue generating from. See the DeepSeek API docs for prefix mode.
+ * @property reasoningContent For the `deepseek-reasoner` model: the reasoning trace
+ * associated with the response.
+ */
 @Serializable
 @SerialName("assistant")
 public open class AssistantMessage(
@@ -93,6 +137,14 @@ public open class AssistantMessage(
         "AssistantMessage(content=$content, name=$name, prefix=$prefix, reasoningContent=$reasoningContent)"
 }
 
+/**
+ * Assistant-role message as returned by the DeepSeek API inside a [ChatChoice].
+ *
+ * Uses a custom serializer so that the `role` field is always present and `tool_calls`
+ * is emitted only when non-null.
+ *
+ * @property toolCalls Tool calls the model emitted on this turn, or `null` if none.
+ */
 @Serializable(with = ChatCompletionMessageSerializer::class)
 @SerialName("assistant")
 public class ChatCompletionMessage(
@@ -119,6 +171,23 @@ public class ChatCompletionMessage(
         "ChatCompletionMessage(content=$content, reasoningContent=$reasoningContent, toolCalls=$toolCalls)"
 }
 
+/**
+ * Tool-role message — the result of executing a [ToolCall] produced by the model.
+ *
+ * Echo [toolCallId] from the matching [ToolCall] so the model can correlate the result
+ * with its original call.
+ *
+ * Example:
+ * ```kotlin
+ * val toolResult = ToolMessage(
+ *     content = Json.encodeToString(weatherResponse),
+ *     toolCallId = toolCall.id,
+ * )
+ * ```
+ *
+ * @property content Result of the tool execution, typically JSON-encoded.
+ * @property toolCallId Identifier of the [ToolCall] this message responds to.
+ */
 @Serializable
 @SerialName("tool")
 public class ToolMessage(override val content: String, public val toolCallId: String) : ChatMessage {
@@ -138,6 +207,13 @@ public class ToolMessage(override val content: String, public val toolCallId: St
         "ToolMessage(content='$content', toolCallId='$toolCallId')"
 }
 
+/**
+ * Custom serializer for [ChatCompletionMessage] that enforces the assistant role on the
+ * wire and omits `null` `tool_calls` fields from the output.
+ *
+ * Exposed publicly because it is referenced from the `@Serializable(with = ...)`
+ * annotation on [ChatCompletionMessage]; callers do not normally invoke it directly.
+ */
 public object ChatCompletionMessageSerializer : KSerializer<ChatCompletionMessage> {
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("ChatCompletionMessage") {
         element<String?>("content")

@@ -5,6 +5,7 @@ import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import org.oremif.deepseek.client.DeepSeekClient
 import org.oremif.deepseek.client.DeepSeekClientBase
+import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.models.FIMCompletion
 import org.oremif.deepseek.models.FIMCompletionParams
 import org.oremif.deepseek.models.FIMCompletionRequest
@@ -26,6 +27,7 @@ import org.oremif.deepseek.utils.validateResponse
  *
  * @param request The FIM completion request containing all parameters
  * @return A [FIMCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClientBase.fimCompletion(request: FIMCompletionRequest): FIMCompletion {
     val response = client.post("beta/completions") {
@@ -59,6 +61,7 @@ public suspend fun DeepSeekClientBase.fimCompletion(request: FIMCompletionReques
  * @param params Parameters controlling the completion behavior
  * @param prompt The text to start completion from
  * @return A [FIMCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.fim(params: FIMCompletionParams, prompt: String): FIMCompletion {
     val request = (if (params.stream == true) params.copy(stream = false) else params).createRequest(prompt)
@@ -79,6 +82,7 @@ public suspend fun DeepSeekClient.fim(params: FIMCompletionParams, prompt: Strin
  *
  * @param prompt The text to start completion from
  * @return A [FIMCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.fim(prompt: String): FIMCompletion =
     fim(FIMCompletionParams(), prompt)
@@ -92,17 +96,19 @@ public suspend fun DeepSeekClient.fim(prompt: String): FIMCompletion =
  * Example:
  * ```kotlin
  * val completion = client.fimCompletion {
- *     model = "deepseek-chat"
- *     prompt = "public class Calculator {"
- *     suffix = "}"
- *     temperature = 0.8
- *     maxTokens = 500
+ *     prompt("public class Calculator {")
+ *     params {
+ *         suffix = "}"
+ *         temperature = 0.8
+ *         maxTokens = 500
+ *     }
  * }
  * println(completion.choices.first().text)
  * ```
  *
  * @param block A builder block for constructing the complete request
  * @return A [FIMCompletion] containing the model's response
+ * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.fimCompletion(block: FIMCompletionRequest.Builder.() -> Unit): FIMCompletion {
     val request = FIMCompletionRequest.Builder().apply(block).build()

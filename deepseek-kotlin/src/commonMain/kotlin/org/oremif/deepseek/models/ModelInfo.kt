@@ -3,11 +3,12 @@ package org.oremif.deepseek.models
 import kotlinx.serialization.Serializable
 
 /**
+ * Metadata for a single DeepSeek model entry returned by [org.oremif.deepseek.api.models].
  *
- *
- * @property id The model identifier, which can be referenced in the API endpoints.
- * @property object **Possible values: {`model`}.** The object type, which is always "model".
- * @property ownedBy The organization that owns the model.
+ * @property id Model identifier that can be passed to chat or FIM endpoints (e.g.
+ * `deepseek-chat`).
+ * @property object Object type discriminator; always [ModelObjectType.MODEL].
+ * @property ownedBy Organization that owns the model.
  */
 @Serializable
 public class ModelInfo(

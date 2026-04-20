@@ -34,8 +34,10 @@ import org.oremif.deepseek.models.FIMCompletionRequest
  *
  * @param request The FIM completion request with streaming enabled
  * @return A [Flow] of [FIMCompletion] objects representing incremental updates
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
-public suspend fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletionRequest): Flow<FIMCompletion> {
+public fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletionRequest): Flow<FIMCompletion> {
     return flow {
         try {
             client.sse(
@@ -92,12 +94,15 @@ public suspend fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletion
  * @param params Parameters controlling the completion behavior
  * @param prompt The text to start the completion from
  * @return A [Flow] of [FIMCompletion] objects representing the streaming response
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
-public suspend fun DeepSeekClientStream.fim(
+public fun DeepSeekClientStream.fim(
     params: FIMCompletionParams,
     prompt: String
 ): Flow<FIMCompletion> {
-    val request = (if (params.stream == null || !params.stream) params.copy(stream = true) else params).createRequest(prompt)
+    val request =
+        (if (params.stream == null || !params.stream) params.copy(stream = true) else params).createRequest(prompt)
     return fimCompletionStream(request)
 }
 
@@ -116,8 +121,10 @@ public suspend fun DeepSeekClientStream.fim(
  *
  * @param prompt The text to start the completion from
  * @return A [Flow] of [FIMCompletion] objects representing the streaming response
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
-public suspend fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> =
+public fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> =
     fim(FIMCompletionParams(stream = true), prompt)
 
 /**
@@ -129,11 +136,12 @@ public suspend fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion>
  * Example:
  * ```kotlin
  * client.fimCompletion {
- *     model = "deepseek-chat"
- *     prompt = "public interface DataProcessor {"
- *     suffix = "}"
- *     temperature = 0.8
- *     maxTokens = 300
+ *     prompt("public interface DataProcessor {")
+ *     params {
+ *         suffix = "}"
+ *         temperature = 0.8
+ *         maxTokens = 300
+ *     }
  * }.collect { chunk ->
  *     print(chunk.choices.firstOrNull()?.text ?: "")
  * }
@@ -141,8 +149,10 @@ public suspend fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion>
  *
  * @param block A builder block for constructing the complete streaming request
  * @return A [Flow] of [FIMCompletion] objects representing the streaming response
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
+ * non-2xx status
  */
-public suspend fun DeepSeekClientStream.fimCompletion(
+public fun DeepSeekClientStream.fimCompletion(
     block: FIMCompletionRequest.StreamBuilder.() -> Unit
 ): Flow<FIMCompletion> {
     val request = FIMCompletionRequest.StreamBuilder().apply(block).build()
