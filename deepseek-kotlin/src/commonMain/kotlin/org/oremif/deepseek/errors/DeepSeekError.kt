@@ -27,7 +27,7 @@ public sealed class DeepSeekException(
     public val error: DeepSeekError?,
     message: String? = null,
     cause: Throwable? = null,
-) : RuntimeException("${error?.error?.message ?: ""}\n$message", cause) {
+) : RuntimeException(listOfNotNull(error?.error?.message, message).joinToString("\n"), cause) {
 
     public class BadRequestException(
         headers: Headers, error: DeepSeekError?, message: String?
