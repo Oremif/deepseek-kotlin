@@ -1,10 +1,33 @@
 package org.oremif.deepseek.errors
 
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class DeepSeekExceptionTests {
+
+    @Test
+    fun `DeepSeekError deserializes string param as String`() {
+        val json = """{"error":{"message":"Invalid value","type":"invalid_request_error","param":"max_tokens","code":"bad_request"}}"""
+        val error = Json.decodeFromString(DeepSeekError.serializer(), json)
+        assertEquals("max_tokens", error.error.param)
+    }
+
+    @Test
+    fun `DeepSeekError deserializes null param as null`() {
+        val json = """{"error":{"message":"Something failed","type":"server_error","param":null,"code":"internal_error"}}"""
+        val error = Json.decodeFromString(DeepSeekError.serializer(), json)
+        assertNull(error.error.param)
+    }
+
+    @Test
+    fun `DeepSeekError deserializes missing param as null`() {
+        val json = """{"error":{"message":"Something failed","type":"server_error","code":"internal_error"}}"""
+        val error = Json.decodeFromString(DeepSeekError.serializer(), json)
+        assertNull(error.error.param)
+    }
 
     @Test
     fun `OverloadServerException exposes 503 as statusCode`() {
