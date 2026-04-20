@@ -63,7 +63,7 @@ public sealed class DeepSeekException(
 
     public class OverloadServerException(
         headers: Headers, error: DeepSeekError?, message: String?
-    ) : DeepSeekException(500, headers, error, message)
+    ) : DeepSeekException(503, headers, error, message)
 
     public class UnexpectedStatusCodeException(
         statusCode: Int, headers: Headers, error: DeepSeekError?, message: String?
@@ -71,70 +71,37 @@ public sealed class DeepSeekException(
 
     public companion object {
         public fun from(statusCode: Int, headers: Headers, error: DeepSeekError?, message: String): DeepSeekException =
-            when (statusCode) {
-                400 -> BadRequestException(headers, error, message)
-                401 -> UnauthorizedException(headers, error, message)
-                402 -> InsufficientBalanceException(headers, error, message)
-                403 -> PermissionDeniedException(headers, error, message)
-                404 -> NotFoundException(headers, error, message)
-                422 -> UnprocessableEntityException(headers, error, message)
-                429 -> RateLimitException(headers, error, message)
-                500 -> InternalServerException(headers, error, message)
-                else -> UnexpectedStatusCodeException(statusCode, headers, error, message)
-            }
+            create(statusCode, headers, error, message)
 
         public fun from(statusCode: Int, headers: Headers, error: DeepSeekError?): DeepSeekException =
-            when (statusCode) {
-                400 -> BadRequestException(
-                    headers,
-                    error,
-                    "Please modify your request body according to the hints in the error message.\nFor more API format details, please refer to [DeepSeek API Docs](https://api-docs.deepseek.com/)."
-                )
+            create(statusCode, headers, error, defaultMessageFor(statusCode))
 
-                401 -> UnauthorizedException(
-                    headers,
-                    error,
-                    "Please check your API key.\nIf you don't have one, please [create an API key](https://platform.deepseek.com/api_keys) first."
-                )
+        private fun create(
+            statusCode: Int, headers: Headers, error: DeepSeekError?, message: String
+        ): DeepSeekException = when (statusCode) {
+            400 -> BadRequestException(headers, error, message)
+            401 -> UnauthorizedException(headers, error, message)
+            402 -> InsufficientBalanceException(headers, error, message)
+            403 -> PermissionDeniedException(headers, error, message)
+            404 -> NotFoundException(headers, error, message)
+            422 -> UnprocessableEntityException(headers, error, message)
+            429 -> RateLimitException(headers, error, message)
+            500 -> InternalServerException(headers, error, message)
+            503 -> OverloadServerException(headers, error, message)
+            else -> UnexpectedStatusCodeException(statusCode, headers, error, message)
+        }
 
-                402 -> InsufficientBalanceException(
-                    headers,
-                    error,
-                    "Please check your account's balance, and go to the [Top up](https://platform.deepseek.com/top_up) page to add funds."
-                )
-
-                403 -> PermissionDeniedException(
-                    headers,
-                    error,
-                    "Please check your API key.\nIf you don't have one, please [create an API key](https://platform.deepseek.com/api_keys) first."
-                )
-
-                404 -> NotFoundException(
-                    headers,
-                    error,
-                    "Please check the API endpoint you are using.\nFor more API format details, please refer to [DeepSeek API Docs](https://api-docs.deepseek.com/)."
-                )
-
-                422 -> UnprocessableEntityException(
-                    headers,
-                    error,
-                    "Please modify your request parameters according to the hints in the error message.\nFor more API format details, please refer to [DeepSeek API Docs](https://api-docs.deepseek.com/)."
-                )
-
-                429 -> RateLimitException(
-                    headers,
-                    error,
-                    "Please pace your requests reasonably.\nWe also advise users to temporarily switch to the APIs of alternative LLM service providers, like OpenAI."
-                )
-
-                500 -> InternalServerException(
-                    headers,
-                    error,
-                    "Please retry your request after a brief wait and contact us if the issue persists."
-                )
-
-                503 -> OverloadServerException(headers, error, "Please retry your request after a brief wait.")
-                else -> UnexpectedStatusCodeException(statusCode, headers, error, "Unexpected status code: $statusCode")
-            }
+        private fun defaultMessageFor(statusCode: Int): String = when (statusCode) {
+            400 -> "Please modify your request body according to the hints in the error message.\nFor more API format details, please refer to [DeepSeek API Docs](https://api-docs.deepseek.com/)."
+            401 -> "Please check your API key.\nIf you don't have one, please [create an API key](https://platform.deepseek.com/api_keys) first."
+            402 -> "Please check your account's balance, and go to the [Top up](https://platform.deepseek.com/top_up) page to add funds."
+            403 -> "Please check your API key.\nIf you don't have one, please [create an API key](https://platform.deepseek.com/api_keys) first."
+            404 -> "Please check the API endpoint you are using.\nFor more API format details, please refer to [DeepSeek API Docs](https://api-docs.deepseek.com/)."
+            422 -> "Please modify your request parameters according to the hints in the error message.\nFor more API format details, please refer to [DeepSeek API Docs](https://api-docs.deepseek.com/)."
+            429 -> "Please pace your requests reasonably.\nWe also advise users to temporarily switch to the APIs of alternative LLM service providers, like OpenAI."
+            500 -> "Please retry your request after a brief wait and contact us if the issue persists."
+            503 -> "Please retry your request after a brief wait."
+            else -> "Unexpected status code: $statusCode"
+        }
     }
 }
