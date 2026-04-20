@@ -119,6 +119,7 @@ public abstract class DeepSeekClientBase(
 
         private val httpClientConfigBlocks: MutableList<HttpClientConfig<*>.() -> Unit> = mutableListOf()
         private var httpClientOverride: HttpClient? = null
+        private var loggingConfig: LoggingConfig? = null
 
         public fun baseUrl(url: String): Builder {
             deepSeekBaseUrl = url
@@ -239,6 +240,35 @@ public abstract class DeepSeekClientBase(
         }
 
         /**
+         * Enables and configures HTTP request/response logging.
+         *
+         * Logging is **disabled by default** — by design, nothing is logged unless this method
+         * is called. Any number of [sanitizeHeader][LoggingConfig.sanitizeHeader] predicates
+         * can be added; the `Authorization` header is always redacted regardless of the
+         * configured predicates.
+         *
+         * Calling this method multiple times keeps the same [LoggingConfig] and applies each
+         * [block] on top of the previous state.
+         *
+         * Example:
+         * ```kotlin
+         * val client = DeepSeekClient("token") {
+         *     logging {
+         *         level = LogLevel.BODY
+         *         sanitizeHeader { header -> header == "Cookie" }
+         *     }
+         * }
+         * ```
+         *
+         * @param block Configuration block receiving a [LoggingConfig]
+         * @return This builder for chaining
+         */
+        public fun logging(block: LoggingConfig.() -> Unit = {}): Builder {
+            loggingConfig = (loggingConfig ?: LoggingConfig()).apply(block)
+            return this
+        }
+
+        /**
          * Builds the default HTTP client with the accumulated [jsonConfig], [deepSeekBaseUrl],
          * and [token]. Subclasses override to layer additional plugins (e.g. SSE for the
          * streaming client) on top.
@@ -271,10 +301,15 @@ public abstract class DeepSeekClientBase(
                 socketTimeoutMillis = 300_000L
             }
 
-            install(Logging) {
-                logger = Logger.DEFAULT
-                level = LogLevel.HEADERS
-                sanitizeHeader { header -> header == "Authorization" }
+            loggingConfig?.let { cfg ->
+                install(Logging) {
+                    logger = cfg.logger
+                    level = cfg.level
+                    sanitizeHeader { header -> header == HttpHeaders.Authorization }
+                    for (predicate in cfg.sanitizers) {
+                        sanitizeHeader { header -> predicate(header) }
+                    }
+                }
             }
         }
 

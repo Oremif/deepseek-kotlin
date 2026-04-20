@@ -5,12 +5,14 @@ import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.pluginOrNull
 import io.ktor.client.plugins.sse.SSE
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -42,7 +44,6 @@ class DeepSeekClientBuilderTests {
                 "HttpRequestRetry must survive httpClient { }"
             )
             assertNotNull(http.pluginOrNull(HttpTimeout), "HttpTimeout must survive httpClient { }")
-            assertNotNull(http.pluginOrNull(Logging), "Logging must survive httpClient { }")
         }
     }
 
@@ -66,8 +67,74 @@ class DeepSeekClientBuilderTests {
                 http.pluginOrNull(HttpTimeout),
                 "HttpTimeout must survive on stream client"
             )
-            assertNotNull(http.pluginOrNull(Logging), "Logging must survive on stream client")
         }
+    }
+
+    @Test
+    fun `logging is not installed by default`() {
+        DeepSeekClient("test-token").use { client ->
+            assertNull(
+                client.client.pluginOrNull(Logging),
+                "Logging plugin must be opt-in — nothing should be logged by default"
+            )
+        }
+    }
+
+    @Test
+    fun `logging block installs Logging plugin`() {
+        DeepSeekClient("test-token") {
+            logging { level = LogLevel.BODY }
+        }.use { client ->
+            assertNotNull(
+                client.client.pluginOrNull(Logging),
+                "logging { } must install the Logging plugin"
+            )
+        }
+    }
+
+    @Test
+    fun `logging block with no args installs Logging with defaults`() {
+        DeepSeekClient("test-token") {
+            logging()
+        }.use { client ->
+            assertNotNull(
+                client.client.pluginOrNull(Logging),
+                "logging() with no block must still install the plugin"
+            )
+        }
+    }
+
+    @Test
+    fun `logging block applies to stream client and survives httpClient block`() {
+        DeepSeekClientStream("test-token") {
+            logging { level = LogLevel.HEADERS }
+            httpClient { /* additive configuration — intentionally empty */ }
+        }.use { client ->
+            assertNotNull(
+                client.client.pluginOrNull(Logging),
+                "Logging from logging { } must survive layered httpClient { } on stream client"
+            )
+            assertNotNull(
+                client.client.pluginOrNull(SSE),
+                "SSE must survive alongside logging { } on stream client"
+            )
+        }
+    }
+
+    @Test
+    fun `logging block can be called multiple times and accumulates sanitizers`() {
+        var calls = 0
+        DeepSeekClient("test-token") {
+            logging { level = LogLevel.BODY }
+            logging {
+                sanitizeHeader { header -> header == "Cookie" }
+                sanitizeHeader { header -> header == "X-Trace-Id" }
+            }
+        }.use { client ->
+            calls++
+            assertNotNull(client.client.pluginOrNull(Logging))
+        }
+        assertEquals(1, calls)
     }
 
     @Test
