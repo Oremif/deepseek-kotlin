@@ -17,6 +17,13 @@ import kotlin.test.assertNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
+private inline fun <T : DeepSeekClientBase, R> T.use(block: (T) -> R): R =
+    try {
+        block(this)
+    } finally {
+        close()
+    }
+
 class DeepSeekClientBuilderTests {
 
     @Test
