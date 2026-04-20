@@ -11,6 +11,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonBuilder
 import kotlinx.serialization.json.JsonNamingStrategy
 import org.oremif.deepseek.models.DeepSeekParams
 import kotlin.random.Random
@@ -85,7 +86,7 @@ public abstract class DeepSeekClientBase(
      *
      * @param token The DeepSeek API token for authentication
      */
-    public abstract class Builder(token: String? = null) {
+    public abstract class Builder(protected val token: String? = null) {
         /**
          * Base URL for the DeepSeek API.
          */
@@ -112,10 +113,145 @@ public abstract class DeepSeekClientBase(
          */
         protected var fimCompletionTimeout: Int = 60_000
 
+        private val httpClientConfigBlocks: MutableList<HttpClientConfig<*>.() -> Unit> = mutableListOf()
+        private var httpClientOverride: HttpClient? = null
+
+        protected var params: DeepSeekParams? = null
+
+        public fun baseUrl(url: String): Builder {
+            deepSeekBaseUrl = url
+            return this
+        }
+
+        public fun params(block: DeepSeekParams.() -> DeepSeekParams): Builder {
+            this.params = DeepSeekParams().block()
+            return this
+        }
+
+        public fun params(params: DeepSeekParams): Builder {
+            this.params = params
+            return this
+        }
+
         /**
-         * The HTTP client used for API requests.
+         * Configures the JSON serialization and deserialization settings.
+         *
+         * The [block] receives a [JsonBuilder] and is applied on top of the current
+         * [jsonConfig], preserving previously-set fields. The resulting [Json] is used by the
+         * HTTP client built in [DeepSeekClient.Builder.build] / [DeepSeekClientStream.Builder.build].
+         *
+         * Example:
+         * ```kotlin
+         * val client = DeepSeekClient("token") {
+         *     jsonConfig {
+         *         prettyPrint = false
+         *         ignoreUnknownKeys = true
+         *     }
+         * }
+         * ```
+         *
+         * @param block Configuration block receiving a [JsonBuilder]
+         * @return This builder for chaining
          */
-        protected open var client: HttpClient = HttpClient {
+        public fun jsonConfig(block: JsonBuilder.() -> Unit): Builder {
+            jsonConfig = Json(from = jsonConfig, builderAction = block)
+            return this
+        }
+
+        /**
+         * Replaces the JSON configuration with the provided instance.
+         *
+         * The given [json] is used as-is by the HTTP client's content negotiation. Any previous
+         * [jsonConfig] settings are discarded.
+         *
+         * @param json Fully configured [Json] instance
+         * @return This builder for chaining
+         */
+        public fun jsonConfig(json: Json): Builder {
+            jsonConfig = json
+            return this
+        }
+
+        /**
+         * Sets the timeout for chat completion requests.
+         *
+         * @param timeout Timeout in milliseconds
+         * @return This builder for chaining
+         */
+        public fun chatCompletionTimeout(timeout: Int): Builder {
+            chatCompletionTimeout = timeout
+            return this
+        }
+
+        /**
+         * Sets the timeout for file-in-the-middle completion requests.
+         *
+         * @param timeout Timeout in milliseconds
+         * @return This builder for chaining
+         */
+        public fun fimCompletionTimeout(timeout: Int): Builder {
+            fimCompletionTimeout = timeout
+            return this
+        }
+
+        /**
+         * Applies additional configuration on top of the default HTTP client.
+         *
+         * The [block] is layered on top of the builder defaults (Auth, ContentNegotiation with
+         * the current [jsonConfig], base URL via `defaultRequest`, HttpRequestRetry, HttpTimeout,
+         * Logging — plus SSE for [DeepSeekClientStream]) at [DeepSeekClient.Builder.build] /
+         * [DeepSeekClientStream.Builder.build] time. Calling this method multiple times layers
+         * each [block] on top of the previous state, in the order they were added.
+         *
+         * Because the HTTP client is assembled lazily, [jsonConfig] changes are picked up
+         * regardless of whether they are set before or after [httpClient].
+         *
+         * Use [httpClient] with an [HttpClient] argument if you want to replace the underlying
+         * client entirely instead of extending it.
+         *
+         * Example — override the request timeout while keeping all other defaults:
+         * ```kotlin
+         * val client = DeepSeekClient("token") {
+         *     httpClient {
+         *         install(HttpTimeout) {
+         *             requestTimeoutMillis = 60_000
+         *         }
+         *     }
+         * }
+         * ```
+         *
+         * @param block Additional configuration to merge on top of the default HTTP client
+         * @return This builder for chaining
+         */
+        public fun httpClient(block: HttpClientConfig<*>.() -> Unit): Builder {
+            httpClientConfigBlocks += block
+            return this
+        }
+
+        /**
+         * Replaces the underlying HTTP client entirely with the provided [client].
+         *
+         * Unlike the [httpClient] overload that takes a configuration block, this overload does
+         * **not** preserve the builder defaults — the caller is responsible for installing Auth,
+         * ContentNegotiation, the base URL in `defaultRequest`, retries, timeouts, logging, and
+         * (for streaming) SSE. [jsonConfig] and any [httpClient] blocks added before or after
+         * this call are ignored for the HTTP client itself, though [jsonConfig] is still
+         * surfaced via `DeepSeekClientConfig.jsonConfig`.
+         *
+         * @param client Fully configured HTTP client to use
+         * @return This builder for chaining
+         */
+        public fun httpClient(client: HttpClient): Builder {
+            this.httpClientOverride = client
+            return this
+        }
+
+        /**
+         * Builds the default HTTP client with the accumulated [jsonConfig], [deepSeekBaseUrl],
+         * and [token]. Subclasses override to layer additional plugins (e.g. SSE for the
+         * streaming client) on top.
+         */
+        protected open fun defaultHttpClient(): HttpClient = HttpClient {
             install(Auth) {
                 if (token == null) return@install
                 bearer { loadTokens { BearerTokens(token, "") } }
@@ -148,124 +284,18 @@ public abstract class DeepSeekClientBase(
             }
         }
 
-        protected var params: DeepSeekParams? = null
-
-        public fun baseUrl(url: String): Builder {
-            deepSeekBaseUrl = url
-            return this
-        }
-
-        public fun params(block: DeepSeekParams.() -> DeepSeekParams): Builder {
-            this.params = DeepSeekParams().block()
-            return this
-        }
-
-        public fun params(params: DeepSeekParams): Builder {
-            this.params = params
-            return this
-        }
-
         /**
-         * Configures the JSON serialization and deserialization settings.
-         *
-         * Example:
-         * ```kotlin
-         * val client = DeepSeekClient("token") {
-         *     jsonConfig {
-         *         prettyPrint = false
-         *         ignoreUnknownKeys = true
-         *     }
-         * }
-         * ```
-         *
-         * @param block Configuration block for JSON settings
-         * @return This builder for chaining
+         * Materialises the HTTP client: either the replacement set via [httpClient] with an
+         * [HttpClient] argument, or the [defaultHttpClient] with every [httpClient] block
+         * layered on top in insertion order.
          */
-        public fun jsonConfig(block: Json.() -> Unit): Builder {
-            jsonConfig = jsonConfig.apply(block)
-            client.config {
-                install(ContentNegotiation) { json(jsonConfig) }
-
+        protected fun buildHttpClient(): HttpClient {
+            httpClientOverride?.let { return it }
+            var client = defaultHttpClient()
+            for (block in httpClientConfigBlocks) {
+                client = client.config(block)
             }
-            return this
-        }
-
-        public fun jsonConfig(json: Json): Builder {
-            jsonConfig = json
-            client.config {
-                install(ContentNegotiation) { json(jsonConfig) }
-
-            }
-            return this
-        }
-
-        /**
-         * Sets the timeout for chat completion requests.
-         *
-         * @param timeout Timeout in milliseconds
-         * @return This builder for chaining
-         */
-        public fun chatCompletionTimeout(timeout: Int): Builder {
-            chatCompletionTimeout = timeout
-            return this
-        }
-
-        /**
-         * Sets the timeout for file-in-the-middle completion requests.
-         *
-         * @param timeout Timeout in milliseconds
-         * @return This builder for chaining
-         */
-        public fun fimCompletionTimeout(timeout: Int): Builder {
-            fimCompletionTimeout = timeout
-            return this
-        }
-
-        /**
-         * Applies additional configuration on top of the default HTTP client.
-         *
-         * The [block] is merged with the existing configuration via [HttpClient.config], so the
-         * defaults installed by the builder (Auth, ContentNegotiation, base URL via
-         * `defaultRequest`, HttpRequestRetry, HttpTimeout, Logging — plus SSE for
-         * [DeepSeekClientStream]) are preserved. Calling this method multiple times layers each
-         * [block] on top of the previous state.
-         *
-         * Use [httpClient] with an [HttpClient] argument if you want to replace the underlying
-         * client entirely instead of extending it.
-         *
-         * Example — override the request timeout while keeping all other defaults:
-         * ```kotlin
-         * val client = DeepSeekClient("token") {
-         *     httpClient {
-         *         install(HttpTimeout) {
-         *             requestTimeoutMillis = 60_000
-         *         }
-         *     }
-         * }
-         * ```
-         *
-         * @param block Additional configuration to merge on top of the default HTTP client
-         * @return This builder for chaining
-         */
-        public fun httpClient(block: HttpClientConfig<*>.() -> Unit): Builder {
-            client = client.config(block)
-            return this
-        }
-
-        /**
-         * Replaces the underlying HTTP client entirely with the provided [client].
-         *
-         * Unlike the [httpClient] overload that takes a configuration block, this overload does
-         * **not** preserve the builder defaults — the caller is responsible for installing Auth,
-         * ContentNegotiation, the base URL in `defaultRequest`, retries, timeouts, logging, and
-         * (for streaming) SSE.
-         *
-         * @param client Fully configured HTTP client to use
-         * @return This builder for chaining
-         */
-        public fun httpClient(client: HttpClient): Builder {
-            this.client = client
-            return this
+            return client
         }
     }
 
@@ -300,7 +330,7 @@ public class DeepSeekClient internal constructor(
          */
         internal fun build(): DeepSeekClient {
             return DeepSeekClient(
-                client = client,
+                client = buildHttpClient(),
                 config = DeepSeekClientConfig(
                     params,
                     jsonConfig,
@@ -330,9 +360,9 @@ public class DeepSeekClientStream internal constructor(
      */
     public class Builder(token: String? = null) : DeepSeekClientBase.Builder(token) {
         /**
-         * The HTTP client with Server-Sent Events support for streaming responses.
+         * Layers [SSE] on top of the base default client so streaming endpoints can be used.
          */
-        override var client: HttpClient = super.client.config {
+        override fun defaultHttpClient(): HttpClient = super.defaultHttpClient().config {
             install(SSE)
         }
 
@@ -343,7 +373,7 @@ public class DeepSeekClientStream internal constructor(
          */
         internal fun build(): DeepSeekClientStream {
             return DeepSeekClientStream(
-                client = client,
+                client = buildHttpClient(),
                 config = DeepSeekClientConfig(
                     params,
                     jsonConfig,

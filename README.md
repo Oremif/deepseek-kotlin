@@ -46,13 +46,13 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.sse.SSE
-import kotlinx.serialization.json.Json
 import org.oremif.deepseek.client.DeepSeekClient
 
 val deepseekApiKey = System.getenv("DEEPSEEK_API_KEY")
 val client = DeepSeekClient(deepseekApiKey) {
     jsonConfig {
-        Json { ignoreUnknownKeys = true }
+        ignoreUnknownKeys = true
+        prettyPrint = false
     }
     httpClient {
         install(SSE)
