@@ -1,7 +1,6 @@
 package org.oremif.deepseek.errors
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.JsonObject
 
 @Serializable
 public class DeepSeekError(
@@ -11,7 +10,7 @@ public class DeepSeekError(
     public class Error(
         public val message: String? = null,
         public val type: String? = null,
-        public val param: JsonObject? = null,
+        public val param: String? = null,
         public val code: String? = null,
     ) {
         override fun toString(): String = "Error(message=$message, type=$type, param=$param, code=$code)"
