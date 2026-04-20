@@ -83,10 +83,8 @@ public suspend fun DeepSeekClient.fim(params: FIMCompletionParams, prompt: Strin
  * @param prompt The text to start completion from
  * @return A [FIMCompletion] containing the model's response
  */
-public suspend fun DeepSeekClient.fim(prompt: String): FIMCompletion {
-    val params = config.params as? FIMCompletionParams ?: FIMCompletionParams()
-    return fim(params, prompt)
-}
+public suspend fun DeepSeekClient.fim(prompt: String): FIMCompletion =
+    fim(FIMCompletionParams(), prompt)
 
 /**
  * Creates a fully customizable FIM completion request using a builder pattern.

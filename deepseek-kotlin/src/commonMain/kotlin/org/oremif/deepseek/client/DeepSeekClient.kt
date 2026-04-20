@@ -13,7 +13,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonBuilder
 import kotlinx.serialization.json.JsonNamingStrategy
-import org.oremif.deepseek.models.DeepSeekParams
 import org.oremif.deepseek.utils.computeRetryDelayMillis
 import org.oremif.deepseek.utils.isRetryableStatus
 
@@ -73,12 +72,16 @@ public fun DeepSeekClientStream(
  * This abstract class serves as a foundation for both standard and streaming
  * DeepSeek clients, handling HTTP interactions and common configuration.
  *
+ * The client is designed to be long-lived: create one instance and reuse it for the
+ * lifetime of your application. The underlying HTTP client automatically releases idle
+ * connections and threads, so calling [close] is usually unnecessary.
+ *
  * @property client The underlying HTTP client used for API requests
  * @property config Configuration options for the DeepSeek client
  */
 public abstract class DeepSeekClientBase(
     public val client: HttpClient, public val config: DeepSeekClientConfig,
-) : AutoCloseable {
+) {
 
     /**
      * Base builder class for configuring DeepSeek clients.
@@ -117,20 +120,8 @@ public abstract class DeepSeekClientBase(
         private val httpClientConfigBlocks: MutableList<HttpClientConfig<*>.() -> Unit> = mutableListOf()
         private var httpClientOverride: HttpClient? = null
 
-        protected var params: DeepSeekParams? = null
-
         public fun baseUrl(url: String): Builder {
             deepSeekBaseUrl = url
-            return this
-        }
-
-        public fun params(block: DeepSeekParams.() -> DeepSeekParams): Builder {
-            this.params = DeepSeekParams().block()
-            return this
-        }
-
-        public fun params(params: DeepSeekParams): Builder {
-            this.params = params
             return this
         }
 
@@ -301,9 +292,15 @@ public abstract class DeepSeekClientBase(
     }
 
     /**
-     * Closes the underlying HTTP client and releases resources.
+     * Closes the underlying HTTP client and releases its resources.
+     *
+     * Calling this method is usually unnecessary — the underlying HTTP client automatically
+     * releases threads and connections if they remain idle. Call this only if you need to
+     * aggressively free resources (e.g. during application shutdown).
+     *
+     * The client cannot be reused after [close] is called.
      */
-    override fun close() {
+    public open fun close() {
         client.close()
     }
 }
@@ -333,7 +330,6 @@ public class DeepSeekClient internal constructor(
             return DeepSeekClient(
                 client = buildHttpClient(),
                 config = DeepSeekClientConfig(
-                    params,
                     jsonConfig,
                     chatCompletionTimeout.toLong(),
                     fimCompletionTimeout.toLong()
@@ -376,7 +372,6 @@ public class DeepSeekClientStream internal constructor(
             return DeepSeekClientStream(
                 client = buildHttpClient(),
                 config = DeepSeekClientConfig(
-                    params,
                     jsonConfig,
                     chatCompletionTimeout.toLong(),
                     fimCompletionTimeout.toLong()
