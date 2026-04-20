@@ -77,11 +77,10 @@ public fun DeepSeekClientStream(
  * lifetime of your application. The underlying HTTP client automatically releases idle
  * connections and threads, so calling [close] is usually unnecessary.
  *
- * @property client The underlying HTTP client used for API requests
  * @property config Configuration options for the DeepSeek client
  */
 public abstract class DeepSeekClientBase(
-    public val client: HttpClient, public val config: DeepSeekClientConfig,
+    internal val client: HttpClient, public val config: DeepSeekClientConfig,
 ) {
 
     /**
