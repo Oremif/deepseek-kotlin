@@ -9,8 +9,6 @@ import kotlinx.serialization.Serializable
  *
  * **Possible values: {`deepseek-chat`}**
  * @property prompt The prompt to generate completions for.
- *
- * **Default value: `Once upon a time, `**
  * @property echo Echo back the prompt in addition to the completion
  * @property frequencyPenalty  Number between -2.0 and 2.0.
  * Positive values penalize new tokens based on their existing frequency in the text so far,
@@ -89,8 +87,10 @@ public class FIMCompletionRequest internal constructor(
             params = FIMCompletionParams.Builder().apply(block).build()
         }
 
-        internal fun build(): FIMCompletionRequest =
-            params.createRequest(prompt ?: "Once upon a time, ")
+        internal fun build(): FIMCompletionRequest {
+            val prompt = requireNotNull(prompt) { "prompt(...) must be called" }
+            return params.createRequest(prompt)
+        }
     }
 
     public class StreamBuilder {
@@ -105,8 +105,10 @@ public class FIMCompletionRequest internal constructor(
             params = FIMCompletionParams.StreamBuilder().apply(block).build()
         }
 
-        internal fun build(): FIMCompletionRequest =
-            params.createRequest(prompt ?: "Once upon a time, ")
+        internal fun build(): FIMCompletionRequest {
+            val prompt = requireNotNull(prompt) { "prompt(...) must be called" }
+            return params.createRequest(prompt)
+        }
     }
 
     public class MessageBuilder {
