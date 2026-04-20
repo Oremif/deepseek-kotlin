@@ -2,10 +2,10 @@ package org.oremif.deepseek.models
 
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonObject
 
 @Serializable(with = ToolFunctionSerializer::class)
 public sealed interface ToolFunction {
@@ -58,10 +58,12 @@ public class FunctionResponse(
 
 internal object ToolFunctionSerializer : JsonContentPolymorphicSerializer<ToolFunction>(ToolFunction::class) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ToolFunction> {
+        val obj = element as? JsonObject
+            ?: throw SerializationException("Expected JsonObject for ToolFunction, got: ${element::class.simpleName}")
         return when {
-            "parameters" in element.jsonObject -> FunctionRequest.serializer()
-            "arguments" in element.jsonObject -> FunctionResponse.serializer()
-            else -> throw Exception("Unknown ToolFunction type")
+            "parameters" in obj -> FunctionRequest.serializer()
+            "arguments" in obj -> FunctionResponse.serializer()
+            else -> throw SerializationException("Unknown ToolFunction variant: keys=${obj.keys}")
         }
     }
 }
