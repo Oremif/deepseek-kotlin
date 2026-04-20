@@ -29,4 +29,30 @@ class DeepSeekExceptionTests {
         val fromLong = DeepSeekException.from(503, Headers.Empty, null, "Service Unavailable")
         assertEquals(fromShort::class, fromLong::class)
     }
+
+    @Test
+    fun `message has no leading newline when error is null`() {
+        val ex = DeepSeekException.from(401, Headers.Empty, null, "Please check your API key.")
+        assertEquals("Please check your API key.", ex.message)
+    }
+
+    @Test
+    fun `message is empty when both error and fallback message are absent`() {
+        val ex = DeepSeekException.UnexpectedStatusCodeException(418, Headers.Empty, null, null)
+        assertEquals("", ex.message)
+    }
+
+    @Test
+    fun `message contains only error message when fallback message is null`() {
+        val error = DeepSeekError(DeepSeekError.Error(message = "Invalid API key"))
+        val ex = DeepSeekException.UnexpectedStatusCodeException(418, Headers.Empty, error, null)
+        assertEquals("Invalid API key", ex.message)
+    }
+
+    @Test
+    fun `message joins error and fallback with newline when both present`() {
+        val error = DeepSeekError(DeepSeekError.Error(message = "Invalid API key"))
+        val ex = DeepSeekException.from(401, Headers.Empty, error, "Please check your API key.")
+        assertEquals("Invalid API key\nPlease check your API key.", ex.message)
+    }
 }
