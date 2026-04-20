@@ -141,7 +141,7 @@ public object ChatCompletionMessageSerializer : KSerializer<ChatCompletionMessag
     override val descriptor: SerialDescriptor = buildClassSerialDescriptor("ChatCompletionMessage") {
         element<String?>("content")
         element<String?>("reasoning_content")
-        element("tool_calls", ListSerializer(ToolCall.serializer()).descriptor)
+        element<List<ToolCall>?>("tool_calls")
         element("role", String.serializer().descriptor)
     }
 
@@ -167,10 +167,10 @@ public object ChatCompletionMessageSerializer : KSerializer<ChatCompletionMessag
             descriptor, 0, String.serializer(), value.content
         )
         value.reasoningContent?.let {
-            composite.encodeSerializableElement(descriptor, 1, String.serializer(), it)
+            composite.encodeNullableSerializableElement(descriptor, 1, String.serializer(), it)
         }
         value.toolCalls?.let {
-            composite.encodeSerializableElement(
+            composite.encodeNullableSerializableElement(
                 descriptor, 2, ListSerializer(ToolCall.serializer()), it
             )
         }
