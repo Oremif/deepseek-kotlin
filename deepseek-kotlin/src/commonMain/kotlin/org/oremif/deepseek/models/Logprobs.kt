@@ -4,20 +4,23 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 public class LogProbs(
-    public val content: List<LogProb>?
+    public val content: List<LogProb>? = null,
+    public val reasoningContent: List<LogProb>? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is LogProbs) return false
-        return content == other.content
+        return content == other.content && reasoningContent == other.reasoningContent
     }
 
     override fun hashCode(): Int {
-        return content?.hashCode() ?: 0
+        var result = content?.hashCode() ?: 0
+        result = 31 * result + (reasoningContent?.hashCode() ?: 0)
+        return result
     }
 
     override fun toString(): String =
-        "LogProbs(content=$content)"
+        "LogProbs(content=$content, reasoningContent=$reasoningContent)"
 }
 
 @Serializable

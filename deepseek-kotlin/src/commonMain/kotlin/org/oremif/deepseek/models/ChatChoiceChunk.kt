@@ -13,27 +13,33 @@ import kotlinx.serialization.Serializable
  *
  * **Possible values: {`stop`, `length`, `content_filter`, `tool_calls`, `insufficient_system_resource`}**
  * @property index The index of the choice in the list of choices.
+ * @property logprobs Log probability information for the choice.
  */
 @Serializable
 public class ChatChoiceChunk(
     public val delta: ChatCompletionDelta,
     public val finishReason: FinishReason?,
     public val index: Long,
+    public val logprobs: LogProbs? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is ChatChoiceChunk) return false
 
-        return delta == other.delta && finishReason == other.finishReason && index == other.index
+        return delta == other.delta &&
+                finishReason == other.finishReason &&
+                index == other.index &&
+                logprobs == other.logprobs
     }
 
     override fun hashCode(): Int {
         var result = delta.hashCode()
         result = 31 * result + (finishReason?.hashCode() ?: 0)
         result = 31 * result + index.hashCode()
+        result = 31 * result + (logprobs?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String =
-        "ChatCompletionChoiceChunk(delta=$delta, finishReason=$finishReason, index=$index)"
+        "ChatCompletionChoiceChunk(delta=$delta, finishReason=$finishReason, index=$index, logprobs=$logprobs)"
 }
