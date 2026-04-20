@@ -222,29 +222,47 @@ public abstract class DeepSeekClientBase(
         }
 
         /**
-         * Configures the underlying HTTP client with custom settings.
+         * Applies additional configuration on top of the default HTTP client.
          *
-         * Use this method for advanced customization of the HTTP client.
+         * The [block] is merged with the existing configuration via [HttpClient.config], so the
+         * defaults installed by the builder (Auth, ContentNegotiation, base URL via
+         * `defaultRequest`, HttpRequestRetry, HttpTimeout, Logging — plus SSE for
+         * [DeepSeekClientStream]) are preserved. Calling this method multiple times layers each
+         * [block] on top of the previous state.
          *
-         * Example:
+         * Use [httpClient] with an [HttpClient] argument if you want to replace the underlying
+         * client entirely instead of extending it.
+         *
+         * Example — override the request timeout while keeping all other defaults:
          * ```kotlin
          * val client = DeepSeekClient("token") {
          *     httpClient {
          *         install(HttpTimeout) {
-         *             requestTimeoutMillis = 60000
+         *             requestTimeoutMillis = 60_000
          *         }
          *     }
          * }
          * ```
          *
-         * @param block Configuration block for the HTTP client
+         * @param block Additional configuration to merge on top of the default HTTP client
          * @return This builder for chaining
          */
         public fun httpClient(block: HttpClientConfig<*>.() -> Unit): Builder {
-            client = HttpClient { block(this) }
+            client = client.config(block)
             return this
         }
 
+        /**
+         * Replaces the underlying HTTP client entirely with the provided [client].
+         *
+         * Unlike the [httpClient] overload that takes a configuration block, this overload does
+         * **not** preserve the builder defaults — the caller is responsible for installing Auth,
+         * ContentNegotiation, the base URL in `defaultRequest`, retries, timeouts, logging, and
+         * (for streaming) SSE.
+         *
+         * @param client Fully configured HTTP client to use
+         * @return This builder for chaining
+         */
         public fun httpClient(client: HttpClient): Builder {
             this.client = client
             return this
