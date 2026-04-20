@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "schedule:monthly"
+  ],
+  "timezone": "UTC",
+  "packageRules": [
+    {
+      "matchPackageNames": ["io.ktor:*"],
+      "groupName": "Ktor"
+    },
+    {
+      "matchPackageNames": ["org.jetbrains.kotlinx:kotlinx-coroutines-*"],
+      "groupName": "Kotlinx Coroutines"
+    },
+    {
+      "matchPackageNames": ["org.jetbrains.kotlinx:kotlinx-serialization-*"],
+      "groupName": "Kotlinx Serialization"
+    },
+    {
+      "matchPackageNames": [
+        "org.jetbrains.kotlin:*",
+        "org.jetbrains.kotlin.multiplatform",
+        "org.jetbrains.kotlin.plugin.serialization"
+      ],
+      "groupName": "Kotlin"
+    },
+    {
+      "matchPackageNames": [
+        "com.android.library",
+        "com.android.application",
+        "com.android.tools.build:gradle"
+      ],
+      "groupName": "Android Gradle Plugin"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions"
+    }
+  ]
+}
