@@ -5,10 +5,11 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
 import org.oremif.deepseek.errors.DeepSeekError
 import org.oremif.deepseek.errors.DeepSeekException
+import org.oremif.deepseek.errors.toDeepSeekHeaders
 
 internal suspend fun validateResponse(response: HttpResponse) {
     if (!response.status.isSuccess()) {
-        val headers = response.headers
+        val headers = response.headers.toDeepSeekHeaders()
         val error = response.body<DeepSeekError>()
         val description = response.status.description
         throw if (description.isEmpty()) {

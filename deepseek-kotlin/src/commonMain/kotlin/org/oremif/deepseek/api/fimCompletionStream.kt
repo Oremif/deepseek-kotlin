@@ -11,6 +11,7 @@ import org.oremif.deepseek.client.DeepSeekClientBase
 import org.oremif.deepseek.client.DeepSeekClientStream
 import org.oremif.deepseek.errors.DeepSeekError
 import org.oremif.deepseek.errors.DeepSeekException
+import org.oremif.deepseek.errors.toDeepSeekHeaders
 import org.oremif.deepseek.models.FIMCompletion
 import org.oremif.deepseek.models.FIMCompletionParams
 import org.oremif.deepseek.models.FIMCompletionRequest
@@ -68,7 +69,7 @@ public suspend fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletion
             val error = runCatching {
                 config.jsonConfig.decodeFromString<DeepSeekError>(response.bodyAsText())
             }.getOrNull()
-            throw DeepSeekException.from(response.status.value, response.headers, error)
+            throw DeepSeekException.from(response.status.value, response.headers.toDeepSeekHeaders(), error)
         }
     }
 }

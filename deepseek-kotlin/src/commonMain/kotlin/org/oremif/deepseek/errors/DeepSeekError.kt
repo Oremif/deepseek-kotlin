@@ -1,6 +1,5 @@
 package org.oremif.deepseek.errors
 
-import io.ktor.http.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonObject
 
@@ -23,61 +22,63 @@ public class DeepSeekError(
 
 public sealed class DeepSeekException(
     public val statusCode: Int,
-    public val headers: Headers,
+    public val headers: DeepSeekHeaders,
     public val error: DeepSeekError?,
     message: String? = null,
     cause: Throwable? = null,
 ) : RuntimeException(listOfNotNull(error?.error?.message, message).joinToString("\n"), cause) {
 
     public class BadRequestException(
-        headers: Headers, error: DeepSeekError?, message: String?
+        headers: DeepSeekHeaders, error: DeepSeekError?, message: String?
     ) : DeepSeekException(400, headers, error, message)
 
     public class UnauthorizedException(
-        headers: Headers, error: DeepSeekError?, message: String?
+        headers: DeepSeekHeaders, error: DeepSeekError?, message: String?
     ) : DeepSeekException(401, headers, error, message)
 
     public class InsufficientBalanceException(
-        headers: Headers, error: DeepSeekError?, message: String?
+        headers: DeepSeekHeaders, error: DeepSeekError?, message: String?
     ) : DeepSeekException(402, headers, error, message)
 
     public class PermissionDeniedException(
-        headers: Headers, error: DeepSeekError?, message: String?
+        headers: DeepSeekHeaders, error: DeepSeekError?, message: String?
     ) : DeepSeekException(403, headers, error, message)
 
     public class NotFoundException(
-        headers: Headers, error: DeepSeekError?, message: String?
+        headers: DeepSeekHeaders, error: DeepSeekError?, message: String?
     ) : DeepSeekException(404, headers, error, message)
 
     public class UnprocessableEntityException(
-        headers: Headers, error: DeepSeekError?, message: String?
+        headers: DeepSeekHeaders, error: DeepSeekError?, message: String?
     ) : DeepSeekException(422, headers, error, message)
 
     public class RateLimitException(
-        headers: Headers, error: DeepSeekError?, message: String?,
+        headers: DeepSeekHeaders, error: DeepSeekError?, message: String?,
     ) : DeepSeekException(429, headers, error, message)
 
     public class InternalServerException(
-        headers: Headers, error: DeepSeekError?, message: String?
+        headers: DeepSeekHeaders, error: DeepSeekError?, message: String?
     ) : DeepSeekException(500, headers, error, message)
 
     public class OverloadServerException(
-        headers: Headers, error: DeepSeekError?, message: String?
+        headers: DeepSeekHeaders, error: DeepSeekError?, message: String?
     ) : DeepSeekException(503, headers, error, message)
 
     public class UnexpectedStatusCodeException(
-        statusCode: Int, headers: Headers, error: DeepSeekError?, message: String?
+        statusCode: Int, headers: DeepSeekHeaders, error: DeepSeekError?, message: String?
     ) : DeepSeekException(statusCode, headers, error, message)
 
     public companion object {
-        public fun from(statusCode: Int, headers: Headers, error: DeepSeekError?, message: String): DeepSeekException =
+        public fun from(
+            statusCode: Int, headers: DeepSeekHeaders, error: DeepSeekError?, message: String
+        ): DeepSeekException =
             create(statusCode, headers, error, message)
 
-        public fun from(statusCode: Int, headers: Headers, error: DeepSeekError?): DeepSeekException =
+        public fun from(statusCode: Int, headers: DeepSeekHeaders, error: DeepSeekError?): DeepSeekException =
             create(statusCode, headers, error, defaultMessageFor(statusCode))
 
         private fun create(
-            statusCode: Int, headers: Headers, error: DeepSeekError?, message: String
+            statusCode: Int, headers: DeepSeekHeaders, error: DeepSeekError?, message: String
         ): DeepSeekException = when (statusCode) {
             400 -> BadRequestException(headers, error, message)
             401 -> UnauthorizedException(headers, error, message)
