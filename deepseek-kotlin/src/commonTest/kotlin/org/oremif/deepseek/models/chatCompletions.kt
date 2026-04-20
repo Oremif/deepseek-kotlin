@@ -253,4 +253,56 @@ class ChatCompletionTests {
         val chunk = streamingJsonConfig.decodeFromString<ChatCompletionChunk>(json)
         assertEquals("thinking...", chunk.choices.single().delta.reasoningContent)
     }
+
+    @Test
+    fun `ChatCompletionMessage toolCalls is null when tool_calls key is absent`() {
+        val json = """
+            {
+                "role": "assistant",
+                "content": "Hello!"
+            }
+        """.trimIndent()
+
+        val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
+        assertEquals("Hello!", message.content)
+        assertNull(message.toolCalls)
+    }
+
+    @Test
+    fun `ChatCompletionMessage toolCalls is null when tool_calls is JsonNull`() {
+        val json = """
+            {
+                "role": "assistant",
+                "content": "Hello!",
+                "tool_calls": null
+            }
+        """.trimIndent()
+
+        val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
+        assertEquals("Hello!", message.content)
+        assertNull(message.toolCalls)
+    }
+
+    @Test
+    fun `ChatCompletionMessage toolCalls is deserialized when present`() {
+        val json = """
+            {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                    {
+                        "id": "call_abc",
+                        "type": "function",
+                        "function": {"name": "get_weather", "arguments": {}}
+                    }
+                ]
+            }
+        """.trimIndent()
+
+        val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
+        val toolCalls = assertNotNull(message.toolCalls)
+        assertEquals(1, toolCalls.size)
+        assertEquals("call_abc", toolCalls[0].id)
+        assertEquals("get_weather", toolCalls[0].function.name)
+    }
 }

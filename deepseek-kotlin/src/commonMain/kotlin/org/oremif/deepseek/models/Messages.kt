@@ -15,6 +15,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.JsonClassDiscriminator
 import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -152,12 +153,12 @@ public object ChatCompletionMessageSerializer : KSerializer<ChatCompletionMessag
         return ChatCompletionMessage(
             content = json["content"]?.jsonPrimitive?.content,
             reasoningContent = json["reasoning_content"]?.jsonPrimitive?.content,
-            toolCalls = json["tool_calls"]?.let {
+            toolCalls = json["tool_calls"]?.takeIf { it !is JsonNull }?.let {
                 jsonInput.json.decodeFromJsonElement(
                     ListSerializer(ToolCall.serializer()),
                     it
                 )
-            } ?: listOf()
+            }
         )
     }
 
