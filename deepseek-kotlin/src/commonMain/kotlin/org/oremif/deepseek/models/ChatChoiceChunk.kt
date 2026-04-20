@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 public class ChatChoiceChunk(
-    public val delta: AssistantMessage,
+    public val delta: ChatCompletionDelta,
     public val finishReason: FinishReason?,
     public val index: Long,
 ) {
