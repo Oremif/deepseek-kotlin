@@ -111,28 +111,6 @@ public class FIMCompletionRequest internal constructor(
         }
     }
 
-    public class MessageBuilder {
-        private val messages = mutableListOf<ChatMessage>()
-
-        public fun system(content: String) {
-            messages.add(SystemMessage(content))
-        }
-
-        public fun user(content: String) {
-            messages.add(UserMessage(content))
-        }
-
-        public fun assistant(content: String) {
-            messages.add(AssistantMessage(content))
-        }
-
-        public fun tool(content: String, toolCallId: String) {
-            messages.add(ToolMessage(content, toolCallId))
-        }
-
-        internal fun build(): List<ChatMessage> = messages.toList()
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is FIMCompletionRequest) return false
