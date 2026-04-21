@@ -83,6 +83,7 @@ public fun chatCompletionStreamParams(block: ChatCompletionParams.StreamBuilder.
  * @property toolChoice Controls how the model selects tools to use
  * @property logprobs Whether to return log probabilities of output tokens
  * @property topLogprobs How many most likely tokens to return at each position (max 20)
+ * @property thinking Toggles the reasoning pass of `deepseek-reasoner`. See [Thinking].
  */
 public class ChatCompletionParams internal constructor(
     public val model: ChatModel,
@@ -99,6 +100,7 @@ public class ChatCompletionParams internal constructor(
     public val toolChoice: ToolChoice? = null,
     public val logprobs: Boolean? = null,
     public val topLogprobs: Int? = null,
+    public val thinking: Thinking? = null,
 ) : DeepSeekParams(frequencyPenalty, maxTokens, presencePenalty, stop, temperature, topP) {
 
     /**
@@ -117,6 +119,7 @@ public class ChatCompletionParams internal constructor(
         public var toolChoice: ToolChoice? = null
         public var logprobs: Boolean? = null
         public var topLogprobs: Int? = null
+        public var thinking: Thinking? = null
 
         internal fun build(): ChatCompletionParams {
             frequencyPenalty?.let { require(it in -2.0..2.0) { "frequencyPenalty must be between -2.0 and 2.0" } }
@@ -139,6 +142,7 @@ public class ChatCompletionParams internal constructor(
                 toolChoice = toolChoice,
                 logprobs = logprobs,
                 topLogprobs = topLogprobs,
+                thinking = thinking,
             )
         }
     }
@@ -160,6 +164,7 @@ public class ChatCompletionParams internal constructor(
         public var toolChoice: ToolChoice? = null
         public var logprobs: Boolean? = null
         public var topLogprobs: Int? = null
+        public var thinking: Thinking? = null
 
 
         internal fun build(): ChatCompletionParams {
@@ -185,6 +190,7 @@ public class ChatCompletionParams internal constructor(
                 toolChoice = toolChoice,
                 logprobs = logprobs,
                 topLogprobs = topLogprobs,
+                thinking = thinking,
             )
         }
     }
@@ -212,6 +218,7 @@ public class ChatCompletionParams internal constructor(
             toolChoice = toolChoice,
             logprobs = logprobs,
             topLogprobs = topLogprobs,
+            thinking = thinking,
         )
 
     /**
@@ -237,6 +244,7 @@ public class ChatCompletionParams internal constructor(
      * @param toolChoice New tool choice, or existing value if not specified
      * @param logprobs New log probabilities setting, or existing value if not specified
      * @param topLogprobs New top log probabilities count, or existing value if not specified
+     * @param thinking New thinking-mode toggle, or existing value if not specified
      * @return A new [ChatCompletionParams] instance with the specified changes
      */
     public fun copy(
@@ -254,6 +262,7 @@ public class ChatCompletionParams internal constructor(
         toolChoice: ToolChoice? = this.toolChoice,
         logprobs: Boolean? = this.logprobs,
         topLogprobs: Int? = this.topLogprobs,
+        thinking: Thinking? = this.thinking,
     ): ChatCompletionParams {
         return ChatCompletionParams(
             model = model,
@@ -270,6 +279,7 @@ public class ChatCompletionParams internal constructor(
             toolChoice = toolChoice,
             logprobs = logprobs,
             topLogprobs = topLogprobs,
+            thinking = thinking,
         )
     }
 
@@ -291,7 +301,8 @@ public class ChatCompletionParams internal constructor(
                 tools == other.tools &&
                 toolChoice == other.toolChoice &&
                 logprobs == other.logprobs &&
-                topLogprobs == other.topLogprobs
+                topLogprobs == other.topLogprobs &&
+                thinking == other.thinking
     }
 
     override fun hashCode(): Int {
@@ -309,10 +320,11 @@ public class ChatCompletionParams internal constructor(
         result = 31 * result + (streamOptions?.hashCode() ?: 0)
         result = 31 * result + (tools?.hashCode() ?: 0)
         result = 31 * result + (toolChoice?.hashCode() ?: 0)
+        result = 31 * result + (thinking?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String {
-        return "ChatCompletionParams(model=$model, frequencyPenalty=$frequencyPenalty, maxTokens=$maxTokens, presencePenalty=$presencePenalty, responseFormat=$responseFormat, stop=$stop, stream=$stream, streamOptions=$streamOptions, temperature=$temperature, topP=$topP, tools=$tools, toolChoice=$toolChoice, logprobs=$logprobs, topLogprobs=$topLogprobs)"
+        return "ChatCompletionParams(model=$model, frequencyPenalty=$frequencyPenalty, maxTokens=$maxTokens, presencePenalty=$presencePenalty, responseFormat=$responseFormat, stop=$stop, stream=$stream, streamOptions=$streamOptions, temperature=$temperature, topP=$topP, tools=$tools, toolChoice=$toolChoice, logprobs=$logprobs, topLogprobs=$topLogprobs, thinking=$thinking)"
     }
 }

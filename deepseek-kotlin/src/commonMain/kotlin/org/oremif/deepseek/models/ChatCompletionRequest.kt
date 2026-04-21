@@ -78,6 +78,9 @@ import kotlinx.serialization.Serializable
  * position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used.
  *
  * **Possible values: `<= 20`.**
+ * @property thinking Toggles the reasoning pass of the `deepseek-reasoner` model. See
+ * [Thinking] for the server-side behaviour, in particular the model-slug rewrite that
+ * happens when [ThinkingType.DISABLED] is sent with `model = deepseek-reasoner`.
  */
 @Serializable
 public class ChatCompletionRequest(
@@ -96,6 +99,7 @@ public class ChatCompletionRequest(
     public val toolChoice: ToolChoice? = null,
     public val logprobs: Boolean? = null,
     public val topLogprobs: Int? = null,
+    public val thinking: Thinking? = null,
 ) {
 
     /**
@@ -247,7 +251,8 @@ public class ChatCompletionRequest(
                 tools == other.tools &&
                 toolChoice == other.toolChoice &&
                 logprobs == other.logprobs &&
-                topLogprobs == other.topLogprobs
+                topLogprobs == other.topLogprobs &&
+                thinking == other.thinking
     }
 
     override fun hashCode(): Int {
@@ -266,9 +271,10 @@ public class ChatCompletionRequest(
         result = 31 * result + (toolChoice?.hashCode() ?: 0)
         result = 31 * result + (logprobs?.hashCode() ?: 0)
         result = 31 * result + (topLogprobs?.hashCode() ?: 0)
+        result = 31 * result + (thinking?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String =
-        "ChatCompletionRequest(messages=$messages, model=$model, frequencyPenalty=$frequencyPenalty, maxTokens=$maxTokens, presencePenalty=$presencePenalty, responseFormat=$responseFormat, stop=$stop, stream=$stream, streamOptions=$streamOptions, temperature=$temperature, topP=$topP, tools=$tools, toolChoice=$toolChoice, logprobs=$logprobs, topLogprobs=$topLogprobs)"
+        "ChatCompletionRequest(messages=$messages, model=$model, frequencyPenalty=$frequencyPenalty, maxTokens=$maxTokens, presencePenalty=$presencePenalty, responseFormat=$responseFormat, stop=$stop, stream=$stream, streamOptions=$streamOptions, temperature=$temperature, topP=$topP, tools=$tools, toolChoice=$toolChoice, logprobs=$logprobs, topLogprobs=$topLogprobs, thinking=$thinking)"
 }

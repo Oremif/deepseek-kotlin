@@ -105,15 +105,20 @@ public class TopLogProb(
  * @property textOffset Character offset of each token into the generated text.
  * @property tokenLogprobs Natural-log probability of each token in [tokens].
  * @property tokens The generated tokens as text.
- * @property topLogprobs For each token position, the alternatives considered, or `null`
- * when the request did not ask for top-logprobs.
+ * @property topLogprobs For each generated token position, a map from candidate token
+ * text to its natural-log probability. Populated only when the request sets
+ * `logprobs > 0`; `null` otherwise. Candidates that were considered but scored out of
+ * range typically appear with a sentinel value of `-9999.0`.
+ *
+ * Note: this shape is specific to the legacy completions endpoint and differs from
+ * chat's [LogProb.topLogprobs], which is a list of [TopLogProb] objects.
  */
 @Serializable
 public class FIMLogProbs(
     public val textOffset: List<Int>,
     public val tokenLogprobs: List<Double>,
     public val tokens: List<String>,
-    public val topLogprobs: List<TopLogProb>?
+    public val topLogprobs: List<Map<String, Double>>? = null,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
