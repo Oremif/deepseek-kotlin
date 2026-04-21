@@ -1,6 +1,6 @@
 # DeepSeek Kotlin SDK
 
-[![Maven Central](https://img.shields.io/maven-central/v/org.oremif/deepseek-kotlin)](https://search.maven.org/artifact/org.oremif/deepseek-kotlin)
+[![Maven Central](https://img.shields.io/maven-central/v/org.oremif/deepseek-kotlin)](https://central.sonatype.com/artifact/org.oremif/deepseek-kotlin)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Kotlin](https://img.shields.io/badge/kotlin-multiplatform-blue.svg?logo=kotlin)](https://kotlinlang.org)
 [![CI](https://github.com/Oremif/deepseek-kotlin/actions/workflows/ci.yml/badge.svg)](https://github.com/Oremif/deepseek-kotlin/actions/workflows/ci.yml)
