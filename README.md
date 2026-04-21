@@ -66,7 +66,7 @@ Add the dependency to your Gradle build:
 ```kotlin
 // build.gradle.kts
 dependencies {
-    implementation("org.oremif:deepseek-kotlin:0.3.4")
+    implementation("org.oremif:deepseek-kotlin:0.4.0")
 }
 ```
 
@@ -76,7 +76,7 @@ dependencies {
 ```groovy
 // build.gradle
 dependencies {
-    implementation 'org.oremif:deepseek-kotlin:0.3.4'
+    implementation 'org.oremif:deepseek-kotlin:0.4.0'
 }
 ```
 
@@ -91,7 +91,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation("org.oremif:deepseek-kotlin:0.3.4")
+                implementation("org.oremif:deepseek-kotlin:0.4.0")
             }
         }
     }
