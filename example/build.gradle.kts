@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     implementation("org.oremif:deepseek-kotlin:0.4.0")
-    implementation("org.slf4j:slf4j-simple:2.0.17")
+    implementation("org.slf4j:slf4j-simple:2.0.18")
 }
 
 tasks.test {
