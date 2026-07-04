@@ -8,7 +8,7 @@ serialization = "1.11.0"
 coroutines = "1.11.0"
 ktor = "3.5.1"
 slf4j = "2.0.18"
-kotest = "6.1.11"
+kotest = "6.2.1"
 maven-publish = "0.37.0"
 binary-compatibility-validator = "0.18.1"
 
