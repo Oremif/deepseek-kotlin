@@ -15,8 +15,9 @@ import kotlinx.serialization.Serializable
  * @property model Model that produced the response.
  * @property systemFingerprint Backend configuration fingerprint, if the API returned one.
  * @property object Object type discriminator; always `chat.completion.chunk`.
- * @property usage Token usage statistics. Only populated on the final usage chunk when
- * `streamOptions.includeUsage` is set; `null` on regular content chunks.
+ * @property usage Token usage statistics for the whole request, carried by the last content
+ * chunk — the one whose single choice adds no content and has a non-null `finish_reason`;
+ * `null` on the chunks before it. See [StreamOptions.includeUsage].
  */
 @Serializable
 public class ChatCompletionChunk(

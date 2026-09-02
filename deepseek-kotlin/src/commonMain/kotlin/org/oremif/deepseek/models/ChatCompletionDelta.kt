@@ -10,11 +10,12 @@ import kotlinx.serialization.Serializable
  * [content] and [reasoningContent] across chunks, and by merging [toolCalls] by
  * [ToolCallDelta.index].
  *
- * @property role The role of the author of this message. Typically present only on
- * the first chunk of a response.
+ * @property role The role of the author of this message. The server may repeat it on every
+ * content chunk and send `null` on the terminating one, so treat it as informational
+ * rather than as a first-chunk marker.
  * @property content Incremental content produced by the model on this step, if any.
- * @property reasoningContent For the `deepseek-reasoner` model: incremental reasoning
- * content produced on this step, if any.
+ * @property reasoningContent In thinking mode: incremental reasoning content produced on
+ * this step, if any.
  * @property toolCalls Incremental tool call updates produced on this step, if any.
  */
 @Serializable

@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 /**
  * Breakdown of how the `completion_tokens` count in [Usage] was spent.
  *
- * Currently only populated for the `deepseek-reasoner` model, which produces separate
- * reasoning output in addition to the visible assistant message.
+ * Populated when the model runs in thinking mode, which produces separate reasoning output
+ * in addition to the visible assistant message.
  *
  * @property reasoningTokens Number of tokens the model produced as reasoning content.
  */

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.oremif.deepseek.models
 
 /**
@@ -9,10 +11,9 @@ package org.oremif.deepseek.models
  * Example:
  * ```kotlin
  * val params = chatCompletionParams {
- *     model = ChatModel.DEEPSEEK_CHAT
+ *     model = ChatModel.DEEPSEEK_V4_FLASH
  *     temperature = 0.8
  *     maxTokens = 500
- *     presencePenalty = 0.3
  *     responseFormat = ResponseFormat.jsonObject
  * }
  * ```
@@ -34,7 +35,7 @@ public fun chatCompletionParams(block: ChatCompletionParams.Builder.() -> Unit):
  * Example:
  * ```kotlin
  * val streamParams = chatCompletionStreamParams {
- *     model = ChatModel.DEEPSEEK_CHAT
+ *     model = ChatModel.DEEPSEEK_V4_FLASH
  *     temperature = 0.7
  *     streamOptions = StreamOptions(includeUsage = true)
  * }
@@ -60,19 +61,20 @@ public fun chatCompletionStreamParams(block: ChatCompletionParams.StreamBuilder.
  * Example:
  * ```kotlin
  * val params = chatCompletionParams {
- *     model = ChatModel.DEEPSEEK_CHAT
+ *     model = ChatModel.DEEPSEEK_V4_FLASH
  *     temperature = 0.7
  *     maxTokens = 1000
- *     presencePenalty = 0.5
  * }
  *
  * client.chat(params, messages)
  * ```
  *
- * @property model The DeepSeek model to use for chat completion
- * @property frequencyPenalty Number between -2.0 and 2.0 that penalizes tokens based on their frequency in the text
- * @property maxTokens Maximum number of tokens to generate, between 1 and 8192
- * @property presencePenalty Number between -2.0 and 2.0 that penalizes tokens based on their presence in the text
+ * @property model The DeepSeek model to use for chat completion; defaults to
+ * [ChatModel.DEEPSEEK_V4_FLASH]
+ * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API
+ * @property maxTokens Maximum number of tokens to generate; at least 1 and otherwise
+ * bounded by the model's context length
+ * @property presencePenalty Sent as `presence_penalty`, ignored by the API
  * @property responseFormat Format specification for the model's output
  * @property stop Custom stop sequences that will cause the model to stop generating further tokens
  * @property stream Whether to stream the response back piece by piece
@@ -83,7 +85,7 @@ public fun chatCompletionStreamParams(block: ChatCompletionParams.StreamBuilder.
  * @property toolChoice Controls how the model selects tools to use
  * @property logprobs Whether to return log probabilities of output tokens
  * @property topLogprobs How many most likely tokens to return at each position (max 20)
- * @property thinking Toggles the reasoning pass of `deepseek-reasoner`. See [Thinking].
+ * @property thinking Switches the model between thinking and non-thinking mode. See [Thinking].
  */
 public class ChatCompletionParams internal constructor(
     public val model: ChatModel,
@@ -107,9 +109,13 @@ public class ChatCompletionParams internal constructor(
      * Builder for creating [ChatCompletionParams] with standard (non-streaming) configuration.
      */
     public class Builder {
-        public var model: ChatModel = ChatModel.DEEPSEEK_CHAT
+        public var model: ChatModel = ChatModel.DEEPSEEK_V4_FLASH
+
+        @Deprecated(DEPRECATED_PENALTY)
         public var frequencyPenalty: Double? = null
         public var maxTokens: Int? = null
+
+        @Deprecated(DEPRECATED_PENALTY)
         public var presencePenalty: Double? = null
         public var responseFormat: ResponseFormat? = null
         public var stop: StopReason? = null
@@ -122,9 +128,7 @@ public class ChatCompletionParams internal constructor(
         public var thinking: Thinking? = null
 
         internal fun build(): ChatCompletionParams {
-            frequencyPenalty?.let { require(it in -2.0..2.0) { "frequencyPenalty must be between -2.0 and 2.0" } }
-            maxTokens?.let { require(it in 1..8192) { "maxTokens must be between 1 and 8192" } }
-            presencePenalty?.let { require(it in -2.0..2.0) { "presencePenalty must be between -2.0 and 2.0" } }
+            maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
             temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
             topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             topLogprobs?.let { require(it <= 20) { "topLogprobs must be <= 20" } }
@@ -151,9 +155,13 @@ public class ChatCompletionParams internal constructor(
      * Builder for creating [ChatCompletionParams] specifically configured for streaming responses.
      */
     public class StreamBuilder {
-        public var model: ChatModel = ChatModel.DEEPSEEK_CHAT
+        public var model: ChatModel = ChatModel.DEEPSEEK_V4_FLASH
+
+        @Deprecated(DEPRECATED_PENALTY)
         public var frequencyPenalty: Double? = null
         public var maxTokens: Int? = null
+
+        @Deprecated(DEPRECATED_PENALTY)
         public var presencePenalty: Double? = null
         public var responseFormat: ResponseFormat? = null
         public var stop: StopReason? = null
@@ -168,9 +176,7 @@ public class ChatCompletionParams internal constructor(
 
 
         internal fun build(): ChatCompletionParams {
-            frequencyPenalty?.let { require(it in -2.0..2.0) { "frequencyPenalty must be between -2.0 and 2.0" } }
-            maxTokens?.let { require(it in 1..8192) { "maxTokens must be between 1 and 8192" } }
-            presencePenalty?.let { require(it in -2.0..2.0) { "presencePenalty must be between -2.0 and 2.0" } }
+            maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
             temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
             topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             topLogprobs?.let { require(it <= 20) { "topLogprobs must be <= 20" } }

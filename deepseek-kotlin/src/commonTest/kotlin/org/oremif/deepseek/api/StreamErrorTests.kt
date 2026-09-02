@@ -22,12 +22,12 @@ class StreamErrorTests {
 
     private val chatRequest = ChatCompletionRequest(
         messages = listOf(UserMessage("Hi")),
-        model = ChatModel.DEEPSEEK_CHAT,
+        model = ChatModel.DEEPSEEK_V4_FLASH,
         stream = true
     )
 
     private val fimRequest = FIMCompletionRequest(
-        model = ChatModel.DEEPSEEK_CHAT,
+        model = ChatModel.DEEPSEEK_V4_FLASH,
         prompt = "def foo():",
         stream = true
     )

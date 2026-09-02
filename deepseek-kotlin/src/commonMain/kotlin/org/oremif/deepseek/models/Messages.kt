@@ -94,8 +94,8 @@ public class UserMessage(override val content: String?, public val name: String?
 }
 
 /**
- * Assistant-role message — either a prior model response replayed as context, or a
- * prefix-completion seed for the `deepseek-chat` prefix mode.
+ * Assistant-role message — either a prior model response replayed as context, or a seed
+ * for prefix completion.
  *
  * Model responses returned by the API are represented by the specialised
  * [ChatCompletionMessage] subclass, which additionally carries [ToolCall]s.
@@ -104,9 +104,11 @@ public class UserMessage(override val content: String?, public val name: String?
  * tool calls.
  * @property name Optional participant name forwarded to the model.
  * @property prefix When `true`, marks this message as a partial assistant response that
- * the model should continue generating from. See the DeepSeek API docs for prefix mode.
- * @property reasoningContent For the `deepseek-reasoner` model: the reasoning trace
- * associated with the response.
+ * the model should continue generating from. Only served from the beta base URL, so the
+ * client must be built with `baseUrl("https://api.deepseek.com/beta")`.
+ * @property reasoningContent Chain-of-thought that precedes [content] in thinking mode.
+ * Seeds the model's reasoning for the continuation, so it takes effect only alongside
+ * `prefix = true`.
  */
 @Serializable
 @SerialName("assistant")
@@ -227,8 +229,8 @@ public object ChatCompletionMessageSerializer : KSerializer<ChatCompletionMessag
         val jsonInput = decoder as? JsonDecoder ?: error("Can be deserialized only by JSON")
         val json = jsonInput.decodeJsonElement().jsonObject
         return ChatCompletionMessage(
-            content = json["content"]?.jsonPrimitive?.content,
-            reasoningContent = json["reasoning_content"]?.jsonPrimitive?.content,
+            content = json["content"]?.takeIf { it !is JsonNull }?.jsonPrimitive?.content,
+            reasoningContent = json["reasoning_content"]?.takeIf { it !is JsonNull }?.jsonPrimitive?.content,
             toolCalls = json["tool_calls"]?.takeIf { it !is JsonNull }?.let {
                 jsonInput.json.decodeFromJsonElement(
                     ListSerializer(ToolCall.serializer()),

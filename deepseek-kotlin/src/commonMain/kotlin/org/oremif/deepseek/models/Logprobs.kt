@@ -8,8 +8,8 @@ import kotlinx.serialization.Serializable
  * Populated only when the request sets `logprobs = true`.
  *
  * @property content Per-token log-probabilities for the assistant's visible content.
- * @property reasoningContent Per-token log-probabilities for the `deepseek-reasoner`
- * reasoning trace, when applicable.
+ * @property reasoningContent Per-token log-probabilities for the reasoning trace produced
+ * in thinking mode, when applicable.
  */
 @Serializable
 public class LogProbs(

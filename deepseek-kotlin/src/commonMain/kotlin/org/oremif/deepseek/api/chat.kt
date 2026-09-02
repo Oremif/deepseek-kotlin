@@ -17,7 +17,7 @@ import org.oremif.deepseek.utils.validateResponse
  *
  * Example:
  * ```kotlin
- * val request = chatCompletionParams { model = ChatModel.DEEPSEEK_CHAT }
+ * val request = chatCompletionParams { model = ChatModel.DEEPSEEK_V4_FLASH }
  *     .createRequest(listOf(UserMessage("Hello!")))
  * val response = client.chatCompletion(request)
  * ```
@@ -92,7 +92,7 @@ public suspend fun DeepSeekClient.chat(params: ChatCompletionParams, messages: L
  * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.chat(messages: List<ChatMessage>): ChatCompletion =
-    chat(ChatCompletionParams(ChatModel.DEEPSEEK_CHAT), messages)
+    chat(ChatCompletionParams(ChatModel.DEEPSEEK_V4_FLASH), messages)
 
 /**
  * Sends a single user message to the chat API.
@@ -175,10 +175,9 @@ public suspend fun DeepSeekClient.chat(blockMessage: ChatCompletionRequest.Messa
  * ```kotlin
  * val response = client.chatCompletion {
  *     params {
- *         model = ChatModel.DEEPSEEK_CHAT
+ *         model = ChatModel.DEEPSEEK_V4_PRO
  *         temperature = 0.7
  *         maxTokens = 2000
- *         frequencyPenalty = 0.5
  *     }
  *     messages {
  *         system("You are a Kotlin expert")

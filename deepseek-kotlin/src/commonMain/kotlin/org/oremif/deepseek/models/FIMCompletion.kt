@@ -16,8 +16,8 @@ import kotlinx.serialization.Serializable
  * @property model Model that produced the completion.
  * @property systemFingerprint Backend configuration fingerprint, if the API returned one.
  * @property object Object type discriminator; always `text_completion`.
- * @property usage Token usage statistics. Only populated on the final usage chunk when
- * `streamOptions.includeUsage` is set for streaming requests.
+ * @property usage Token usage statistics. For streaming requests they arrive on the last
+ * content chunk — the one with a non-null `finish_reason`. See [StreamOptions.includeUsage].
  */
 @Serializable
 public class FIMCompletion(

@@ -4,21 +4,18 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 /**
- * Toggles the reasoning ("thinking") pass of the `deepseek-reasoner` model.
+ * Switches a model between its thinking and non-thinking mode.
  *
- * When omitted, `deepseek-reasoner` behaves as if [ThinkingType.ENABLED] were passed.
- *
- * Important behaviour observed against the live API: sending
- * `Thinking(ThinkingType.DISABLED)` together with `model = [ChatModel.DEEPSEEK_REASONER]`
- * causes the server to route the request to `deepseek-chat`. The returned
- * [ChatCompletion.model] comes back as `"deepseek-chat"` and no `reasoning_content` is
- * produced. Consumers that branch on `response.model` must account for this rewrite.
+ * Omitting this field is equivalent to [ThinkingType.ENABLED]. A thinking response carries
+ * its chain-of-thought in [ChatCompletionMessage.reasoningContent] and bills the extra
+ * tokens under [CompletionTokenDetails.reasoningTokens]; the non-thinking mode answers
+ * faster and cheaper. Either way [ChatCompletion.model] echoes the slug that was sent.
  *
  * Example:
  * ```kotlin
  * val params = chatCompletionParams {
- *     model = ChatModel.DEEPSEEK_REASONER
- *     thinking = Thinking(ThinkingType.DISABLED) // server routes to deepseek-chat
+ *     model = ChatModel.DEEPSEEK_V4_FLASH
+ *     thinking = Thinking(ThinkingType.DISABLED) // skip the reasoning pass
  * }
  * ```
  *
@@ -44,13 +41,13 @@ public class Thinking(
  */
 @Serializable
 public enum class ThinkingType {
-    /** Reasoning pass is active (default behaviour of `deepseek-reasoner`). */
+    /** Reasoning pass is active; this is what an omitted [Thinking] means. */
     @SerialName("enabled")
     ENABLED,
 
     /**
-     * Reasoning pass is suppressed. Paired with `model = deepseek-reasoner`, the server
-     * transparently downgrades the request to `deepseek-chat` — see [Thinking].
+     * Reasoning pass is suppressed: the model answers directly, without producing
+     * `reasoning_content` — see [Thinking].
      */
     @SerialName("disabled")
     DISABLED,

@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.oremif.deepseek.models
 
 import kotlinx.serialization.Serializable
@@ -6,31 +8,16 @@ import kotlinx.serialization.Serializable
  * Represents the Chat Completion request
  *
  * @property messages A list of messages comprising the conversation so far.
- * @property model ID of the model to use. You can use deepseek-chat.
+ * @property model ID of the model to use.
  *
- * **Possible values: {`deepseek-chat`, `deepseek-reasoner`}.**
- * @property frequencyPenalty  Number between -2.0 and 2.0.
- * Positive values penalize new tokens based on their existing frequency in the text so far,
- * decreasing the model's likelihood to repeat the same line verbatim.
- *
- * **Possible values: `>= -2` and `<= 2`.**
- *
- * **Default value: `0`.**
- * @property maxTokens Integer between 1 and 8192.
- * The maximum number of tokens that can be generated in the chat completion.
+ * **Possible values: {`deepseek-v4-flash`, `deepseek-v4-pro`, `deepseek-v4-flash-vision-exp`}.**
+ * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API.
+ * @property maxTokens The maximum number of tokens that can be generated in the chat completion.
  *
  * The total length of input tokens and generated tokens is limited by the model's context length.
  *
- * If `max_tokens` is not specified, the default value 4096 is used.
- *
- * **Possible values: `> 1`.**
- * @property presencePenalty Number between -2.0 and 2.0.
- * Positive values penalize new tokens based on whether they appear in the text so far,
- * increasing the model's likelihood to talk about new topics.
- *
- * **Possible values: `>= -2` and `<= 2`.**
- *
- * **Default value: `0`.**
+ * **Possible values: `>= 1`.**
+ * @property presencePenalty Sent as `presence_penalty`, ignored by the API.
  * @property responseFormat An object specifying the format that the model must output.
  * Setting to { "type": "json_object" } enables JSON Output,
  * which guarantees the message the model generates is valid JSON.
@@ -78,16 +65,16 @@ import kotlinx.serialization.Serializable
  * position, each with an associated log probability. `logprobs` must be set to `true` if this parameter is used.
  *
  * **Possible values: `<= 20`.**
- * @property thinking Toggles the reasoning pass of the `deepseek-reasoner` model. See
- * [Thinking] for the server-side behaviour, in particular the model-slug rewrite that
- * happens when [ThinkingType.DISABLED] is sent with `model = deepseek-reasoner`.
+ * @property thinking Switches the model between thinking and non-thinking mode. See [Thinking].
  */
 @Serializable
 public class ChatCompletionRequest(
     public val messages: List<ChatMessage>,
     public val model: ChatModel,
+    @Deprecated(DEPRECATED_PENALTY)
     public val frequencyPenalty: Double? = null,
     public val maxTokens: Int? = null,
+    @Deprecated(DEPRECATED_PENALTY)
     public val presencePenalty: Double? = null,
     public val responseFormat: ResponseFormat? = null,
     public val stop: StopReason? = null,
@@ -111,7 +98,7 @@ public class ChatCompletionRequest(
     public class Builder {
         private var messages = mutableListOf<ChatMessage>()
         private var params: ChatCompletionParams = ChatCompletionParams(
-            model = ChatModel.DEEPSEEK_CHAT,
+            model = ChatModel.DEEPSEEK_V4_FLASH,
         )
 
         /**
@@ -148,7 +135,7 @@ public class ChatCompletionRequest(
     public class StreamBuilder {
         private var messages = mutableListOf<ChatMessage>()
         private var params: ChatCompletionParams = ChatCompletionParams(
-            model = ChatModel.DEEPSEEK_CHAT,
+            model = ChatModel.DEEPSEEK_V4_FLASH,
         )
 
         /**
@@ -258,20 +245,20 @@ public class ChatCompletionRequest(
     override fun hashCode(): Int {
         var result = messages.hashCode()
         result = 31 * result + model.hashCode()
-        result = 31 * result + (frequencyPenalty?.hashCode() ?: 0)
-        result = 31 * result + (maxTokens?.hashCode() ?: 0)
-        result = 31 * result + (presencePenalty?.hashCode() ?: 0)
-        result = 31 * result + (responseFormat?.hashCode() ?: 0)
-        result = 31 * result + (stop?.hashCode() ?: 0)
-        result = 31 * result + (stream?.hashCode() ?: 0)
-        result = 31 * result + (streamOptions?.hashCode() ?: 0)
-        result = 31 * result + (temperature?.hashCode() ?: 0)
-        result = 31 * result + (topP?.hashCode() ?: 0)
-        result = 31 * result + (tools?.hashCode() ?: 0)
-        result = 31 * result + (toolChoice?.hashCode() ?: 0)
-        result = 31 * result + (logprobs?.hashCode() ?: 0)
-        result = 31 * result + (topLogprobs?.hashCode() ?: 0)
-        result = 31 * result + (thinking?.hashCode() ?: 0)
+        result = 31 * result + frequencyPenalty.hashCode()
+        result = 31 * result + maxTokens.hashCode()
+        result = 31 * result + presencePenalty.hashCode()
+        result = 31 * result + responseFormat.hashCode()
+        result = 31 * result + stop.hashCode()
+        result = 31 * result + stream.hashCode()
+        result = 31 * result + streamOptions.hashCode()
+        result = 31 * result + temperature.hashCode()
+        result = 31 * result + topP.hashCode()
+        result = 31 * result + tools.hashCode()
+        result = 31 * result + toolChoice.hashCode()
+        result = 31 * result + logprobs.hashCode()
+        result = 31 * result + topLogprobs.hashCode()
+        result = 31 * result + thinking.hashCode()
         return result
     }
 

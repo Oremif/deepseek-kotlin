@@ -14,16 +14,12 @@ class ParamsValidationTests {
             chatCompletionParams {
                 temperature = 0.0
                 topP = 0.0
-                frequencyPenalty = -2.0
-                presencePenalty = 2.0
                 maxTokens = 1
                 topLogprobs = 0
             }
             chatCompletionParams {
                 temperature = 2.0
                 topP = 1.0
-                frequencyPenalty = 2.0
-                presencePenalty = -2.0
                 maxTokens = 8192
                 topLogprobs = 20
             }
@@ -61,9 +57,12 @@ class ParamsValidationTests {
     }
 
     @Test
-    fun `chat params reject maxTokens above 8192`() {
-        shouldThrow<IllegalArgumentException> {
-            chatCompletionParams { maxTokens = 9000 }
+    fun `chat params accept maxTokens beyond the retired 8192 cap`() {
+        shouldNotThrowAny {
+            chatCompletionParams { maxTokens = 384_000 }
+            chatCompletionStreamParams { maxTokens = 384_000 }
+            fimCompletionParams { maxTokens = 384_000 }
+            fimCompletionStreamParams { maxTokens = 384_000 }
         }
     }
 
@@ -80,7 +79,7 @@ class ParamsValidationTests {
             chatCompletionStreamParams { topP = 1.01 }
         }
         shouldThrow<IllegalArgumentException> {
-            chatCompletionStreamParams { frequencyPenalty = -3.0 }
+            chatCompletionStreamParams { maxTokens = 0 }
         }
     }
 
@@ -111,8 +110,6 @@ class ParamsValidationTests {
             fimCompletionParams {
                 temperature = 0.0
                 topP = 1.0
-                frequencyPenalty = -2.0
-                presencePenalty = 2.0
                 maxTokens = 1
                 logprobs = 20
             }
@@ -123,5 +120,28 @@ class ParamsValidationTests {
     fun `fim stream params force stream = true`() {
         val params = fimCompletionStreamParams { maxTokens = 100 }
         params.stream shouldBe true
+    }
+
+    @Test
+    fun `fim params default to the only model the endpoint accepts`() {
+        fimCompletionParams { }.model shouldBe ChatModel.DEEPSEEK_V4_PRO
+        fimCompletionStreamParams { }.model shouldBe ChatModel.DEEPSEEK_V4_PRO
+    }
+
+    @Test
+    fun `fim params reject the vision model`() {
+        val ex = shouldThrow<IllegalArgumentException> {
+            fimCompletionParams { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
+        }
+        ex.message!! shouldContain "deepseek-v4-flash-vision-exp"
+        shouldThrow<IllegalArgumentException> {
+            fimCompletionStreamParams { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
+        }
+    }
+
+    @Test
+    fun `chat params default to the flash model`() {
+        chatCompletionParams { }.model shouldBe ChatModel.DEEPSEEK_V4_FLASH
+        chatCompletionStreamParams { }.model shouldBe ChatModel.DEEPSEEK_V4_FLASH
     }
 }
