@@ -11,6 +11,9 @@ import kotlinx.serialization.Serializable
  * tokens under [CompletionTokenDetails.reasoningTokens]; the non-thinking mode answers
  * faster and cheaper. Either way [ChatCompletion.model] echoes the slug that was sent.
  *
+ * How long that reasoning pass runs is a separate, top-level request field — see
+ * [ReasoningEffort].
+ *
  * Example:
  * ```kotlin
  * val params = chatCompletionParams {

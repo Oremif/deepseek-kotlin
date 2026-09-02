@@ -30,28 +30,36 @@ public sealed interface ToolFunction {
  * @property description Natural-language description of what the function does; helps the
  * model decide when to call it.
  * @property parameters JSON-Schema description of the arguments the function accepts.
+ * @property strict Whether the API constrains the generated arguments to
+ * [parameters] instead of merely prompting for them. Beta feature; left out of the
+ * request when `null`, which the API reads as `false`.
  */
 @Serializable
 public class FunctionRequest(
     override val name: String,
     public val description: String?,
     public val parameters: JsonObject?,
+    public val strict: Boolean? = null,
 ) : ToolFunction {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is FunctionRequest) return false
-        return name == other.name && description == other.description && parameters == other.parameters
+        return name == other.name &&
+                description == other.description &&
+                parameters == other.parameters &&
+                strict == other.strict
     }
 
     override fun hashCode(): Int {
         var result = name.hashCode()
         result = 31 * result + (description?.hashCode() ?: 0)
         result = 31 * result + (parameters?.hashCode() ?: 0)
+        result = 31 * result + (strict?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String =
-        "FunctionRequest(name='$name', description=$description, parameters=$parameters)"
+        "FunctionRequest(name='$name', description=$description, parameters=$parameters, strict=$strict)"
 }
 
 /**

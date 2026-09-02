@@ -9,10 +9,10 @@ import io.kotest.matchers.string.shouldEndWith
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.buildJsonObject
 import org.oremif.deepseek.errors.DeepSeekException
-import org.oremif.deepseek.models.ChatModel
-import org.oremif.deepseek.models.FinishReason
-import org.oremif.deepseek.models.UserMessage
+import org.oremif.deepseek.models.*
 import org.oremif.deepseek.testing.mockEngine
 import org.oremif.deepseek.testing.testClient
 import kotlin.test.Test
@@ -150,5 +150,46 @@ class ChatCompletionApiTests {
         body shouldContain "\"model\":\"deepseek-v4-pro\""
         body shouldContain "\"role\":\"system\""
         body shouldContain "\"role\":\"user\""
+    }
+
+    @Test
+    fun `chatCompletion DSL sends reasoning_effort user_id and strict tools`() = runTest {
+        var capturedBody: String? = null
+        val engine = mockEngine { request ->
+            capturedBody = request.body.toByteArray().decodeToString()
+            respond(
+                content = successBody,
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            )
+        }
+        val client = testClient(engine)
+
+        client.chatCompletion {
+            params {
+                model = ChatModel.DEEPSEEK_V4_PRO
+                thinking = Thinking(ThinkingType.ENABLED)
+                reasoningEffort = ReasoningEffort.MAX
+                userId = "user-42"
+                tools = listOf(
+                    Tool(
+                        type = ToolCallType.FUNCTION,
+                        function = FunctionRequest(
+                            name = "get_weather",
+                            description = "Get the weather",
+                            parameters = buildJsonObject { put("type", JsonPrimitive("object")) },
+                            strict = true,
+                        ),
+                    )
+                )
+            }
+            messages { user("Hi") }
+        }
+
+        val body = capturedBody.shouldNotBeNull()
+        body shouldContain "\"thinking\":{\"type\":\"enabled\"}"
+        body shouldContain "\"reasoning_effort\":\"max\""
+        body shouldContain "\"user_id\":\"user-42\""
+        body shouldContain "\"strict\":true"
     }
 }
