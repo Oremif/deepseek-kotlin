@@ -487,13 +487,14 @@ public final class org/oremif/deepseek/models/ChatCompletionNamedToolChoice$Comp
 }
 
 public final class org/oremif/deepseek/models/ChatCompletionParams : org/oremif/deepseek/models/DeepSeekParams {
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Double;Lorg/oremif/deepseek/models/ResponseFormat;Lorg/oremif/deepseek/models/StopReason;Ljava/lang/Boolean;Lorg/oremif/deepseek/models/StreamOptions;Ljava/lang/Double;Ljava/lang/Double;Ljava/util/List;Lorg/oremif/deepseek/models/ToolChoice;Ljava/lang/Boolean;Ljava/lang/Integer;Lorg/oremif/deepseek/models/Thinking;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun copy-OodFPpI (Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Double;Lorg/oremif/deepseek/models/ResponseFormat;Lorg/oremif/deepseek/models/StopReason;Ljava/lang/Boolean;Lorg/oremif/deepseek/models/StreamOptions;Ljava/lang/Double;Ljava/lang/Double;Ljava/util/List;Lorg/oremif/deepseek/models/ToolChoice;Ljava/lang/Boolean;Ljava/lang/Integer;Lorg/oremif/deepseek/models/Thinking;)Lorg/oremif/deepseek/models/ChatCompletionParams;
-	public static synthetic fun copy-OodFPpI$default (Lorg/oremif/deepseek/models/ChatCompletionParams;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Double;Lorg/oremif/deepseek/models/ResponseFormat;Lorg/oremif/deepseek/models/StopReason;Ljava/lang/Boolean;Lorg/oremif/deepseek/models/StreamOptions;Ljava/lang/Double;Ljava/lang/Double;Ljava/util/List;Lorg/oremif/deepseek/models/ToolChoice;Ljava/lang/Boolean;Ljava/lang/Integer;Lorg/oremif/deepseek/models/Thinking;ILjava/lang/Object;)Lorg/oremif/deepseek/models/ChatCompletionParams;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Double;Lorg/oremif/deepseek/models/ResponseFormat;Lorg/oremif/deepseek/models/StopReason;Ljava/lang/Boolean;Lorg/oremif/deepseek/models/StreamOptions;Ljava/lang/Double;Ljava/lang/Double;Ljava/util/List;Lorg/oremif/deepseek/models/ToolChoice;Ljava/lang/Boolean;Ljava/lang/Integer;Lorg/oremif/deepseek/models/Thinking;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy-Ml02HBk (Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Double;Lorg/oremif/deepseek/models/ResponseFormat;Lorg/oremif/deepseek/models/StopReason;Ljava/lang/Boolean;Lorg/oremif/deepseek/models/StreamOptions;Ljava/lang/Double;Ljava/lang/Double;Ljava/util/List;Lorg/oremif/deepseek/models/ToolChoice;Ljava/lang/Boolean;Ljava/lang/Integer;Lorg/oremif/deepseek/models/Thinking;Ljava/lang/String;Ljava/lang/String;)Lorg/oremif/deepseek/models/ChatCompletionParams;
+	public static synthetic fun copy-Ml02HBk$default (Lorg/oremif/deepseek/models/ChatCompletionParams;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Double;Lorg/oremif/deepseek/models/ResponseFormat;Lorg/oremif/deepseek/models/StopReason;Ljava/lang/Boolean;Lorg/oremif/deepseek/models/StreamOptions;Ljava/lang/Double;Ljava/lang/Double;Ljava/util/List;Lorg/oremif/deepseek/models/ToolChoice;Ljava/lang/Boolean;Ljava/lang/Integer;Lorg/oremif/deepseek/models/Thinking;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lorg/oremif/deepseek/models/ChatCompletionParams;
 	public final fun createRequest (Ljava/util/List;)Lorg/oremif/deepseek/models/ChatCompletionRequest;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getLogprobs ()Ljava/lang/Boolean;
 	public final fun getModel-GojUQW0 ()Ljava/lang/String;
+	public final fun getReasoningEffort-EJCfyis ()Ljava/lang/String;
 	public final fun getResponseFormat ()Lorg/oremif/deepseek/models/ResponseFormat;
 	public final fun getStream ()Ljava/lang/Boolean;
 	public final fun getStreamOptions ()Lorg/oremif/deepseek/models/StreamOptions;
@@ -501,6 +502,7 @@ public final class org/oremif/deepseek/models/ChatCompletionParams : org/oremif/
 	public final fun getToolChoice ()Lorg/oremif/deepseek/models/ToolChoice;
 	public final fun getTools ()Ljava/util/List;
 	public final fun getTopLogprobs ()Ljava/lang/Integer;
+	public final fun getUserId ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -512,6 +514,7 @@ public final class org/oremif/deepseek/models/ChatCompletionParams$Builder {
 	public final fun getMaxTokens ()Ljava/lang/Integer;
 	public final fun getModel-GojUQW0 ()Ljava/lang/String;
 	public final fun getPresencePenalty ()Ljava/lang/Double;
+	public final fun getReasoningEffort-EJCfyis ()Ljava/lang/String;
 	public final fun getResponseFormat ()Lorg/oremif/deepseek/models/ResponseFormat;
 	public final fun getStop ()Lorg/oremif/deepseek/models/StopReason;
 	public final fun getTemperature ()Ljava/lang/Double;
@@ -520,11 +523,13 @@ public final class org/oremif/deepseek/models/ChatCompletionParams$Builder {
 	public final fun getTools ()Ljava/util/List;
 	public final fun getTopLogprobs ()Ljava/lang/Integer;
 	public final fun getTopP ()Ljava/lang/Double;
+	public final fun getUserId ()Ljava/lang/String;
 	public final fun setFrequencyPenalty (Ljava/lang/Double;)V
 	public final fun setLogprobs (Ljava/lang/Boolean;)V
 	public final fun setMaxTokens (Ljava/lang/Integer;)V
 	public final fun setModel-n9SmoFs (Ljava/lang/String;)V
 	public final fun setPresencePenalty (Ljava/lang/Double;)V
+	public final fun setReasoningEffort-myQIRfQ (Ljava/lang/String;)V
 	public final fun setResponseFormat (Lorg/oremif/deepseek/models/ResponseFormat;)V
 	public final fun setStop (Lorg/oremif/deepseek/models/StopReason;)V
 	public final fun setTemperature (Ljava/lang/Double;)V
@@ -533,6 +538,7 @@ public final class org/oremif/deepseek/models/ChatCompletionParams$Builder {
 	public final fun setTools (Ljava/util/List;)V
 	public final fun setTopLogprobs (Ljava/lang/Integer;)V
 	public final fun setTopP (Ljava/lang/Double;)V
+	public final fun setUserId (Ljava/lang/String;)V
 }
 
 public final class org/oremif/deepseek/models/ChatCompletionParams$StreamBuilder {
@@ -542,6 +548,7 @@ public final class org/oremif/deepseek/models/ChatCompletionParams$StreamBuilder
 	public final fun getMaxTokens ()Ljava/lang/Integer;
 	public final fun getModel-GojUQW0 ()Ljava/lang/String;
 	public final fun getPresencePenalty ()Ljava/lang/Double;
+	public final fun getReasoningEffort-EJCfyis ()Ljava/lang/String;
 	public final fun getResponseFormat ()Lorg/oremif/deepseek/models/ResponseFormat;
 	public final fun getStop ()Lorg/oremif/deepseek/models/StopReason;
 	public final fun getStreamOptions ()Lorg/oremif/deepseek/models/StreamOptions;
@@ -551,11 +558,13 @@ public final class org/oremif/deepseek/models/ChatCompletionParams$StreamBuilder
 	public final fun getTools ()Ljava/util/List;
 	public final fun getTopLogprobs ()Ljava/lang/Integer;
 	public final fun getTopP ()Ljava/lang/Double;
+	public final fun getUserId ()Ljava/lang/String;
 	public final fun setFrequencyPenalty (Ljava/lang/Double;)V
 	public final fun setLogprobs (Ljava/lang/Boolean;)V
 	public final fun setMaxTokens (Ljava/lang/Integer;)V
 	public final fun setModel-n9SmoFs (Ljava/lang/String;)V
 	public final fun setPresencePenalty (Ljava/lang/Double;)V
+	public final fun setReasoningEffort-myQIRfQ (Ljava/lang/String;)V
 	public final fun setResponseFormat (Lorg/oremif/deepseek/models/ResponseFormat;)V
 	public final fun setStop (Lorg/oremif/deepseek/models/StopReason;)V
 	public final fun setStreamOptions (Lorg/oremif/deepseek/models/StreamOptions;)V
@@ -565,6 +574,7 @@ public final class org/oremif/deepseek/models/ChatCompletionParams$StreamBuilder
 	public final fun setTools (Ljava/util/List;)V
 	public final fun setTopLogprobs (Ljava/lang/Integer;)V
 	public final fun setTopP (Ljava/lang/Double;)V
+	public final fun setUserId (Ljava/lang/String;)V
 }
 
 public final class org/oremif/deepseek/models/ChatCompletionParamsKt {
@@ -574,8 +584,8 @@ public final class org/oremif/deepseek/models/ChatCompletionParamsKt {
 
 public final class org/oremif/deepseek/models/ChatCompletionRequest {
 	public static final field Companion Lorg/oremif/deepseek/models/ChatCompletionRequest$Companion;
-	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Double;Lorg/oremif/deepseek/models/ResponseFormat;Lorg/oremif/deepseek/models/StopReason;Ljava/lang/Boolean;Lorg/oremif/deepseek/models/StreamOptions;Ljava/lang/Double;Ljava/lang/Double;Ljava/util/List;Lorg/oremif/deepseek/models/ToolChoice;Ljava/lang/Boolean;Ljava/lang/Integer;Lorg/oremif/deepseek/models/Thinking;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Double;Lorg/oremif/deepseek/models/ResponseFormat;Lorg/oremif/deepseek/models/StopReason;Ljava/lang/Boolean;Lorg/oremif/deepseek/models/StreamOptions;Ljava/lang/Double;Ljava/lang/Double;Ljava/util/List;Lorg/oremif/deepseek/models/ToolChoice;Ljava/lang/Boolean;Ljava/lang/Integer;Lorg/oremif/deepseek/models/Thinking;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Double;Lorg/oremif/deepseek/models/ResponseFormat;Lorg/oremif/deepseek/models/StopReason;Ljava/lang/Boolean;Lorg/oremif/deepseek/models/StreamOptions;Ljava/lang/Double;Ljava/lang/Double;Ljava/util/List;Lorg/oremif/deepseek/models/ToolChoice;Ljava/lang/Boolean;Ljava/lang/Integer;Lorg/oremif/deepseek/models/Thinking;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Ljava/lang/Double;Ljava/lang/Integer;Ljava/lang/Double;Lorg/oremif/deepseek/models/ResponseFormat;Lorg/oremif/deepseek/models/StopReason;Ljava/lang/Boolean;Lorg/oremif/deepseek/models/StreamOptions;Ljava/lang/Double;Ljava/lang/Double;Ljava/util/List;Lorg/oremif/deepseek/models/ToolChoice;Ljava/lang/Boolean;Ljava/lang/Integer;Lorg/oremif/deepseek/models/Thinking;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFrequencyPenalty ()Ljava/lang/Double;
 	public final fun getLogprobs ()Ljava/lang/Boolean;
@@ -583,6 +593,7 @@ public final class org/oremif/deepseek/models/ChatCompletionRequest {
 	public final fun getMessages ()Ljava/util/List;
 	public final fun getModel-GojUQW0 ()Ljava/lang/String;
 	public final fun getPresencePenalty ()Ljava/lang/Double;
+	public final fun getReasoningEffort-EJCfyis ()Ljava/lang/String;
 	public final fun getResponseFormat ()Lorg/oremif/deepseek/models/ResponseFormat;
 	public final fun getStop ()Lorg/oremif/deepseek/models/StopReason;
 	public final fun getStream ()Ljava/lang/Boolean;
@@ -593,6 +604,7 @@ public final class org/oremif/deepseek/models/ChatCompletionRequest {
 	public final fun getTools ()Ljava/util/List;
 	public final fun getTopLogprobs ()Ljava/lang/Integer;
 	public final fun getTopP ()Ljava/lang/Double;
+	public final fun getUserId ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -987,11 +999,13 @@ public final class org/oremif/deepseek/models/FunctionDelta$Companion {
 
 public final class org/oremif/deepseek/models/FunctionRequest : org/oremif/deepseek/models/ToolFunction {
 	public static final field Companion Lorg/oremif/deepseek/models/FunctionRequest$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Ljava/lang/Boolean;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Ljava/lang/Boolean;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getDescription ()Ljava/lang/String;
 	public fun getName ()Ljava/lang/String;
 	public final fun getParameters ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getStrict ()Ljava/lang/Boolean;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1176,6 +1190,39 @@ public final synthetic class org/oremif/deepseek/models/PromptTokensDetails$$ser
 }
 
 public final class org/oremif/deepseek/models/PromptTokensDetails$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/ReasoningEffort {
+	public static final field Companion Lorg/oremif/deepseek/models/ReasoningEffort$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lorg/oremif/deepseek/models/ReasoningEffort;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/ReasoningEffort$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/ReasoningEffort$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-kxEBKKU (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-QZY0qE8 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/ReasoningEffort$Companion {
+	public final fun getHIGH-lFkEgO0 ()Ljava/lang/String;
+	public final fun getLOW-lFkEgO0 ()Ljava/lang/String;
+	public final fun getMAX-lFkEgO0 ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

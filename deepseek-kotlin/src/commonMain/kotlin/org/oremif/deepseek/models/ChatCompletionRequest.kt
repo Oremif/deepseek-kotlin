@@ -66,6 +66,17 @@ import kotlinx.serialization.Serializable
  *
  * **Possible values: `<= 20`.**
  * @property thinking Switches the model between thinking and non-thinking mode. See [Thinking].
+ * @property reasoningEffort How much reasoning the model spends before answering, while
+ * thinking mode is on. See [ReasoningEffort].
+ *
+ * **Possible values: {`low`, `high`, `max`}.**
+ *
+ * **Default value: `high`.**
+ * @property userId A custom identifier of the end user behind the request, used for content
+ * safety review, KVCache isolation, scheduling isolation and privacy management. Must not
+ * carry personal data.
+ *
+ * **Possible values: 1 to 512 characters from `[a-zA-Z0-9\-_]`.**
  */
 @Serializable
 public class ChatCompletionRequest(
@@ -87,6 +98,8 @@ public class ChatCompletionRequest(
     public val logprobs: Boolean? = null,
     public val topLogprobs: Int? = null,
     public val thinking: Thinking? = null,
+    public val reasoningEffort: ReasoningEffort? = null,
+    public val userId: String? = null,
 ) {
 
     /**
@@ -239,7 +252,9 @@ public class ChatCompletionRequest(
                 toolChoice == other.toolChoice &&
                 logprobs == other.logprobs &&
                 topLogprobs == other.topLogprobs &&
-                thinking == other.thinking
+                thinking == other.thinking &&
+                reasoningEffort == other.reasoningEffort &&
+                userId == other.userId
     }
 
     override fun hashCode(): Int {
@@ -259,9 +274,11 @@ public class ChatCompletionRequest(
         result = 31 * result + logprobs.hashCode()
         result = 31 * result + topLogprobs.hashCode()
         result = 31 * result + thinking.hashCode()
+        result = 31 * result + reasoningEffort.hashCode()
+        result = 31 * result + userId.hashCode()
         return result
     }
 
     override fun toString(): String =
-        "ChatCompletionRequest(messages=$messages, model=$model, frequencyPenalty=$frequencyPenalty, maxTokens=$maxTokens, presencePenalty=$presencePenalty, responseFormat=$responseFormat, stop=$stop, stream=$stream, streamOptions=$streamOptions, temperature=$temperature, topP=$topP, tools=$tools, toolChoice=$toolChoice, logprobs=$logprobs, topLogprobs=$topLogprobs, thinking=$thinking)"
+        "ChatCompletionRequest(messages=$messages, model=$model, frequencyPenalty=$frequencyPenalty, maxTokens=$maxTokens, presencePenalty=$presencePenalty, responseFormat=$responseFormat, stop=$stop, stream=$stream, streamOptions=$streamOptions, temperature=$temperature, topP=$topP, tools=$tools, toolChoice=$toolChoice, logprobs=$logprobs, topLogprobs=$topLogprobs, thinking=$thinking, reasoningEffort=$reasoningEffort, userId=$userId)"
 }

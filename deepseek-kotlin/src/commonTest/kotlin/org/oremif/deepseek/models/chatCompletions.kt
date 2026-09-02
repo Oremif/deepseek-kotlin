@@ -5,10 +5,10 @@ import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
+import io.kotest.matchers.types.shouldBeInstanceOf
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonNamingStrategy
-import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.*
 import kotlin.test.Test
 
 class ChatCompletionTests {
@@ -167,6 +167,7 @@ class ChatCompletionTests {
         request.messages shouldBe listOf(SystemMessage("You are a helpful assistant"), UserMessage("Hi"))
         request.model shouldBe ChatModel.DEEPSEEK_V4_PRO
         request.thinking?.type shouldBe ThinkingType.ENABLED
+        request.reasoningEffort shouldBe ReasoningEffort.LOW
         request.maxTokens shouldBe 4096
         request.responseFormat shouldBe ResponseFormat.text
         request.temperature shouldBe 1.0
@@ -424,5 +425,82 @@ class ChatCompletionTests {
     @Test
     fun `ChatModel rejects a blank slug`() {
         shouldThrow<IllegalArgumentException> { ChatModel(" ") }
+    }
+
+    @Test
+    fun `reasoning_effort is a sibling of thinking not one of its fields`() {
+        val request = ChatCompletionRequest(
+            messages = listOf(UserMessage("Hi")),
+            model = ChatModel.DEEPSEEK_V4_PRO,
+            thinking = Thinking(ThinkingType.ENABLED),
+            reasoningEffort = ReasoningEffort.MAX,
+        )
+
+        val encoded = clientJsonConfig.encodeToString(request)
+        encoded shouldContain """"thinking":{"type":"enabled"}"""
+        encoded shouldContain """"reasoning_effort":"max""""
+    }
+
+    @Test
+    fun `ReasoningEffort serializes as its raw value and accepts unknown ones`() {
+        jsonConfig.encodeToString(ReasoningEffort.LOW) shouldBe "\"low\""
+        jsonConfig.encodeToString(ReasoningEffort.HIGH) shouldBe "\"high\""
+        jsonConfig.decodeFromString<ReasoningEffort>("\"xhigh\"") shouldBe ReasoningEffort("xhigh")
+        ReasoningEffort.MAX.toString() shouldBe "max"
+        shouldThrow<IllegalArgumentException> { ReasoningEffort(" ") }
+    }
+
+    @Test
+    fun `user_id is sent when set and omitted when not`() {
+        val messages = listOf(UserMessage("Hi"))
+
+        clientJsonConfig.encodeToString(
+            ChatCompletionRequest(messages = messages, model = ChatModel.DEEPSEEK_V4_FLASH, userId = "user_42-a"),
+        ) shouldContain """"user_id":"user_42-a""""
+
+        clientJsonConfig.encodeToString(
+            ChatCompletionRequest(messages = messages, model = ChatModel.DEEPSEEK_V4_FLASH),
+        ) shouldNotContain "user_id"
+    }
+
+    @Test
+    fun `params carry reasoningEffort and userId into the request and through copy`() {
+        val params = chatCompletionParams {
+            model = ChatModel.DEEPSEEK_V4_PRO
+            reasoningEffort = ReasoningEffort.LOW
+            userId = "user-1"
+        }
+
+        val request = params.createRequest(listOf(UserMessage("Hi")))
+        request.reasoningEffort shouldBe ReasoningEffort.LOW
+        request.userId shouldBe "user-1"
+
+        val copied = params.copy(reasoningEffort = ReasoningEffort.MAX)
+        copied.reasoningEffort shouldBe ReasoningEffort.MAX
+        copied.userId shouldBe "user-1"
+        copied.model shouldBe ChatModel.DEEPSEEK_V4_PRO
+    }
+
+    @Test
+    fun `function strict is sent when set and omitted when not`() {
+        val schema = buildJsonObject { put("type", JsonPrimitive("object")) }
+        val strictTool = Tool(
+            type = ToolCallType.FUNCTION,
+            function = FunctionRequest("get_weather", "Get the weather", schema, strict = true),
+        )
+
+        clientJsonConfig.encodeToString(strictTool) shouldContain """"strict":true"""
+        clientJsonConfig.encodeToString(
+            Tool(ToolCallType.FUNCTION, FunctionRequest("get_weather", "Get the weather", schema)),
+        ) shouldNotContain "strict"
+    }
+
+    @Test
+    fun `a strict function declaration decodes as a request not a response`() {
+        val json = """{"name": "get_weather", "description": null, "parameters": {}, "strict": true}"""
+
+        val function = clientJsonConfig.decodeFromString<ToolFunction>(json)
+        function.shouldBeInstanceOf<FunctionRequest>()
+        function.strict shouldBe true
     }
 }

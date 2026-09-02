@@ -140,6 +140,40 @@ class ParamsValidationTests {
     }
 
     @Test
+    fun `chat params accept a userId within the documented charset and length`() {
+        shouldNotThrowAny {
+            chatCompletionParams { userId = "User_42-abc" }
+            chatCompletionParams { userId = "u".repeat(512) }
+            chatCompletionStreamParams { userId = "User_42-abc" }
+        }
+    }
+
+    @Test
+    fun `chat params reject a userId longer than 512 characters`() {
+        val ex = shouldThrow<IllegalArgumentException> {
+            chatCompletionParams { userId = "u".repeat(513) }
+        }
+        ex.message!! shouldContain "512"
+        shouldThrow<IllegalArgumentException> {
+            chatCompletionStreamParams { userId = "u".repeat(513) }
+        }
+    }
+
+    @Test
+    fun `chat params reject a userId outside the allowed charset`() {
+        val ex = shouldThrow<IllegalArgumentException> {
+            chatCompletionParams { userId = "user@example.com" }
+        }
+        ex.message!! shouldContain "userId"
+        shouldThrow<IllegalArgumentException> {
+            chatCompletionParams { userId = "" }
+        }
+        shouldThrow<IllegalArgumentException> {
+            chatCompletionStreamParams { userId = "user id" }
+        }
+    }
+
+    @Test
     fun `chat params default to the flash model`() {
         chatCompletionParams { }.model shouldBe ChatModel.DEEPSEEK_V4_FLASH
         chatCompletionStreamParams { }.model shouldBe ChatModel.DEEPSEEK_V4_FLASH

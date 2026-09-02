@@ -86,6 +86,10 @@ public fun chatCompletionStreamParams(block: ChatCompletionParams.StreamBuilder.
  * @property logprobs Whether to return log probabilities of output tokens
  * @property topLogprobs How many most likely tokens to return at each position (max 20)
  * @property thinking Switches the model between thinking and non-thinking mode. See [Thinking].
+ * @property reasoningEffort How much reasoning the model spends before answering, while
+ * thinking mode is on; defaults to the API's own `high`. See [ReasoningEffort].
+ * @property userId Custom identifier of the end user behind the request; 1 to 512
+ * characters from `[a-zA-Z0-9\-_]`. Must not carry personal data.
  */
 public class ChatCompletionParams internal constructor(
     public val model: ChatModel,
@@ -103,6 +107,8 @@ public class ChatCompletionParams internal constructor(
     public val logprobs: Boolean? = null,
     public val topLogprobs: Int? = null,
     public val thinking: Thinking? = null,
+    public val reasoningEffort: ReasoningEffort? = null,
+    public val userId: String? = null,
 ) : DeepSeekParams(frequencyPenalty, maxTokens, presencePenalty, stop, temperature, topP) {
 
     /**
@@ -126,12 +132,15 @@ public class ChatCompletionParams internal constructor(
         public var logprobs: Boolean? = null
         public var topLogprobs: Int? = null
         public var thinking: Thinking? = null
+        public var reasoningEffort: ReasoningEffort? = null
+        public var userId: String? = null
 
         internal fun build(): ChatCompletionParams {
             maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
             temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
             topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             topLogprobs?.let { require(it <= 20) { "topLogprobs must be <= 20" } }
+            userId?.let(::requireValidUserId)
 
             return ChatCompletionParams(
                 model = model,
@@ -147,6 +156,8 @@ public class ChatCompletionParams internal constructor(
                 logprobs = logprobs,
                 topLogprobs = topLogprobs,
                 thinking = thinking,
+                reasoningEffort = reasoningEffort,
+                userId = userId,
             )
         }
     }
@@ -173,6 +184,8 @@ public class ChatCompletionParams internal constructor(
         public var logprobs: Boolean? = null
         public var topLogprobs: Int? = null
         public var thinking: Thinking? = null
+        public var reasoningEffort: ReasoningEffort? = null
+        public var userId: String? = null
 
 
         internal fun build(): ChatCompletionParams {
@@ -180,6 +193,7 @@ public class ChatCompletionParams internal constructor(
             temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
             topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             topLogprobs?.let { require(it <= 20) { "topLogprobs must be <= 20" } }
+            userId?.let(::requireValidUserId)
 
             return ChatCompletionParams(
                 model = model,
@@ -197,6 +211,8 @@ public class ChatCompletionParams internal constructor(
                 logprobs = logprobs,
                 topLogprobs = topLogprobs,
                 thinking = thinking,
+                reasoningEffort = reasoningEffort,
+                userId = userId,
             )
         }
     }
@@ -225,6 +241,8 @@ public class ChatCompletionParams internal constructor(
             logprobs = logprobs,
             topLogprobs = topLogprobs,
             thinking = thinking,
+            reasoningEffort = reasoningEffort,
+            userId = userId,
         )
 
     /**
@@ -251,6 +269,8 @@ public class ChatCompletionParams internal constructor(
      * @param logprobs New log probabilities setting, or existing value if not specified
      * @param topLogprobs New top log probabilities count, or existing value if not specified
      * @param thinking New thinking-mode toggle, or existing value if not specified
+     * @param reasoningEffort New reasoning effort, or existing value if not specified
+     * @param userId New end-user identifier, or existing value if not specified
      * @return A new [ChatCompletionParams] instance with the specified changes
      */
     public fun copy(
@@ -269,6 +289,8 @@ public class ChatCompletionParams internal constructor(
         logprobs: Boolean? = this.logprobs,
         topLogprobs: Int? = this.topLogprobs,
         thinking: Thinking? = this.thinking,
+        reasoningEffort: ReasoningEffort? = this.reasoningEffort,
+        userId: String? = this.userId,
     ): ChatCompletionParams {
         return ChatCompletionParams(
             model = model,
@@ -286,6 +308,8 @@ public class ChatCompletionParams internal constructor(
             logprobs = logprobs,
             topLogprobs = topLogprobs,
             thinking = thinking,
+            reasoningEffort = reasoningEffort,
+            userId = userId,
         )
     }
 
@@ -308,7 +332,9 @@ public class ChatCompletionParams internal constructor(
                 toolChoice == other.toolChoice &&
                 logprobs == other.logprobs &&
                 topLogprobs == other.topLogprobs &&
-                thinking == other.thinking
+                thinking == other.thinking &&
+                reasoningEffort == other.reasoningEffort &&
+                userId == other.userId
     }
 
     override fun hashCode(): Int {
@@ -327,10 +353,24 @@ public class ChatCompletionParams internal constructor(
         result = 31 * result + (tools?.hashCode() ?: 0)
         result = 31 * result + (toolChoice?.hashCode() ?: 0)
         result = 31 * result + (thinking?.hashCode() ?: 0)
+        result = 31 * result + (reasoningEffort?.hashCode() ?: 0)
+        result = 31 * result + (userId?.hashCode() ?: 0)
         return result
     }
 
     override fun toString(): String {
-        return "ChatCompletionParams(model=$model, frequencyPenalty=$frequencyPenalty, maxTokens=$maxTokens, presencePenalty=$presencePenalty, responseFormat=$responseFormat, stop=$stop, stream=$stream, streamOptions=$streamOptions, temperature=$temperature, topP=$topP, tools=$tools, toolChoice=$toolChoice, logprobs=$logprobs, topLogprobs=$topLogprobs, thinking=$thinking)"
+        return "ChatCompletionParams(model=$model, frequencyPenalty=$frequencyPenalty, maxTokens=$maxTokens, presencePenalty=$presencePenalty, responseFormat=$responseFormat, stop=$stop, stream=$stream, streamOptions=$streamOptions, temperature=$temperature, topP=$topP, tools=$tools, toolChoice=$toolChoice, logprobs=$logprobs, topLogprobs=$topLogprobs, thinking=$thinking, reasoningEffort=$reasoningEffort, userId=$userId)"
     }
+}
+
+/** Character set the API accepts in `user_id`, anchored so an empty value is rejected too. */
+private val USER_ID_REGEX = Regex("^[a-zA-Z0-9\\-_]+$")
+
+/**
+ * Fails fast on a `user_id` the API would reject: the documented limit is 512 characters
+ * drawn from `[a-zA-Z0-9\-_]`.
+ */
+private fun requireValidUserId(userId: String) {
+    require(userId.length <= 512) { "userId must be at most 512 characters long, was ${userId.length}" }
+    require(USER_ID_REGEX.matches(userId)) { "userId must be non-empty and match [a-zA-Z0-9\\-_]" }
 }

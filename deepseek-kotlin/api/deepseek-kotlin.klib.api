@@ -519,6 +519,8 @@ final class org.oremif.deepseek.models/ChatCompletionParams : org.oremif.deepsee
         final fun <get-logprobs>(): kotlin/Boolean? // org.oremif.deepseek.models/ChatCompletionParams.logprobs.<get-logprobs>|<get-logprobs>(){}[0]
     final val model // org.oremif.deepseek.models/ChatCompletionParams.model|{}model[0]
         final fun <get-model>(): org.oremif.deepseek.models/ChatModel // org.oremif.deepseek.models/ChatCompletionParams.model.<get-model>|<get-model>(){}[0]
+    final val reasoningEffort // org.oremif.deepseek.models/ChatCompletionParams.reasoningEffort|{}reasoningEffort[0]
+        final fun <get-reasoningEffort>(): org.oremif.deepseek.models/ReasoningEffort? // org.oremif.deepseek.models/ChatCompletionParams.reasoningEffort.<get-reasoningEffort>|<get-reasoningEffort>(){}[0]
     final val responseFormat // org.oremif.deepseek.models/ChatCompletionParams.responseFormat|{}responseFormat[0]
         final fun <get-responseFormat>(): org.oremif.deepseek.models/ResponseFormat? // org.oremif.deepseek.models/ChatCompletionParams.responseFormat.<get-responseFormat>|<get-responseFormat>(){}[0]
     final val stream // org.oremif.deepseek.models/ChatCompletionParams.stream|{}stream[0]
@@ -533,8 +535,10 @@ final class org.oremif.deepseek.models/ChatCompletionParams : org.oremif.deepsee
         final fun <get-tools>(): kotlin.collections/List<org.oremif.deepseek.models/Tool>? // org.oremif.deepseek.models/ChatCompletionParams.tools.<get-tools>|<get-tools>(){}[0]
     final val topLogprobs // org.oremif.deepseek.models/ChatCompletionParams.topLogprobs|{}topLogprobs[0]
         final fun <get-topLogprobs>(): kotlin/Int? // org.oremif.deepseek.models/ChatCompletionParams.topLogprobs.<get-topLogprobs>|<get-topLogprobs>(){}[0]
+    final val userId // org.oremif.deepseek.models/ChatCompletionParams.userId|{}userId[0]
+        final fun <get-userId>(): kotlin/String? // org.oremif.deepseek.models/ChatCompletionParams.userId.<get-userId>|<get-userId>(){}[0]
 
-    final fun copy(org.oremif.deepseek.models/ChatModel = ..., kotlin/Double? = ..., kotlin/Int? = ..., kotlin/Double? = ..., org.oremif.deepseek.models/ResponseFormat? = ..., org.oremif.deepseek.models/StopReason? = ..., kotlin/Boolean? = ..., org.oremif.deepseek.models/StreamOptions? = ..., kotlin/Double? = ..., kotlin/Double? = ..., kotlin.collections/List<org.oremif.deepseek.models/Tool>? = ..., org.oremif.deepseek.models/ToolChoice? = ..., kotlin/Boolean? = ..., kotlin/Int? = ..., org.oremif.deepseek.models/Thinking? = ...): org.oremif.deepseek.models/ChatCompletionParams // org.oremif.deepseek.models/ChatCompletionParams.copy|copy(org.oremif.deepseek.models.ChatModel;kotlin.Double?;kotlin.Int?;kotlin.Double?;org.oremif.deepseek.models.ResponseFormat?;org.oremif.deepseek.models.StopReason?;kotlin.Boolean?;org.oremif.deepseek.models.StreamOptions?;kotlin.Double?;kotlin.Double?;kotlin.collections.List<org.oremif.deepseek.models.Tool>?;org.oremif.deepseek.models.ToolChoice?;kotlin.Boolean?;kotlin.Int?;org.oremif.deepseek.models.Thinking?){}[0]
+    final fun copy(org.oremif.deepseek.models/ChatModel = ..., kotlin/Double? = ..., kotlin/Int? = ..., kotlin/Double? = ..., org.oremif.deepseek.models/ResponseFormat? = ..., org.oremif.deepseek.models/StopReason? = ..., kotlin/Boolean? = ..., org.oremif.deepseek.models/StreamOptions? = ..., kotlin/Double? = ..., kotlin/Double? = ..., kotlin.collections/List<org.oremif.deepseek.models/Tool>? = ..., org.oremif.deepseek.models/ToolChoice? = ..., kotlin/Boolean? = ..., kotlin/Int? = ..., org.oremif.deepseek.models/Thinking? = ..., org.oremif.deepseek.models/ReasoningEffort? = ..., kotlin/String? = ...): org.oremif.deepseek.models/ChatCompletionParams // org.oremif.deepseek.models/ChatCompletionParams.copy|copy(org.oremif.deepseek.models.ChatModel;kotlin.Double?;kotlin.Int?;kotlin.Double?;org.oremif.deepseek.models.ResponseFormat?;org.oremif.deepseek.models.StopReason?;kotlin.Boolean?;org.oremif.deepseek.models.StreamOptions?;kotlin.Double?;kotlin.Double?;kotlin.collections.List<org.oremif.deepseek.models.Tool>?;org.oremif.deepseek.models.ToolChoice?;kotlin.Boolean?;kotlin.Int?;org.oremif.deepseek.models.Thinking?;org.oremif.deepseek.models.ReasoningEffort?;kotlin.String?){}[0]
     final fun createRequest(kotlin.collections/List<org.oremif.deepseek.models/ChatMessage>): org.oremif.deepseek.models/ChatCompletionRequest // org.oremif.deepseek.models/ChatCompletionParams.createRequest|createRequest(kotlin.collections.List<org.oremif.deepseek.models.ChatMessage>){}[0]
     final fun equals(kotlin/Any?): kotlin/Boolean // org.oremif.deepseek.models/ChatCompletionParams.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // org.oremif.deepseek.models/ChatCompletionParams.hashCode|hashCode(){}[0]
@@ -558,6 +562,9 @@ final class org.oremif.deepseek.models/ChatCompletionParams : org.oremif.deepsee
         final var presencePenalty // org.oremif.deepseek.models/ChatCompletionParams.Builder.presencePenalty|{}presencePenalty[0]
             final fun <get-presencePenalty>(): kotlin/Double? // org.oremif.deepseek.models/ChatCompletionParams.Builder.presencePenalty.<get-presencePenalty>|<get-presencePenalty>(){}[0]
             final fun <set-presencePenalty>(kotlin/Double?) // org.oremif.deepseek.models/ChatCompletionParams.Builder.presencePenalty.<set-presencePenalty>|<set-presencePenalty>(kotlin.Double?){}[0]
+        final var reasoningEffort // org.oremif.deepseek.models/ChatCompletionParams.Builder.reasoningEffort|{}reasoningEffort[0]
+            final fun <get-reasoningEffort>(): org.oremif.deepseek.models/ReasoningEffort? // org.oremif.deepseek.models/ChatCompletionParams.Builder.reasoningEffort.<get-reasoningEffort>|<get-reasoningEffort>(){}[0]
+            final fun <set-reasoningEffort>(org.oremif.deepseek.models/ReasoningEffort?) // org.oremif.deepseek.models/ChatCompletionParams.Builder.reasoningEffort.<set-reasoningEffort>|<set-reasoningEffort>(org.oremif.deepseek.models.ReasoningEffort?){}[0]
         final var responseFormat // org.oremif.deepseek.models/ChatCompletionParams.Builder.responseFormat|{}responseFormat[0]
             final fun <get-responseFormat>(): org.oremif.deepseek.models/ResponseFormat? // org.oremif.deepseek.models/ChatCompletionParams.Builder.responseFormat.<get-responseFormat>|<get-responseFormat>(){}[0]
             final fun <set-responseFormat>(org.oremif.deepseek.models/ResponseFormat?) // org.oremif.deepseek.models/ChatCompletionParams.Builder.responseFormat.<set-responseFormat>|<set-responseFormat>(org.oremif.deepseek.models.ResponseFormat?){}[0]
@@ -582,6 +589,9 @@ final class org.oremif.deepseek.models/ChatCompletionParams : org.oremif.deepsee
         final var topP // org.oremif.deepseek.models/ChatCompletionParams.Builder.topP|{}topP[0]
             final fun <get-topP>(): kotlin/Double? // org.oremif.deepseek.models/ChatCompletionParams.Builder.topP.<get-topP>|<get-topP>(){}[0]
             final fun <set-topP>(kotlin/Double?) // org.oremif.deepseek.models/ChatCompletionParams.Builder.topP.<set-topP>|<set-topP>(kotlin.Double?){}[0]
+        final var userId // org.oremif.deepseek.models/ChatCompletionParams.Builder.userId|{}userId[0]
+            final fun <get-userId>(): kotlin/String? // org.oremif.deepseek.models/ChatCompletionParams.Builder.userId.<get-userId>|<get-userId>(){}[0]
+            final fun <set-userId>(kotlin/String?) // org.oremif.deepseek.models/ChatCompletionParams.Builder.userId.<set-userId>|<set-userId>(kotlin.String?){}[0]
     }
 
     final class StreamBuilder { // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder|null[0]
@@ -602,6 +612,9 @@ final class org.oremif.deepseek.models/ChatCompletionParams : org.oremif.deepsee
         final var presencePenalty // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.presencePenalty|{}presencePenalty[0]
             final fun <get-presencePenalty>(): kotlin/Double? // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.presencePenalty.<get-presencePenalty>|<get-presencePenalty>(){}[0]
             final fun <set-presencePenalty>(kotlin/Double?) // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.presencePenalty.<set-presencePenalty>|<set-presencePenalty>(kotlin.Double?){}[0]
+        final var reasoningEffort // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.reasoningEffort|{}reasoningEffort[0]
+            final fun <get-reasoningEffort>(): org.oremif.deepseek.models/ReasoningEffort? // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.reasoningEffort.<get-reasoningEffort>|<get-reasoningEffort>(){}[0]
+            final fun <set-reasoningEffort>(org.oremif.deepseek.models/ReasoningEffort?) // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.reasoningEffort.<set-reasoningEffort>|<set-reasoningEffort>(org.oremif.deepseek.models.ReasoningEffort?){}[0]
         final var responseFormat // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.responseFormat|{}responseFormat[0]
             final fun <get-responseFormat>(): org.oremif.deepseek.models/ResponseFormat? // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.responseFormat.<get-responseFormat>|<get-responseFormat>(){}[0]
             final fun <set-responseFormat>(org.oremif.deepseek.models/ResponseFormat?) // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.responseFormat.<set-responseFormat>|<set-responseFormat>(org.oremif.deepseek.models.ResponseFormat?){}[0]
@@ -629,11 +642,14 @@ final class org.oremif.deepseek.models/ChatCompletionParams : org.oremif.deepsee
         final var topP // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.topP|{}topP[0]
             final fun <get-topP>(): kotlin/Double? // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.topP.<get-topP>|<get-topP>(){}[0]
             final fun <set-topP>(kotlin/Double?) // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.topP.<set-topP>|<set-topP>(kotlin.Double?){}[0]
+        final var userId // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.userId|{}userId[0]
+            final fun <get-userId>(): kotlin/String? // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.userId.<get-userId>|<get-userId>(){}[0]
+            final fun <set-userId>(kotlin/String?) // org.oremif.deepseek.models/ChatCompletionParams.StreamBuilder.userId.<set-userId>|<set-userId>(kotlin.String?){}[0]
     }
 }
 
 final class org.oremif.deepseek.models/ChatCompletionRequest { // org.oremif.deepseek.models/ChatCompletionRequest|null[0]
-    constructor <init>(kotlin.collections/List<org.oremif.deepseek.models/ChatMessage>, org.oremif.deepseek.models/ChatModel, kotlin/Double? = ..., kotlin/Int? = ..., kotlin/Double? = ..., org.oremif.deepseek.models/ResponseFormat? = ..., org.oremif.deepseek.models/StopReason? = ..., kotlin/Boolean? = ..., org.oremif.deepseek.models/StreamOptions? = ..., kotlin/Double? = ..., kotlin/Double? = ..., kotlin.collections/List<org.oremif.deepseek.models/Tool>? = ..., org.oremif.deepseek.models/ToolChoice? = ..., kotlin/Boolean? = ..., kotlin/Int? = ..., org.oremif.deepseek.models/Thinking? = ...) // org.oremif.deepseek.models/ChatCompletionRequest.<init>|<init>(kotlin.collections.List<org.oremif.deepseek.models.ChatMessage>;org.oremif.deepseek.models.ChatModel;kotlin.Double?;kotlin.Int?;kotlin.Double?;org.oremif.deepseek.models.ResponseFormat?;org.oremif.deepseek.models.StopReason?;kotlin.Boolean?;org.oremif.deepseek.models.StreamOptions?;kotlin.Double?;kotlin.Double?;kotlin.collections.List<org.oremif.deepseek.models.Tool>?;org.oremif.deepseek.models.ToolChoice?;kotlin.Boolean?;kotlin.Int?;org.oremif.deepseek.models.Thinking?){}[0]
+    constructor <init>(kotlin.collections/List<org.oremif.deepseek.models/ChatMessage>, org.oremif.deepseek.models/ChatModel, kotlin/Double? = ..., kotlin/Int? = ..., kotlin/Double? = ..., org.oremif.deepseek.models/ResponseFormat? = ..., org.oremif.deepseek.models/StopReason? = ..., kotlin/Boolean? = ..., org.oremif.deepseek.models/StreamOptions? = ..., kotlin/Double? = ..., kotlin/Double? = ..., kotlin.collections/List<org.oremif.deepseek.models/Tool>? = ..., org.oremif.deepseek.models/ToolChoice? = ..., kotlin/Boolean? = ..., kotlin/Int? = ..., org.oremif.deepseek.models/Thinking? = ..., org.oremif.deepseek.models/ReasoningEffort? = ..., kotlin/String? = ...) // org.oremif.deepseek.models/ChatCompletionRequest.<init>|<init>(kotlin.collections.List<org.oremif.deepseek.models.ChatMessage>;org.oremif.deepseek.models.ChatModel;kotlin.Double?;kotlin.Int?;kotlin.Double?;org.oremif.deepseek.models.ResponseFormat?;org.oremif.deepseek.models.StopReason?;kotlin.Boolean?;org.oremif.deepseek.models.StreamOptions?;kotlin.Double?;kotlin.Double?;kotlin.collections.List<org.oremif.deepseek.models.Tool>?;org.oremif.deepseek.models.ToolChoice?;kotlin.Boolean?;kotlin.Int?;org.oremif.deepseek.models.Thinking?;org.oremif.deepseek.models.ReasoningEffort?;kotlin.String?){}[0]
 
     final val frequencyPenalty // org.oremif.deepseek.models/ChatCompletionRequest.frequencyPenalty|{}frequencyPenalty[0]
         final fun <get-frequencyPenalty>(): kotlin/Double? // org.oremif.deepseek.models/ChatCompletionRequest.frequencyPenalty.<get-frequencyPenalty>|<get-frequencyPenalty>(){}[0]
@@ -647,6 +663,8 @@ final class org.oremif.deepseek.models/ChatCompletionRequest { // org.oremif.dee
         final fun <get-model>(): org.oremif.deepseek.models/ChatModel // org.oremif.deepseek.models/ChatCompletionRequest.model.<get-model>|<get-model>(){}[0]
     final val presencePenalty // org.oremif.deepseek.models/ChatCompletionRequest.presencePenalty|{}presencePenalty[0]
         final fun <get-presencePenalty>(): kotlin/Double? // org.oremif.deepseek.models/ChatCompletionRequest.presencePenalty.<get-presencePenalty>|<get-presencePenalty>(){}[0]
+    final val reasoningEffort // org.oremif.deepseek.models/ChatCompletionRequest.reasoningEffort|{}reasoningEffort[0]
+        final fun <get-reasoningEffort>(): org.oremif.deepseek.models/ReasoningEffort? // org.oremif.deepseek.models/ChatCompletionRequest.reasoningEffort.<get-reasoningEffort>|<get-reasoningEffort>(){}[0]
     final val responseFormat // org.oremif.deepseek.models/ChatCompletionRequest.responseFormat|{}responseFormat[0]
         final fun <get-responseFormat>(): org.oremif.deepseek.models/ResponseFormat? // org.oremif.deepseek.models/ChatCompletionRequest.responseFormat.<get-responseFormat>|<get-responseFormat>(){}[0]
     final val stop // org.oremif.deepseek.models/ChatCompletionRequest.stop|{}stop[0]
@@ -667,6 +685,8 @@ final class org.oremif.deepseek.models/ChatCompletionRequest { // org.oremif.dee
         final fun <get-topLogprobs>(): kotlin/Int? // org.oremif.deepseek.models/ChatCompletionRequest.topLogprobs.<get-topLogprobs>|<get-topLogprobs>(){}[0]
     final val topP // org.oremif.deepseek.models/ChatCompletionRequest.topP|{}topP[0]
         final fun <get-topP>(): kotlin/Double? // org.oremif.deepseek.models/ChatCompletionRequest.topP.<get-topP>|<get-topP>(){}[0]
+    final val userId // org.oremif.deepseek.models/ChatCompletionRequest.userId|{}userId[0]
+        final fun <get-userId>(): kotlin/String? // org.oremif.deepseek.models/ChatCompletionRequest.userId.<get-userId>|<get-userId>(){}[0]
 
     final fun equals(kotlin/Any?): kotlin/Boolean // org.oremif.deepseek.models/ChatCompletionRequest.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // org.oremif.deepseek.models/ChatCompletionRequest.hashCode|hashCode(){}[0]
@@ -1018,7 +1038,7 @@ final class org.oremif.deepseek.models/FunctionDelta { // org.oremif.deepseek.mo
 }
 
 final class org.oremif.deepseek.models/FunctionRequest : org.oremif.deepseek.models/ToolFunction { // org.oremif.deepseek.models/FunctionRequest|null[0]
-    constructor <init>(kotlin/String, kotlin/String?, kotlinx.serialization.json/JsonObject?) // org.oremif.deepseek.models/FunctionRequest.<init>|<init>(kotlin.String;kotlin.String?;kotlinx.serialization.json.JsonObject?){}[0]
+    constructor <init>(kotlin/String, kotlin/String?, kotlinx.serialization.json/JsonObject?, kotlin/Boolean? = ...) // org.oremif.deepseek.models/FunctionRequest.<init>|<init>(kotlin.String;kotlin.String?;kotlinx.serialization.json.JsonObject?;kotlin.Boolean?){}[0]
 
     final val description // org.oremif.deepseek.models/FunctionRequest.description|{}description[0]
         final fun <get-description>(): kotlin/String? // org.oremif.deepseek.models/FunctionRequest.description.<get-description>|<get-description>(){}[0]
@@ -1026,6 +1046,8 @@ final class org.oremif.deepseek.models/FunctionRequest : org.oremif.deepseek.mod
         final fun <get-name>(): kotlin/String // org.oremif.deepseek.models/FunctionRequest.name.<get-name>|<get-name>(){}[0]
     final val parameters // org.oremif.deepseek.models/FunctionRequest.parameters|{}parameters[0]
         final fun <get-parameters>(): kotlinx.serialization.json/JsonObject? // org.oremif.deepseek.models/FunctionRequest.parameters.<get-parameters>|<get-parameters>(){}[0]
+    final val strict // org.oremif.deepseek.models/FunctionRequest.strict|{}strict[0]
+        final fun <get-strict>(): kotlin/Boolean? // org.oremif.deepseek.models/FunctionRequest.strict.<get-strict>|<get-strict>(){}[0]
 
     final fun equals(kotlin/Any?): kotlin/Boolean // org.oremif.deepseek.models/FunctionRequest.equals|equals(kotlin.Any?){}[0]
     final fun hashCode(): kotlin/Int // org.oremif.deepseek.models/FunctionRequest.hashCode|hashCode(){}[0]
@@ -1599,6 +1621,37 @@ final value class org.oremif.deepseek.models/ChatModel { // org.oremif.deepseek.
             final fun <get-DEEPSEEK_V4_PRO>(): org.oremif.deepseek.models/ChatModel // org.oremif.deepseek.models/ChatModel.Companion.DEEPSEEK_V4_PRO.<get-DEEPSEEK_V4_PRO>|<get-DEEPSEEK_V4_PRO>(){}[0]
 
         final fun serializer(): kotlinx.serialization/KSerializer<org.oremif.deepseek.models/ChatModel> // org.oremif.deepseek.models/ChatModel.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final value class org.oremif.deepseek.models/ReasoningEffort { // org.oremif.deepseek.models/ReasoningEffort|null[0]
+    constructor <init>(kotlin/String) // org.oremif.deepseek.models/ReasoningEffort.<init>|<init>(kotlin.String){}[0]
+
+    final val value // org.oremif.deepseek.models/ReasoningEffort.value|{}value[0]
+        final fun <get-value>(): kotlin/String // org.oremif.deepseek.models/ReasoningEffort.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // org.oremif.deepseek.models/ReasoningEffort.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // org.oremif.deepseek.models/ReasoningEffort.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // org.oremif.deepseek.models/ReasoningEffort.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<org.oremif.deepseek.models/ReasoningEffort> { // org.oremif.deepseek.models/ReasoningEffort.$serializer|null[0]
+        final val descriptor // org.oremif.deepseek.models/ReasoningEffort.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // org.oremif.deepseek.models/ReasoningEffort.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // org.oremif.deepseek.models/ReasoningEffort.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): org.oremif.deepseek.models/ReasoningEffort // org.oremif.deepseek.models/ReasoningEffort.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, org.oremif.deepseek.models/ReasoningEffort) // org.oremif.deepseek.models/ReasoningEffort.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;org.oremif.deepseek.models.ReasoningEffort){}[0]
+    }
+
+    final object Companion { // org.oremif.deepseek.models/ReasoningEffort.Companion|null[0]
+        final val HIGH // org.oremif.deepseek.models/ReasoningEffort.Companion.HIGH|{}HIGH[0]
+            final fun <get-HIGH>(): org.oremif.deepseek.models/ReasoningEffort // org.oremif.deepseek.models/ReasoningEffort.Companion.HIGH.<get-HIGH>|<get-HIGH>(){}[0]
+        final val LOW // org.oremif.deepseek.models/ReasoningEffort.Companion.LOW|{}LOW[0]
+            final fun <get-LOW>(): org.oremif.deepseek.models/ReasoningEffort // org.oremif.deepseek.models/ReasoningEffort.Companion.LOW.<get-LOW>|<get-LOW>(){}[0]
+        final val MAX // org.oremif.deepseek.models/ReasoningEffort.Companion.MAX|{}MAX[0]
+            final fun <get-MAX>(): org.oremif.deepseek.models/ReasoningEffort // org.oremif.deepseek.models/ReasoningEffort.Companion.MAX.<get-MAX>|<get-MAX>(){}[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<org.oremif.deepseek.models/ReasoningEffort> // org.oremif.deepseek.models/ReasoningEffort.Companion.serializer|serializer(){}[0]
     }
 }
 
