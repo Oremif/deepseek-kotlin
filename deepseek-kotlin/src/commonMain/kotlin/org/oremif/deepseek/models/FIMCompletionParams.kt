@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.oremif.deepseek.models
 
 /**
@@ -52,6 +54,13 @@ public fun fimCompletionStreamParams(block: FIMCompletionParams.StreamBuilder.()
     return FIMCompletionParams.StreamBuilder().apply(block).build()
 }
 
+/** Rejects [ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP]; any other slug is left to the server. */
+internal fun requireFimModel(model: ChatModel) {
+    require(model != ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP) {
+        "FIM completion is not supported by ${ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP}, use ChatModel.DEEPSEEK_V4_PRO"
+    }
+}
+
 /**
  * Parameters for configuring Fill-in-the-Middle (FIM) completion requests to DeepSeek models.
  *
@@ -70,11 +79,14 @@ public fun fimCompletionStreamParams(block: FIMCompletionParams.StreamBuilder.()
  * println(completion.choices.first().text)
  * ```
  *
+ * @property model The DeepSeek model to use; the FIM endpoint only accepts
+ * [ChatModel.DEEPSEEK_V4_PRO], which is the default
  * @property echo Whether to include the prompt in the returned completion
- * @property frequencyPenalty Number between -2.0 and 2.0 that penalizes tokens based on their frequency in the text
+ * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API
  * @property logprobs Maximum number of log probabilities to return (up to 20)
- * @property maxTokens Maximum number of tokens to generate, between 1 and 8192
- * @property presencePenalty Number between -2.0 and 2.0 that penalizes tokens based on their presence in the text
+ * @property maxTokens Maximum number of tokens to generate; at least 1 and otherwise
+ * bounded by the model's context length
+ * @property presencePenalty Sent as `presence_penalty`, ignored by the API
  * @property stop Custom stop sequences that will cause the model to stop generating further tokens
  * @property stream Whether to stream the response back piece by piece
  * @property streamOptions Configuration options for streaming responses
@@ -83,6 +95,7 @@ public fun fimCompletionStreamParams(block: FIMCompletionParams.StreamBuilder.()
  * @property topP Controls diversity by limiting to top-p probability mass in token selection
  */
 public class FIMCompletionParams internal constructor(
+    public val model: ChatModel = ChatModel.DEEPSEEK_V4_PRO,
     public val echo: Boolean? = null,
     frequencyPenalty: Double? = null,
     public val logprobs: Int? = null,
@@ -99,10 +112,15 @@ public class FIMCompletionParams internal constructor(
      * Builder for creating [FIMCompletionParams] with standard (non-streaming) configuration.
      */
     public class Builder {
+        public var model: ChatModel = ChatModel.DEEPSEEK_V4_PRO
         public var echo: Boolean? = null
+
+        @Deprecated(DEPRECATED_PENALTY)
         public var frequencyPenalty: Double? = null
         public var logprobs: Int? = null
         public var maxTokens: Int? = null
+
+        @Deprecated(DEPRECATED_PENALTY)
         public var presencePenalty: Double? = null
         public var stop: StopReason? = null
         public var suffix: String? = null
@@ -110,14 +128,14 @@ public class FIMCompletionParams internal constructor(
         public var topP: Double? = null
 
         internal fun build(): FIMCompletionParams {
-            frequencyPenalty?.let { require(it in -2.0..2.0) { "frequencyPenalty must be between -2.0 and 2.0" } }
-            maxTokens?.let { require(it in 1..8192) { "maxTokens must be between 1 and 8192" } }
-            presencePenalty?.let { require(it in -2.0..2.0) { "presencePenalty must be between -2.0 and 2.0" } }
+            requireFimModel(model)
+            maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
             temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
             topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             logprobs?.let { require(it <= 20) { "logprobs must be <= 20" } }
 
             return FIMCompletionParams(
+                model = model,
                 echo = echo,
                 frequencyPenalty = frequencyPenalty,
                 logprobs = logprobs,
@@ -135,10 +153,15 @@ public class FIMCompletionParams internal constructor(
      * Builder for creating [FIMCompletionParams] specifically configured for streaming responses.
      */
     public class StreamBuilder {
+        public var model: ChatModel = ChatModel.DEEPSEEK_V4_PRO
         public var echo: Boolean? = null
+
+        @Deprecated(DEPRECATED_PENALTY)
         public var frequencyPenalty: Double? = null
         public var logprobs: Int? = null
         public var maxTokens: Int? = null
+
+        @Deprecated(DEPRECATED_PENALTY)
         public var presencePenalty: Double? = null
         public var stop: StopReason? = null
         public var streamOptions: StreamOptions? = null
@@ -147,14 +170,14 @@ public class FIMCompletionParams internal constructor(
         public var topP: Double? = null
 
         internal fun build(): FIMCompletionParams {
-            frequencyPenalty?.let { require(it in -2.0..2.0) { "frequencyPenalty must be between -2.0 and 2.0" } }
-            maxTokens?.let { require(it in 1..8192) { "maxTokens must be between 1 and 8192" } }
-            presencePenalty?.let { require(it in -2.0..2.0) { "presencePenalty must be between -2.0 and 2.0" } }
+            requireFimModel(model)
+            maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
             temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
             topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             logprobs?.let { require(it <= 20) { "logprobs must be <= 20" } }
 
             return FIMCompletionParams(
+                model = model,
                 echo = echo,
                 frequencyPenalty = frequencyPenalty,
                 logprobs = logprobs,
@@ -178,7 +201,7 @@ public class FIMCompletionParams internal constructor(
      */
     public fun createRequest(prompt: String): FIMCompletionRequest =
         FIMCompletionRequest(
-            model = ChatModel.DEEPSEEK_CHAT,
+            model = model,
             prompt = prompt,
             echo = echo,
             frequencyPenalty = frequencyPenalty,
@@ -206,6 +229,7 @@ public class FIMCompletionParams internal constructor(
      * val streamParams = regularParams.copy(stream = true)
      * ```
      *
+     * @param model New model to use, or existing value if not specified
      * @param echo New echo setting, or existing value if not specified
      * @param frequencyPenalty New frequency penalty value, or existing value if not specified
      * @param logprobs New log probabilities count, or existing value if not specified
@@ -220,6 +244,7 @@ public class FIMCompletionParams internal constructor(
      * @return A new [FIMCompletionParams] instance with the specified changes
      */
     public fun copy(
+        model: ChatModel = this.model,
         echo: Boolean? = this.echo,
         frequencyPenalty: Double? = this.frequencyPenalty,
         logprobs: Int? = this.logprobs,
@@ -233,6 +258,7 @@ public class FIMCompletionParams internal constructor(
         topP: Double? = this.topP,
     ): FIMCompletionParams {
         return FIMCompletionParams(
+            model = model,
             echo = echo,
             frequencyPenalty = frequencyPenalty,
             logprobs = logprobs,
@@ -252,7 +278,8 @@ public class FIMCompletionParams internal constructor(
         if (this === other) return true
         if (other !is FIMCompletionParams) return false
 
-        return echo == other.echo &&
+        return model == other.model &&
+                echo == other.echo &&
                 frequencyPenalty == other.frequencyPenalty &&
                 logprobs == other.logprobs &&
                 maxTokens == other.maxTokens &&
@@ -266,7 +293,8 @@ public class FIMCompletionParams internal constructor(
     }
 
     override fun hashCode(): Int {
-        var result = echo?.hashCode() ?: 0
+        var result = model.hashCode()
+        result = 31 * result + (echo?.hashCode() ?: 0)
         result = 31 * result + (frequencyPenalty?.hashCode() ?: 0)
         result = 31 * result + (logprobs?.hashCode() ?: 0)
         result = 31 * result + (maxTokens?.hashCode() ?: 0)
@@ -281,5 +309,5 @@ public class FIMCompletionParams internal constructor(
     }
 
     override fun toString(): String =
-        "FIMCompletionParams(echo=$echo, frequencyPenalty=$frequencyPenalty, logprobs=$logprobs, maxTokens=$maxTokens, presencePenalty=$presencePenalty, stop=$stop, stream=$stream, streamOptions=$streamOptions, suffix=$suffix, temperature=$temperature, topP=$topP)"
+        "FIMCompletionParams(model=$model, echo=$echo, frequencyPenalty=$frequencyPenalty, logprobs=$logprobs, maxTokens=$maxTokens, presencePenalty=$presencePenalty, stop=$stop, stream=$stream, streamOptions=$streamOptions, suffix=$suffix, temperature=$temperature, topP=$topP)"
 }

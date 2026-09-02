@@ -28,6 +28,12 @@ class EndpointApiTests {
                         "is_available": true,
                         "balance_infos": [
                             {
+                                "currency": "CNY",
+                                "total_balance": "110.00",
+                                "granted_balance": "10.00",
+                                "topped_up_balance": "100.00"
+                            },
+                            {
                                 "currency": "USD",
                                 "total_balance": "10.00",
                                 "granted_balance": "5.00",
@@ -47,12 +53,15 @@ class EndpointApiTests {
         capturedMethod shouldBe HttpMethod.Get
         capturedPath.shouldNotBeNull().shouldEndWith("/user/balance")
         balance.isAvailable.shouldBeTrue()
-        balance.balanceInfos shouldHaveSize 1
-        val info = balance.balanceInfos[0]
-        info.currency shouldBe CurrencyType.USD
-        info.totalBalance shouldBe "10.00"
-        info.grantedBalance shouldBe "5.00"
-        info.toppedUpBalance shouldBe "5.00"
+        balance.balanceInfos shouldHaveSize 2
+        val cny = balance.balanceInfos[0]
+        cny.currency shouldBe CurrencyType.CNY
+        cny.totalBalance shouldBe "110.00"
+        cny.grantedBalance shouldBe "10.00"
+        cny.toppedUpBalance shouldBe "100.00"
+        val usd = balance.balanceInfos[1]
+        usd.currency shouldBe CurrencyType.USD
+        usd.totalBalance shouldBe "10.00"
     }
 
     @Test
@@ -67,8 +76,8 @@ class EndpointApiTests {
                     {
                         "object": "list",
                         "data": [
-                            {"id": "deepseek-chat", "object": "model", "owned_by": "deepseek"},
-                            {"id": "deepseek-reasoner", "object": "model", "owned_by": "deepseek"}
+                            {"id": "deepseek-v4-flash", "object": "model", "owned_by": "deepseek"},
+                            {"id": "deepseek-v4-pro", "object": "model", "owned_by": "deepseek"}
                         ]
                     }
                 """.trimIndent(),
@@ -84,6 +93,6 @@ class EndpointApiTests {
         capturedPath.shouldNotBeNull().shouldEndWith("/models")
         models.`object` shouldBe "list"
         models.data shouldHaveSize 2
-        models.data.map { it.id } shouldBe listOf("deepseek-chat", "deepseek-reasoner")
+        models.data.map { it.id } shouldBe listOf("deepseek-v4-flash", "deepseek-v4-pro")
     }
 }

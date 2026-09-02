@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 /**
  * Represents options that can be applied to a streaming request.
  *
- * @property includeUsage If set, an additional chunk will be streamed before the `data: [DONE]` message.
- * The `usage` field on this chunk shows the token usage statistics for the entire request,
- * and the `choices` field will always be an empty array. All other chunks will also include a `usage` field,
- * but with a null value.
+ * @property includeUsage If set, every chunk carries a `usage` field: `null` on the
+ * intermediate ones, and the token usage statistics for the whole request on the last
+ * content chunk — the one whose single choice adds no content and has a non-null
+ * `finish_reason`.
  */
 @Serializable
 public class StreamOptions(

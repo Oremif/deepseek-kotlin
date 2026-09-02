@@ -107,9 +107,11 @@ public abstract class DeepSeekClientBase(
         }
 
         /**
-         * Timeout in milliseconds for chat completion requests.
+         * Timeout in milliseconds for chat completion requests. Defaults to 5 minutes,
+         * matching the socket timeout, since a thinking model can spend minutes on a
+         * single non-streaming call.
          */
-        protected var chatCompletionTimeout: Int = 45_000
+        protected var chatCompletionTimeout: Int = 300_000
 
         /**
          * Timeout in milliseconds for file-in-the-middle completion requests.

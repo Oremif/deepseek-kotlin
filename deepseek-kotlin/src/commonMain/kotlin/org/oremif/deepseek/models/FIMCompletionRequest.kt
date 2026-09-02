@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package org.oremif.deepseek.models
 
 import kotlinx.serialization.Serializable
@@ -7,16 +9,10 @@ import kotlinx.serialization.Serializable
  *
  * @property model ID of the model to use.
  *
- * **Possible values: {`deepseek-chat`}**
+ * **Possible values: {`deepseek-v4-pro`}**
  * @property prompt The prompt to generate completions for.
  * @property echo Echo back the prompt in addition to the completion
- * @property frequencyPenalty  Number between -2.0 and 2.0.
- * Positive values penalize new tokens based on their existing frequency in the text so far,
- * decreasing the model's likelihood to repeat the same line verbatim.
- *
- * **Possible values: `>= -2` and `<= 2`.**
- *
- * **Default value: `0`.**
+ * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API.
  * @property logprobs Include the log probabilities on the `logprobs` most likely output tokens,
  * as well the chosen tokens.
  * For example, if `logprobs` is 20, the API will return a list of the 20 most likely tokens.
@@ -27,17 +23,11 @@ import kotlinx.serialization.Serializable
  *
  * **Possible values: `<= 20`.**
  * @property maxTokens The maximum number of tokens that can be generated in the completion.
- * @property presencePenalty Number between -2.0 and 2.0.
- * Positive values penalize new tokens based on whether they appear in the text so far,
- * increasing the model's likelihood to talk about new topics.
- *
- * **Possible values: `>= -2` and `<= 2`.**
- *
- * **Default value: `0`.**
+ * @property presencePenalty Sent as `presence_penalty`, ignored by the API.
  * @property stop Up to 16 sequences where the API will stop generating further tokens.
  * @property stream Whether to stream back partial progress.
  * If set, tokens will be sent as data-only server-sent events as they become available,
- * with the stream terminated by a data: [DONE] message.
+ * with the stream terminated by a data: `[DONE]` message.
  * @property streamOptions Options for streaming response. Only set this when you set `stream: true`.
  * @property suffix The suffix that comes after a completion of inserted text.
  * @property temperature What sampling temperature to use, between 0 and 2.
@@ -63,9 +53,11 @@ public class FIMCompletionRequest internal constructor(
     public val model: ChatModel,
     public val prompt: String,
     public val echo: Boolean? = null,
+    @Deprecated(DEPRECATED_PENALTY)
     public val frequencyPenalty: Double? = null,
     public val logprobs: Int? = null,
     public val maxTokens: Int? = null,
+    @Deprecated(DEPRECATED_PENALTY)
     public val presencePenalty: Double? = null,
     public val stop: StopReason? = null,
     public val stream: Boolean? = null,

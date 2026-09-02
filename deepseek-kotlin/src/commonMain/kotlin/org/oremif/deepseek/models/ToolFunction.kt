@@ -3,6 +3,7 @@ package org.oremif.deepseek.models
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
+import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonContentPolymorphicSerializer
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
@@ -57,13 +58,14 @@ public class FunctionRequest(
  * Function invocation emitted by the model inside a [ToolCall].
  *
  * @property name Name of the function the model asked to call.
- * @property arguments JSON-encoded arguments produced by the model, matching the schema
- * declared in the corresponding [FunctionRequest.parameters].
+ * @property arguments Arguments the model generated, as a raw JSON string. Not guaranteed
+ * to be valid JSON, nor to match the schema declared in the corresponding
+ * [FunctionRequest.parameters]; [argumentsAsJsonOrNull] parses it defensively.
  */
 @Serializable
 public class FunctionResponse(
     override val name: String,
-    public val arguments: JsonObject?,
+    public val arguments: String?,
 ) : ToolFunction {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -80,6 +82,24 @@ public class FunctionResponse(
     override fun toString(): String =
         "FunctionResponse(name='$name', arguments=$arguments)"
 }
+
+/**
+ * Parses [FunctionResponse.arguments] into a [JsonObject], or returns `null` when the
+ * model produced no arguments, malformed JSON, or a JSON value that is not an object.
+ *
+ * Example:
+ * ```kotlin
+ * val call = response.choices.first().message.toolCalls?.first()
+ * val city = call?.function?.argumentsAsJsonOrNull()
+ *     ?.get("city")?.jsonPrimitive?.content
+ * ```
+ *
+ * @param json [Json] instance used for parsing; the default is sufficient for plain
+ * argument objects.
+ * @return The parsed arguments, or `null` if they are absent or not a valid JSON object.
+ */
+public fun FunctionResponse.argumentsAsJsonOrNull(json: Json = Json): JsonObject? =
+    arguments?.let { runCatching { json.parseToJsonElement(it) as? JsonObject }.getOrNull() }
 
 internal object ToolFunctionSerializer : JsonContentPolymorphicSerializer<ToolFunction>(ToolFunction::class) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ToolFunction> {

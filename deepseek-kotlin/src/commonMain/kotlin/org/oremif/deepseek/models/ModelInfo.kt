@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
  * Metadata for a single DeepSeek model entry returned by [org.oremif.deepseek.api.models].
  *
  * @property id Model identifier that can be passed to chat or FIM endpoints (e.g.
- * `deepseek-chat`).
+ * `deepseek-v4-flash`); wrap it in [ChatModel] to send it back in a request.
  * @property object Object type discriminator; always [ModelObjectType.MODEL].
  * @property ownedBy Organization that owns the model.
  */

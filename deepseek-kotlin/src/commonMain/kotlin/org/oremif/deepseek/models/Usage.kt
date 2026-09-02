@@ -6,24 +6,23 @@ import kotlinx.serialization.Serializable
 /**
  * Token usage statistics for a single chat or FIM request.
  *
- * For streamed responses the [ChatCompletionChunk.usage] or [FIMCompletion.usage] field
- * is populated only on the final usage-only chunk, which the API emits when
- * `streamOptions.includeUsage` is set.
+ * For streamed responses the statistics ride on the **last content chunk** — the one whose
+ * single choice carries no new content and a non-null `finish_reason` — instead of a
+ * separate usage-only chunk; see [ChatCompletionChunk.usage] and [StreamOptions].
  *
  * @property completionTokens Number of tokens in the generated completion.
- * @property promptTokens Number of tokens in the prompt. When context caching applies,
- * this equals [promptCacheHitTokens] + [promptCacheMissTokens].
+ * @property promptTokens Number of tokens in the prompt, equal to [promptCacheHitTokens] +
+ * [promptCacheMissTokens].
  * @property promptCacheHitTokens Number of prompt tokens served from the context cache,
- * or `null` when caching does not apply. Legacy field; newer responses may report the
- * same information under [promptTokensDetails] instead.
+ * or `null` when caching does not apply.
  * @property promptCacheMissTokens Number of prompt tokens not served from the context
- * cache, or `null` when caching does not apply. Legacy field; see [promptTokensDetails].
- * @property promptTokensDetails Structured breakdown of [promptTokens] under the
- * `prompt_tokens_details` key, matching the OpenAI-compatible shape. May be `null`
- * for older API versions.
+ * cache, or `null` when caching does not apply.
+ * @property promptTokensDetails Breakdown of [promptTokens] under the OpenAI-compatible
+ * `prompt_tokens_details` key. `null` unless the server sends that key, which current
+ * responses do not — read [promptCacheHitTokens] / [promptCacheMissTokens] instead.
  * @property totalTokens Total tokens billed for the request (prompt + completion).
- * @property completionTokensDetails Breakdown of how [completionTokens] was spent (e.g.
- * reasoning tokens for `deepseek-reasoner`).
+ * @property completionTokensDetails Breakdown of how [completionTokens] was spent — in
+ * particular the tokens spent on reasoning in thinking mode.
  */
 @Serializable
 public class Usage(
@@ -52,9 +51,9 @@ public class Usage(
         result = 31 * result + promptTokens.hashCode()
         result = 31 * result + (promptCacheHitTokens ?: 0)
         result = 31 * result + (promptCacheMissTokens ?: 0)
-        result = 31 * result + (promptTokensDetails?.hashCode() ?: 0)
+        result = 31 * result + promptTokensDetails.hashCode()
         result = 31 * result + totalTokens.hashCode()
-        result = 31 * result + (completionTokensDetails?.hashCode() ?: 0)
+        result = 31 * result + completionTokensDetails.hashCode()
         return result
     }
 

@@ -1,5 +1,9 @@
 package org.oremif.deepseek.models
 
+/** Deprecation message shared by the `frequency_penalty` / `presence_penalty` declarations. */
+internal const val DEPRECATED_PENALTY: String =
+    "The DeepSeek API ignores this parameter: it is still sent, but has no effect on the response."
+
 /**
  * Shared sampling parameters for the DeepSeek chat and FIM endpoints.
  *
@@ -8,11 +12,10 @@ package org.oremif.deepseek.models
  * methods ([chat], [chatStream], [fim], [fimStream]) so any existing param instance can
  * be used as an entry point to produce a differently-typed one.
  *
- * @property frequencyPenalty Reduces repetition by penalizing tokens based on their frequency in the text.
- * Expected range: `-2.0..2.0`.
- * @property maxTokens Maximum number of tokens to generate in the response. Expected range: `1..8192`.
- * @property presencePenalty Reduces repetition by penalizing tokens that have appeared in the text.
- * Expected range: `-2.0..2.0`.
+ * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API.
+ * @property maxTokens Maximum number of tokens to generate in the response. At least `1`,
+ * and otherwise bounded by the model's context length.
+ * @property presencePenalty Sent as `presence_penalty`, ignored by the API.
  * @property stop Custom stop sequences that cause the model to stop generating further tokens.
  * @property temperature Controls randomness in output generation (higher = more random).
  * Expected range: `0.0..2.0`.
@@ -20,8 +23,10 @@ package org.oremif.deepseek.models
  * Expected range: `0.0..1.0`.
  */
 public open class DeepSeekParams internal constructor(
+    @Deprecated(DEPRECATED_PENALTY)
     public val frequencyPenalty: Double? = null,
     public val maxTokens: Int? = null,
+    @Deprecated(DEPRECATED_PENALTY)
     public val presencePenalty: Double? = null,
     public val stop: StopReason? = null,
     public val temperature: Double? = null,
@@ -34,7 +39,7 @@ public open class DeepSeekParams internal constructor(
      * Example:
      * ```kotlin
      * val params = existingParams.chat {
-     *     model = ChatModel.DEEPSEEK_CHAT
+     *     model = ChatModel.DEEPSEEK_V4_FLASH
      *     temperature = 0.8
      *     maxTokens = 2000
      * }
@@ -52,7 +57,7 @@ public open class DeepSeekParams internal constructor(
      * Example:
      * ```kotlin
      * val streamParams = existingParams.chatStream {
-     *     model = ChatModel.DEEPSEEK_CHAT
+     *     model = ChatModel.DEEPSEEK_V4_PRO
      *     temperature = 0.8
      * }
      * ```

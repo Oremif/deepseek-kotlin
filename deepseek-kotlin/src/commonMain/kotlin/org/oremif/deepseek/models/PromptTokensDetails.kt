@@ -3,13 +3,11 @@ package org.oremif.deepseek.models
 import kotlinx.serialization.Serializable
 
 /**
- * Breakdown of the prompt tokens counted by [Usage], returned by the API under the
+ * Breakdown of the prompt tokens counted by [Usage], decoded from the OpenAI-compatible
  * `prompt_tokens_details` key.
  *
- * Distinct from the older flat fields [Usage.promptCacheHitTokens] /
- * [Usage.promptCacheMissTokens]: both shapes may appear in the same response, and
- * either may be `null` depending on the model and the API version that served the
- * request.
+ * Current responses omit that key and report cache accounting through the flat
+ * [Usage.promptCacheHitTokens] / [Usage.promptCacheMissTokens] fields instead.
  *
  * @property cachedTokens Number of prompt tokens served from the context cache, or
  * `null` when the server did not report this breakdown.

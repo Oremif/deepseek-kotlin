@@ -33,7 +33,7 @@ class ChatCompletionApiTests {
                 }
             ],
             "created": 1705651092,
-            "model": "deepseek-chat",
+            "model": "deepseek-v4-flash",
             "object": "chat.completion",
             "usage": {
                 "completion_tokens": 3,
@@ -65,7 +65,7 @@ class ChatCompletionApiTests {
         capturedMethod shouldBe HttpMethod.Post
         capturedPath.shouldNotBeNull().shouldEndWith("/chat/completions")
         val body = capturedBody.shouldNotBeNull()
-        body shouldContain "\"model\":\"deepseek-chat\""
+        body shouldContain "\"model\":\"deepseek-v4-flash\""
         body shouldContain "\"content\":\"Hi\""
     }
 
@@ -83,7 +83,7 @@ class ChatCompletionApiTests {
         val response = client.chat(listOf(UserMessage("Hi")))
 
         response.id shouldBe "abc-123"
-        response.model shouldBe "deepseek-chat"
+        response.model shouldBe "deepseek-v4-flash"
         response.choices shouldHaveSize 1
         response.choices[0].finishReason shouldBe FinishReason.STOP
         response.choices[0].message.content shouldBe "Hello!"
@@ -139,7 +139,7 @@ class ChatCompletionApiTests {
         val client = testClient(engine)
 
         client.chatCompletion {
-            params { model = ChatModel.DEEPSEEK_REASONER }
+            params { model = ChatModel.DEEPSEEK_V4_PRO }
             messages {
                 system("You are helpful")
                 user("Hi")
@@ -147,7 +147,7 @@ class ChatCompletionApiTests {
         }
 
         val body = capturedBody.shouldNotBeNull()
-        body shouldContain "\"model\":\"deepseek-reasoner\""
+        body shouldContain "\"model\":\"deepseek-v4-pro\""
         body shouldContain "\"role\":\"system\""
         body shouldContain "\"role\":\"user\""
     }

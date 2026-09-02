@@ -1,11 +1,14 @@
 package org.oremif.deepseek.models
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonNamingStrategy
+import kotlinx.serialization.json.jsonPrimitive
 import kotlin.test.Test
 
 class ChatCompletionTests {
@@ -28,10 +31,8 @@ class ChatCompletionTests {
                         "content": "Hi"
                     }
                 ],
-                "model": "deepseek-chat",
-                "frequency_penalty": 0.0,
-                "max_tokens": 2048,
-                "presence_penalty": 0.0,
+                "model": "deepseek-v4-pro",
+                "max_tokens": 4096,
                 "response_format": {
                     "type": "text"
                 },
@@ -39,7 +40,10 @@ class ChatCompletionTests {
                 "temperature": 1.0,
                 "top_p": 1.0,
                 "tool_choice": "none",
-                "logprobs": false
+                "logprobs": false,
+                "thinking": {
+                    "type": "enabled"
+                }
             }
         """.trimIndent()
 
@@ -57,7 +61,7 @@ class ChatCompletionTests {
                     }
                 ],
                 "created": 1705651092,
-                "model": "deepseek-chat",
+                "model": "deepseek-v4-pro",
                 "object": "chat.completion",
                 "usage": {
                     "completion_tokens": 10,
@@ -74,10 +78,8 @@ class ChatCompletionTests {
                 SystemMessage("You are a helpful assistant"),
                 UserMessage("Hi"),
             ),
-            model = ChatModel.DEEPSEEK_CHAT,
-            frequencyPenalty = .0,
-            maxTokens = 2048,
-            presencePenalty = .0,
+            model = ChatModel.DEEPSEEK_V4_PRO,
+            maxTokens = 4096,
             responseFormat = ResponseFormat.text,
             stop = null,
             stream = false,
@@ -87,13 +89,15 @@ class ChatCompletionTests {
             tools = null,
             toolChoice = ChatCompletionToolChoice.NONE,
             logprobs = false,
-            topLogprobs = null
+            topLogprobs = null,
+            thinking = Thinking(ThinkingType.ENABLED),
         )
 
         val expected = jsonConfig.decodeFromString<ChatCompletionRequest>(jsonRequest)
         expected.messages.size shouldBe 2
-        expected.maxTokens shouldBe 2048
+        expected.maxTokens shouldBe 4096
         expected.responseFormat shouldBe ResponseFormat.text
+        expected.thinking?.type shouldBe ThinkingType.ENABLED
 
         jsonConfig.encodeToString(request).trimIndent() shouldBe jsonRequest
     }
@@ -110,7 +114,7 @@ class ChatCompletionTests {
                 )
             ),
             created = 1705651092L,
-            model = "deepseek-chat",
+            model = "deepseek-v4-pro",
             `object` = "chat.completion",
             usage = Usage(
                 completionTokens = 10,
@@ -128,9 +132,52 @@ class ChatCompletionTests {
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    private val streamingJsonConfig = Json {
+    private val clientJsonConfig = Json {
         ignoreUnknownKeys = true
         namingStrategy = JsonNamingStrategy.SnakeCase
+    }
+
+    @Test
+    fun `documented request payload decodes with explicit nulls and unknown fields`() {
+        val json = """
+            {
+              "messages": [
+                {"content": "You are a helpful assistant", "role": "system"},
+                {"content": "Hi", "role": "user"}
+              ],
+              "model": "deepseek-v4-pro",
+              "thinking": {"type": "enabled"},
+              "reasoning_effort": "low",
+              "max_tokens": 4096,
+              "response_format": {"type": "text"},
+              "stop": null,
+              "stream": false,
+              "stream_options": null,
+              "temperature": 1,
+              "top_p": 1,
+              "tools": null,
+              "tool_choice": "none",
+              "logprobs": false,
+              "top_logprobs": null
+            }
+        """.trimIndent()
+
+        val request = clientJsonConfig.decodeFromString<ChatCompletionRequest>(json)
+
+        request.messages shouldBe listOf(SystemMessage("You are a helpful assistant"), UserMessage("Hi"))
+        request.model shouldBe ChatModel.DEEPSEEK_V4_PRO
+        request.thinking?.type shouldBe ThinkingType.ENABLED
+        request.maxTokens shouldBe 4096
+        request.responseFormat shouldBe ResponseFormat.text
+        request.temperature shouldBe 1.0
+        request.topP shouldBe 1.0
+        request.toolChoice shouldBe ChatCompletionToolChoice.NONE
+        request.logprobs shouldBe false
+        request.stream shouldBe false
+        request.stop.shouldBeNull()
+        request.streamOptions.shouldBeNull()
+        request.tools.shouldBeNull()
+        request.topLogprobs.shouldBeNull()
     }
 
     @Test
@@ -157,12 +204,12 @@ class ChatCompletionTests {
                     }
                 ],
                 "created": 1705651092,
-                "model": "deepseek-chat",
+                "model": "deepseek-v4-flash",
                 "object": "chat.completion.chunk"
             }
         """.trimIndent()
 
-        val chunk = streamingJsonConfig.decodeFromString<ChatCompletionChunk>(json)
+        val chunk = clientJsonConfig.decodeFromString<ChatCompletionChunk>(json)
         val delta = chunk.choices.single().delta
         delta.role shouldBe "assistant"
         delta.content.shouldBeNull()
@@ -194,12 +241,12 @@ class ChatCompletionTests {
                     }
                 ],
                 "created": 1705651092,
-                "model": "deepseek-chat",
+                "model": "deepseek-v4-flash",
                 "object": "chat.completion.chunk"
             }
         """.trimIndent()
 
-        val chunk = streamingJsonConfig.decodeFromString<ChatCompletionChunk>(json)
+        val chunk = clientJsonConfig.decodeFromString<ChatCompletionChunk>(json)
         val toolCall = chunk.choices.single().delta.toolCalls.shouldNotBeNull().single()
         toolCall.index shouldBe 0
         toolCall.id.shouldBeNull()
@@ -220,12 +267,12 @@ class ChatCompletionTests {
                     }
                 ],
                 "created": 1705651092,
-                "model": "deepseek-chat",
+                "model": "deepseek-v4-flash",
                 "object": "chat.completion.chunk"
             }
         """.trimIndent()
 
-        val chunk = streamingJsonConfig.decodeFromString<ChatCompletionChunk>(json)
+        val chunk = clientJsonConfig.decodeFromString<ChatCompletionChunk>(json)
         val choice = chunk.choices.single()
         choice.finishReason shouldBe FinishReason.TOOL_CALLS
         choice.delta.content.shouldBeNull()
@@ -245,12 +292,12 @@ class ChatCompletionTests {
                     }
                 ],
                 "created": 1705651092,
-                "model": "deepseek-reasoner",
+                "model": "deepseek-v4-pro",
                 "object": "chat.completion.chunk"
             }
         """.trimIndent()
 
-        val chunk = streamingJsonConfig.decodeFromString<ChatCompletionChunk>(json)
+        val chunk = clientJsonConfig.decodeFromString<ChatCompletionChunk>(json)
         chunk.choices.single().delta.reasoningContent shouldBe "thinking..."
     }
 
@@ -293,7 +340,7 @@ class ChatCompletionTests {
                     {
                         "id": "call_abc",
                         "type": "function",
-                        "function": {"name": "get_weather", "arguments": {}}
+                        "function": {"name": "get_weather", "arguments": "{}"}
                     }
                 ]
             }
@@ -304,5 +351,78 @@ class ChatCompletionTests {
         toolCalls.size shouldBe 1
         toolCalls[0].id shouldBe "call_abc"
         toolCalls[0].function.name shouldBe "get_weather"
+        toolCalls[0].function.arguments shouldBe "{}"
+    }
+
+    @Test
+    fun `tool call arguments are decoded as a raw JSON string`() {
+        val json = """
+            {
+                "role": "assistant",
+                "content": null,
+                "tool_calls": [
+                    {
+                        "id": "call_abc",
+                        "type": "function",
+                        "function": {"name": "get_weather", "arguments": "{\"location\": \"Tokyo\"}"}
+                    }
+                ]
+            }
+        """.trimIndent()
+
+        val call = jsonConfig.decodeFromString<ChatCompletionMessage>(json).toolCalls.shouldNotBeNull().single()
+        call.function.arguments shouldBe """{"location": "Tokyo"}"""
+        call.function.argumentsAsJsonOrNull()
+            .shouldNotBeNull()["location"]?.jsonPrimitive?.content shouldBe "Tokyo"
+    }
+
+    @Test
+    fun `argumentsAsJsonOrNull returns null for malformed model output`() {
+        FunctionResponse(name = "get_weather", arguments = """{"location": """)
+            .argumentsAsJsonOrNull().shouldBeNull()
+        FunctionResponse(name = "get_weather", arguments = "\"just a string\"")
+            .argumentsAsJsonOrNull().shouldBeNull()
+        FunctionResponse(name = "get_weather", arguments = null)
+            .argumentsAsJsonOrNull().shouldBeNull()
+    }
+
+    @Test
+    fun `ChatCompletionMessage content stays null instead of the string null`() {
+        val json = """
+            {
+                "role": "assistant",
+                "content": null,
+                "reasoning_content": null,
+                "tool_calls": [
+                    {
+                        "id": "call_abc",
+                        "type": "function",
+                        "function": {"name": "get_weather", "arguments": "{}"}
+                    }
+                ]
+            }
+        """.trimIndent()
+
+        val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
+        message.content.shouldBeNull()
+        message.reasoningContent.shouldBeNull()
+        message.toolCalls.shouldNotBeNull().size shouldBe 1
+    }
+
+    @Test
+    fun `ChatModel serializes as its raw slug and accepts unknown ones`() {
+        jsonConfig.encodeToString(ChatModel.DEEPSEEK_V4_PRO) shouldBe "\"deepseek-v4-pro\""
+        jsonConfig.decodeFromString<ChatModel>("\"deepseek-v5-flash\"") shouldBe ChatModel("deepseek-v5-flash")
+
+        val request = ChatCompletionRequest(
+            messages = listOf(UserMessage("Hi")),
+            model = ChatModel("deepseek-v5-flash"),
+        )
+        jsonConfig.encodeToString(request) shouldContain "\"model\": \"deepseek-v5-flash\""
+    }
+
+    @Test
+    fun `ChatModel rejects a blank slug`() {
+        shouldThrow<IllegalArgumentException> { ChatModel(" ") }
     }
 }

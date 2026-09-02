@@ -18,7 +18,7 @@ A Kotlin Multiplatform SDK for the [DeepSeek REST API](https://api-docs.deepseek
   - [Creating a client](#creating-a-client)
   - [Chat completion](#chat-completion)
   - [Streaming chat](#streaming-chat)
-  - [Reasoning model](#reasoning-model)
+  - [Thinking mode](#thinking-mode)
   - [Fill-In-the-Middle (FIM)](#fill-in-the-middle-fim)
   - [JSON output mode](#json-output-mode)
   - [Tool / function calling](#tool--function-calling)
@@ -36,7 +36,7 @@ A Kotlin Multiplatform SDK for the [DeepSeek REST API](https://api-docs.deepseek
 
 - **Kotlin Multiplatform** — one SDK for JVM, Android, iOS, macOS, Linux, Windows, and WebAssembly.
 - **Coroutines-first** — every endpoint is `suspend`; streaming endpoints return `Flow`.
-- **Full API coverage** — Chat, Reasoner, Fill-In-the-Middle, Models, User Balance.
+- **Full API coverage** — Chat (thinking and non-thinking), Fill-In-the-Middle, Models, User Balance.
 - **Type-safe DSL** — build requests and conversations with idiomatic Kotlin builders.
 - **Typed errors** — HTTP status codes are mapped to dedicated `DeepSeekException` subclasses.
 - **Automatic retries** — retries with exponential backoff and `Retry-After` support for transient failures.
@@ -177,7 +177,7 @@ import org.oremif.deepseek.models.ChatModel
 import org.oremif.deepseek.models.chatCompletionParams
 
 val params = chatCompletionParams {
-    model = ChatModel.DEEPSEEK_CHAT
+    model = ChatModel.DEEPSEEK_V4_FLASH
     temperature = 0.3
     maxTokens = 2048
 }
@@ -193,10 +193,9 @@ For full control, use the `chatCompletion` builder:
 ```kotlin
 val response = client.chatCompletion {
     params {
-        model = ChatModel.DEEPSEEK_CHAT
+        model = ChatModel.DEEPSEEK_V4_PRO
         temperature = 0.7
         maxTokens = 2000
-        frequencyPenalty = 0.5
     }
     messages {
         system("You are a Kotlin expert.")
@@ -233,7 +232,7 @@ Streaming follows the same three shapes as the unary API (string, `List<ChatMess
 import org.oremif.deepseek.models.chatCompletionStreamParams
 
 val params = chatCompletionStreamParams {
-    model = ChatModel.DEEPSEEK_CHAT
+    model = ChatModel.DEEPSEEK_V4_FLASH
     temperature = 0.3
 }
 
@@ -245,15 +244,16 @@ streamClient.chat(params) {
 }
 ```
 
-### Reasoning model
+### Thinking mode
 
-`ChatModel.DEEPSEEK_REASONER` returns both the final answer and the chain-of-thought in a separate `reasoningContent` field:
+Every V4 model runs in thinking mode **by default** and returns both the final answer and the chain-of-thought in a separate
+`reasoningContent` field. Pass `thinking = Thinking(ThinkingType.DISABLED)` for the faster, cheaper non-thinking mode:
 
 ```kotlin
 val client = DeepSeekClient(System.getenv("DEEPSEEK_API_KEY"))
 
 val params = chatCompletionParams {
-    model = ChatModel.DEEPSEEK_REASONER
+    model = ChatModel.DEEPSEEK_V4_FLASH
     maxTokens = 2048
 }
 
@@ -269,7 +269,7 @@ println("Answer:\n${message.content}")
 Streaming works the same way — each chunk may contain either `delta.reasoningContent` or `delta.content`:
 
 ```kotlin
-streamClient.chat(chatCompletionStreamParams { model = ChatModel.DEEPSEEK_REASONER }) {
+streamClient.chat(chatCompletionStreamParams { model = ChatModel.DEEPSEEK_V4_FLASH }) {
     user("How many R's are in the word 'strawberry'?")
 }.collect { chunk ->
     val delta = chunk.choices.first().delta
@@ -330,7 +330,7 @@ Force the model to return valid JSON with `ResponseFormat.jsonObject`:
 import org.oremif.deepseek.models.ResponseFormat
 
 val params = chatCompletionParams {
-    model = ChatModel.DEEPSEEK_CHAT
+    model = ChatModel.DEEPSEEK_V4_FLASH
     responseFormat = ResponseFormat.jsonObject
 }
 
@@ -375,7 +375,7 @@ val getWeather = Tool(
 
 val response = client.chat(
     chatCompletionParams {
-        model = ChatModel.DEEPSEEK_CHAT
+        model = ChatModel.DEEPSEEK_V4_FLASH
         tools = listOf(getWeather)
     }
 ) {
@@ -427,8 +427,8 @@ val client = DeepSeekClient(System.getenv("DEEPSEEK_API_KEY")) {
         ignoreUnknownKeys = true
     }
 
-    // Per-endpoint timeouts, in milliseconds.
-    chatCompletionTimeout(45_000)
+    // Per-endpoint timeouts, in milliseconds (defaults: 300_000 and 60_000).
+    chatCompletionTimeout(120_000)
     fimCompletionTimeout(60_000)
 
     // Opt-in logging. Authorization is always redacted; add more predicates as needed.
