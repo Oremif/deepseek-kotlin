@@ -18,6 +18,15 @@ public final class org/oremif/deepseek/api/ChatStreamKt {
 	public static final fun chatCompletionStream (Lorg/oremif/deepseek/client/DeepSeekClientBase;Lorg/oremif/deepseek/models/ChatCompletionRequest;)Lkotlinx/coroutines/flow/Flow;
 }
 
+public final class org/oremif/deepseek/api/FilesKt {
+	public static final fun deleteFile (Lorg/oremif/deepseek/client/DeepSeekClientBase;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun listFiles-q32F9T0 (Lorg/oremif/deepseek/client/DeepSeekClientBase;Ljava/lang/String;Ljava/lang/Integer;Lorg/oremif/deepseek/models/SortOrder;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun listFiles-q32F9T0$default (Lorg/oremif/deepseek/client/DeepSeekClientBase;Ljava/lang/String;Ljava/lang/Integer;Lorg/oremif/deepseek/models/SortOrder;Ljava/lang/String;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun retrieveFile (Lorg/oremif/deepseek/client/DeepSeekClientBase;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun uploadFile (Lorg/oremif/deepseek/client/DeepSeekClientBase;[BLjava/lang/String;Ljava/lang/Integer;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun uploadFile$default (Lorg/oremif/deepseek/client/DeepSeekClientBase;[BLjava/lang/String;Ljava/lang/Integer;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
 public final class org/oremif/deepseek/api/FimCompletionKt {
 	public static final fun fim (Lorg/oremif/deepseek/client/DeepSeekClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 	public static final fun fim (Lorg/oremif/deepseek/client/DeepSeekClient;Lorg/oremif/deepseek/models/FIMCompletionParams;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
@@ -63,32 +72,39 @@ public abstract class org/oremif/deepseek/client/DeepSeekClientBase$Builder {
 	public final fun baseUrl (Ljava/lang/String;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	protected final fun buildHttpClient ()Lio/ktor/client/HttpClient;
 	public final fun chatCompletionTimeout (I)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
+	public final fun chatCompletionTimeout-LRDsOJo (J)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	protected fun defaultHttpClient ()Lio/ktor/client/HttpClient;
 	public final fun fimCompletionTimeout (I)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
-	protected final fun getChatCompletionTimeout ()I
+	public final fun fimCompletionTimeout-LRDsOJo (J)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
+	protected final fun getChatCompletionTimeout ()J
 	protected final fun getDeepSeekBaseUrl ()Ljava/lang/String;
-	protected final fun getFimCompletionTimeout ()I
+	protected final fun getFimCompletionTimeout ()J
 	protected final fun getJsonConfig ()Lkotlinx/serialization/json/Json;
 	protected final fun getToken ()Ljava/lang/String;
+	protected final fun getUploadTimeout ()J
 	public final fun httpClient (Lio/ktor/client/HttpClient;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	public final fun httpClient (Lkotlin/jvm/functions/Function1;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	public final fun jsonConfig (Lkotlin/jvm/functions/Function1;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	public final fun jsonConfig (Lkotlinx/serialization/json/Json;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	public final fun logging (Lkotlin/jvm/functions/Function1;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	public static synthetic fun logging$default (Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
-	protected final fun setChatCompletionTimeout (I)V
+	protected final fun setChatCompletionTimeout (J)V
 	protected final fun setDeepSeekBaseUrl (Ljava/lang/String;)V
-	protected final fun setFimCompletionTimeout (I)V
+	protected final fun setFimCompletionTimeout (J)V
 	protected final fun setJsonConfig (Lkotlinx/serialization/json/Json;)V
+	protected final fun setUploadTimeout (J)V
+	public final fun uploadTimeout (I)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
+	public final fun uploadTimeout-LRDsOJo (J)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 }
 
 public final class org/oremif/deepseek/client/DeepSeekClientConfig {
 	public fun <init> ()V
-	public fun <init> (Lkotlinx/serialization/json/Json;JJ)V
-	public synthetic fun <init> (Lkotlinx/serialization/json/Json;JJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lkotlinx/serialization/json/Json;JJJ)V
+	public synthetic fun <init> (Lkotlinx/serialization/json/Json;JJJILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getChatCompletionTimeout ()J
 	public final fun getFimCompletionTimeout ()J
 	public final fun getJsonConfig ()Lkotlinx/serialization/json/Json;
+	public final fun getUploadTimeout ()J
 }
 
 public final class org/oremif/deepseek/client/DeepSeekClientKt {
@@ -973,6 +989,92 @@ public final class org/oremif/deepseek/models/FIMLogProbs$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public final class org/oremif/deepseek/models/FileDeleted {
+	public static final field Companion Lorg/oremif/deepseek/models/FileDeleted$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Z)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDeleted ()Z
+	public final fun getId ()Ljava/lang/String;
+	public final fun getObject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/FileDeleted$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/FileDeleted$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/FileDeleted;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/FileDeleted;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/FileDeleted$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/FileList {
+	public static final field Companion Lorg/oremif/deepseek/models/FileList$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/util/List;ZLjava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;ZLjava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Ljava/util/List;
+	public final fun getFirstId ()Ljava/lang/String;
+	public final fun getHasMore ()Z
+	public final fun getLastId ()Ljava/lang/String;
+	public final fun getObject ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/FileList$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/FileList$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/FileList;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/FileList;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/FileList$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/FileObject {
+	public static final field Companion Lorg/oremif/deepseek/models/FileObject$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;JJLjava/lang/String;Ljava/lang/String;Ljava/lang/Long;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;JJLjava/lang/String;Ljava/lang/String;Ljava/lang/Long;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBytes ()J
+	public final fun getCreatedAt ()J
+	public final fun getExpiresAt ()Ljava/lang/Long;
+	public final fun getFilename ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getObject ()Ljava/lang/String;
+	public final fun getPurpose-WOenSlU ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/FileObject$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/FileObject$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/FileObject;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/FileObject;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/FileObject$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
 public final class org/oremif/deepseek/models/FilePart : org/oremif/deepseek/models/ContentPart {
 	public static final field Companion Lorg/oremif/deepseek/models/FilePart$Companion;
 	public fun <init> ()V
@@ -998,6 +1100,37 @@ public final synthetic class org/oremif/deepseek/models/FilePart$$serializer : k
 }
 
 public final class org/oremif/deepseek/models/FilePart$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/FilePurpose {
+	public static final field Companion Lorg/oremif/deepseek/models/FilePurpose$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lorg/oremif/deepseek/models/FilePurpose;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/FilePurpose$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/FilePurpose$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-F8FwqKo (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-JSOCrS0 (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/FilePurpose$Companion {
+	public final fun getUSER_DATA-WOenSlU ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -1362,6 +1495,20 @@ public final synthetic class org/oremif/deepseek/models/ResponseFormat$$serializ
 public final class org/oremif/deepseek/models/ResponseFormat$Companion {
 	public final fun getJsonObject ()Lorg/oremif/deepseek/models/ResponseFormat;
 	public final fun getText ()Lorg/oremif/deepseek/models/ResponseFormat;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/SortOrder : java/lang/Enum {
+	public static final field ASC Lorg/oremif/deepseek/models/SortOrder;
+	public static final field Companion Lorg/oremif/deepseek/models/SortOrder$Companion;
+	public static final field DESC Lorg/oremif/deepseek/models/SortOrder;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getValue ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lorg/oremif/deepseek/models/SortOrder;
+	public static fun values ()[Lorg/oremif/deepseek/models/SortOrder;
+}
+
+public final class org/oremif/deepseek/models/SortOrder$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 

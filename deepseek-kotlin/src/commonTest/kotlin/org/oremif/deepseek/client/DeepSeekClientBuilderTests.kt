@@ -4,6 +4,7 @@ import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
 import io.ktor.client.*
 import io.ktor.client.plugins.*
@@ -14,6 +15,10 @@ import io.ktor.client.plugins.sse.*
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 private inline fun <T : DeepSeekClientBase, R> T.use(block: (T) -> R): R =
     try {
@@ -164,6 +169,41 @@ class DeepSeekClientBuilderTests {
             client.config.jsonConfig.configuration.prettyPrint.shouldBeFalse()
             client.client.pluginOrNull(SSE).shouldNotBeNull()
             client.client.pluginOrNull(ContentNegotiation).shouldNotBeNull()
+        }
+    }
+
+    @Test
+    fun `timeouts given in milliseconds reach the config`() {
+        DeepSeekClient("test-token") {
+            chatCompletionTimeout(1_000)
+            fimCompletionTimeout(2_000)
+            uploadTimeout(3_000)
+        }.use { client ->
+            client.config.chatCompletionTimeout shouldBe 1_000L
+            client.config.fimCompletionTimeout shouldBe 2_000L
+            client.config.uploadTimeout shouldBe 3_000L
+        }
+    }
+
+    @Test
+    fun `timeouts given as a Duration reach the config in milliseconds`() {
+        DeepSeekClientStream("test-token") {
+            chatCompletionTimeout(10.minutes)
+            fimCompletionTimeout(90.seconds)
+            uploadTimeout(2.hours)
+        }.use { client ->
+            client.config.chatCompletionTimeout shouldBe 600_000L
+            client.config.fimCompletionTimeout shouldBe 90_000L
+            client.config.uploadTimeout shouldBe 7_200_000L
+        }
+    }
+
+    @Test
+    fun `an infinite Duration timeout survives without truncation`() {
+        DeepSeekClient("test-token") {
+            uploadTimeout(Duration.INFINITE)
+        }.use { client ->
+            client.config.uploadTimeout shouldBe Long.MAX_VALUE
         }
     }
 }

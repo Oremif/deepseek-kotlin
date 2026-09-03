@@ -13,9 +13,13 @@ import kotlinx.serialization.json.Json
  * defaults to 5 minutes, since a thinking model can spend minutes on a single
  * non-streaming call
  * @property fimCompletionTimeout Timeout in milliseconds for file-in-the-middle completion requests
+ * @property uploadTimeout Timeout in milliseconds for Files API uploads; defaults to
+ * 5 minutes, since the API accepts files of up to 64 MiB and a slow uplink needs far
+ * longer than a chat call to push one
  */
 public class DeepSeekClientConfig(
     public val jsonConfig: Json = Json,
     public val chatCompletionTimeout: Long = 300_000,
     public val fimCompletionTimeout: Long = 60_000,
+    public val uploadTimeout: Long = 300_000,
 )

@@ -16,6 +16,7 @@ import kotlinx.serialization.json.JsonBuilder
 import kotlinx.serialization.json.JsonNamingStrategy
 import org.oremif.deepseek.utils.computeRetryDelayMillis
 import org.oremif.deepseek.utils.isRetryableStatus
+import kotlin.time.Duration
 
 /**
  * Creates a new instance of [DeepSeekClient] with optional configuration.
@@ -111,12 +112,17 @@ public abstract class DeepSeekClientBase(
          * matching the socket timeout, since a thinking model can spend minutes on a
          * single non-streaming call.
          */
-        protected var chatCompletionTimeout: Int = 300_000
+        protected var chatCompletionTimeout: Long = 300_000
 
         /**
          * Timeout in milliseconds for file-in-the-middle completion requests.
          */
-        protected var fimCompletionTimeout: Int = 60_000
+        protected var fimCompletionTimeout: Long = 60_000
+
+        /**
+         * Timeout in milliseconds for Files API uploads.
+         */
+        protected var uploadTimeout: Long = 300_000
 
         private val httpClientConfigBlocks: MutableList<HttpClientConfig<*>.() -> Unit> = mutableListOf()
         private var httpClientOverride: HttpClient? = null
@@ -189,7 +195,25 @@ public abstract class DeepSeekClientBase(
          * @return This builder for chaining
          */
         public fun chatCompletionTimeout(timeout: Int): Builder {
-            chatCompletionTimeout = timeout
+            chatCompletionTimeout = timeout.toLong()
+            return this
+        }
+
+        /**
+         * Sets the timeout for chat completion requests.
+         *
+         * Example:
+         * ```kotlin
+         * val client = DeepSeekClient("token") {
+         *     chatCompletionTimeout(10.minutes)
+         * }
+         * ```
+         *
+         * @param timeout Timeout to allow; [Duration.INFINITE] disables it
+         * @return This builder for chaining
+         */
+        public fun chatCompletionTimeout(timeout: Duration): Builder {
+            chatCompletionTimeout = timeout.inWholeMilliseconds
             return this
         }
 
@@ -200,7 +224,40 @@ public abstract class DeepSeekClientBase(
          * @return This builder for chaining
          */
         public fun fimCompletionTimeout(timeout: Int): Builder {
-            fimCompletionTimeout = timeout
+            fimCompletionTimeout = timeout.toLong()
+            return this
+        }
+
+        /**
+         * Sets the timeout for file-in-the-middle completion requests.
+         *
+         * @param timeout Timeout to allow; [Duration.INFINITE] disables it
+         * @return This builder for chaining
+         */
+        public fun fimCompletionTimeout(timeout: Duration): Builder {
+            fimCompletionTimeout = timeout.inWholeMilliseconds
+            return this
+        }
+
+        /**
+         * Sets the timeout for Files API uploads.
+         *
+         * @param timeout Timeout in milliseconds
+         * @return This builder for chaining
+         */
+        public fun uploadTimeout(timeout: Int): Builder {
+            uploadTimeout = timeout.toLong()
+            return this
+        }
+
+        /**
+         * Sets the timeout for Files API uploads.
+         *
+         * @param timeout Timeout to allow; [Duration.INFINITE] disables it
+         * @return This builder for chaining
+         */
+        public fun uploadTimeout(timeout: Duration): Builder {
+            uploadTimeout = timeout.inWholeMilliseconds
             return this
         }
 
@@ -381,7 +438,7 @@ public abstract class DeepSeekClientBase(
  * Client for unary (non-streaming) interactions with the DeepSeek API.
  *
  * Use the [DeepSeekClient] top-level function to create instances. The client exposes
- * chat completion, Fill-In-the-Middle completion, user balance, and model listing
+ * chat completion, Fill-In-the-Middle completion, user balance, model listing and Files
  * endpoints as extension functions declared in the `org.oremif.deepseek.api` package.
  *
  * The client is designed to be long-lived — create one instance and reuse it. Calling
@@ -413,8 +470,9 @@ public class DeepSeekClient internal constructor(
                 client = buildHttpClient(),
                 config = DeepSeekClientConfig(
                     jsonConfig,
-                    chatCompletionTimeout.toLong(),
-                    fimCompletionTimeout.toLong()
+                    chatCompletionTimeout,
+                    fimCompletionTimeout,
+                    uploadTimeout
                 )
             )
         }
@@ -461,8 +519,9 @@ public class DeepSeekClientStream internal constructor(
                 client = buildHttpClient(),
                 config = DeepSeekClientConfig(
                     jsonConfig,
-                    chatCompletionTimeout.toLong(),
-                    fimCompletionTimeout.toLong()
+                    chatCompletionTimeout,
+                    fimCompletionTimeout,
+                    uploadTimeout
                 )
             )
         }

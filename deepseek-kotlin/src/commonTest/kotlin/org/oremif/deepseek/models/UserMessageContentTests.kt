@@ -100,4 +100,20 @@ class UserMessageContentTests {
     fun `an image url must not be blank`() {
         shouldThrow<IllegalArgumentException> { ImageUrlPart("  ") }
     }
+
+    @Test
+    fun `the parts DSL sends parts in the order they were appended`() {
+        val parts = ChatCompletionRequest.UserContentBuilder().apply {
+            image("https://example.com/before.jpg")
+            text("What changed?")
+            imageFile("file-api-after")
+        }.build()
+
+        parts.map { it::class } shouldBe listOf(ImageUrlPart::class, TextPart::class, FilePart::class)
+        TestJson.encodeToString<ChatMessage>(UserMessage(parts)) shouldBe
+                """{"role":"user","content":[""" +
+                """{"type":"image_url","image_url":{"url":"https://example.com/before.jpg"}},""" +
+                """{"type":"text","text":"What changed?"},""" +
+                """{"type":"file","file_id":"file-api-after"}]}"""
+    }
 }
