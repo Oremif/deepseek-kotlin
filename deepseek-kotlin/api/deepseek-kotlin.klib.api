@@ -86,6 +86,24 @@ final enum class org.oremif.deepseek.models/ModelObjectType : kotlin/Enum<org.or
     }
 }
 
+final enum class org.oremif.deepseek.models/SortOrder : kotlin/Enum<org.oremif.deepseek.models/SortOrder> { // org.oremif.deepseek.models/SortOrder|null[0]
+    enum entry ASC // org.oremif.deepseek.models/SortOrder.ASC|null[0]
+    enum entry DESC // org.oremif.deepseek.models/SortOrder.DESC|null[0]
+
+    final val entries // org.oremif.deepseek.models/SortOrder.entries|#static{}entries[0]
+        final fun <get-entries>(): kotlin.enums/EnumEntries<org.oremif.deepseek.models/SortOrder> // org.oremif.deepseek.models/SortOrder.entries.<get-entries>|<get-entries>#static(){}[0]
+    final val value // org.oremif.deepseek.models/SortOrder.value|{}value[0]
+        final fun <get-value>(): kotlin/String // org.oremif.deepseek.models/SortOrder.value.<get-value>|<get-value>(){}[0]
+
+    final fun valueOf(kotlin/String): org.oremif.deepseek.models/SortOrder // org.oremif.deepseek.models/SortOrder.valueOf|valueOf#static(kotlin.String){}[0]
+    final fun values(): kotlin/Array<org.oremif.deepseek.models/SortOrder> // org.oremif.deepseek.models/SortOrder.values|values#static(){}[0]
+
+    final object Companion : kotlinx.serialization.internal/SerializerFactory { // org.oremif.deepseek.models/SortOrder.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<org.oremif.deepseek.models/SortOrder> // org.oremif.deepseek.models/SortOrder.Companion.serializer|serializer(){}[0]
+        final fun serializer(kotlin/Array<out kotlinx.serialization/KSerializer<*>>...): kotlinx.serialization/KSerializer<*> // org.oremif.deepseek.models/SortOrder.Companion.serializer|serializer(kotlin.Array<out|kotlinx.serialization.KSerializer<*>>...){}[0]
+    }
+}
+
 final enum class org.oremif.deepseek.models/ThinkingType : kotlin/Enum<org.oremif.deepseek.models/ThinkingType> { // org.oremif.deepseek.models/ThinkingType|null[0]
     enum entry DISABLED // org.oremif.deepseek.models/ThinkingType.DISABLED|null[0]
     enum entry ENABLED // org.oremif.deepseek.models/ThinkingType.ENABLED|null[0]
@@ -167,27 +185,34 @@ abstract class org.oremif.deepseek.client/DeepSeekClientBase { // org.oremif.dee
             final fun <get-token>(): kotlin/String? // org.oremif.deepseek.client/DeepSeekClientBase.Builder.token.<get-token>|<get-token>(){}[0]
 
         final var chatCompletionTimeout // org.oremif.deepseek.client/DeepSeekClientBase.Builder.chatCompletionTimeout|{}chatCompletionTimeout[0]
-            final fun <get-chatCompletionTimeout>(): kotlin/Int // org.oremif.deepseek.client/DeepSeekClientBase.Builder.chatCompletionTimeout.<get-chatCompletionTimeout>|<get-chatCompletionTimeout>(){}[0]
-            final fun <set-chatCompletionTimeout>(kotlin/Int) // org.oremif.deepseek.client/DeepSeekClientBase.Builder.chatCompletionTimeout.<set-chatCompletionTimeout>|<set-chatCompletionTimeout>(kotlin.Int){}[0]
+            final fun <get-chatCompletionTimeout>(): kotlin/Long // org.oremif.deepseek.client/DeepSeekClientBase.Builder.chatCompletionTimeout.<get-chatCompletionTimeout>|<get-chatCompletionTimeout>(){}[0]
+            final fun <set-chatCompletionTimeout>(kotlin/Long) // org.oremif.deepseek.client/DeepSeekClientBase.Builder.chatCompletionTimeout.<set-chatCompletionTimeout>|<set-chatCompletionTimeout>(kotlin.Long){}[0]
         final var deepSeekBaseUrl // org.oremif.deepseek.client/DeepSeekClientBase.Builder.deepSeekBaseUrl|{}deepSeekBaseUrl[0]
             final fun <get-deepSeekBaseUrl>(): kotlin/String // org.oremif.deepseek.client/DeepSeekClientBase.Builder.deepSeekBaseUrl.<get-deepSeekBaseUrl>|<get-deepSeekBaseUrl>(){}[0]
             final fun <set-deepSeekBaseUrl>(kotlin/String) // org.oremif.deepseek.client/DeepSeekClientBase.Builder.deepSeekBaseUrl.<set-deepSeekBaseUrl>|<set-deepSeekBaseUrl>(kotlin.String){}[0]
         final var fimCompletionTimeout // org.oremif.deepseek.client/DeepSeekClientBase.Builder.fimCompletionTimeout|{}fimCompletionTimeout[0]
-            final fun <get-fimCompletionTimeout>(): kotlin/Int // org.oremif.deepseek.client/DeepSeekClientBase.Builder.fimCompletionTimeout.<get-fimCompletionTimeout>|<get-fimCompletionTimeout>(){}[0]
-            final fun <set-fimCompletionTimeout>(kotlin/Int) // org.oremif.deepseek.client/DeepSeekClientBase.Builder.fimCompletionTimeout.<set-fimCompletionTimeout>|<set-fimCompletionTimeout>(kotlin.Int){}[0]
+            final fun <get-fimCompletionTimeout>(): kotlin/Long // org.oremif.deepseek.client/DeepSeekClientBase.Builder.fimCompletionTimeout.<get-fimCompletionTimeout>|<get-fimCompletionTimeout>(){}[0]
+            final fun <set-fimCompletionTimeout>(kotlin/Long) // org.oremif.deepseek.client/DeepSeekClientBase.Builder.fimCompletionTimeout.<set-fimCompletionTimeout>|<set-fimCompletionTimeout>(kotlin.Long){}[0]
         final var jsonConfig // org.oremif.deepseek.client/DeepSeekClientBase.Builder.jsonConfig|{}jsonConfig[0]
             final fun <get-jsonConfig>(): kotlinx.serialization.json/Json // org.oremif.deepseek.client/DeepSeekClientBase.Builder.jsonConfig.<get-jsonConfig>|<get-jsonConfig>(){}[0]
             final fun <set-jsonConfig>(kotlinx.serialization.json/Json) // org.oremif.deepseek.client/DeepSeekClientBase.Builder.jsonConfig.<set-jsonConfig>|<set-jsonConfig>(kotlinx.serialization.json.Json){}[0]
+        final var uploadTimeout // org.oremif.deepseek.client/DeepSeekClientBase.Builder.uploadTimeout|{}uploadTimeout[0]
+            final fun <get-uploadTimeout>(): kotlin/Long // org.oremif.deepseek.client/DeepSeekClientBase.Builder.uploadTimeout.<get-uploadTimeout>|<get-uploadTimeout>(){}[0]
+            final fun <set-uploadTimeout>(kotlin/Long) // org.oremif.deepseek.client/DeepSeekClientBase.Builder.uploadTimeout.<set-uploadTimeout>|<set-uploadTimeout>(kotlin.Long){}[0]
 
         final fun baseUrl(kotlin/String): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.baseUrl|baseUrl(kotlin.String){}[0]
         final fun buildHttpClient(): io.ktor.client/HttpClient // org.oremif.deepseek.client/DeepSeekClientBase.Builder.buildHttpClient|buildHttpClient(){}[0]
+        final fun chatCompletionTimeout(kotlin.time/Duration): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.chatCompletionTimeout|chatCompletionTimeout(kotlin.time.Duration){}[0]
         final fun chatCompletionTimeout(kotlin/Int): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.chatCompletionTimeout|chatCompletionTimeout(kotlin.Int){}[0]
+        final fun fimCompletionTimeout(kotlin.time/Duration): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.fimCompletionTimeout|fimCompletionTimeout(kotlin.time.Duration){}[0]
         final fun fimCompletionTimeout(kotlin/Int): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.fimCompletionTimeout|fimCompletionTimeout(kotlin.Int){}[0]
         final fun httpClient(io.ktor.client/HttpClient): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.httpClient|httpClient(io.ktor.client.HttpClient){}[0]
         final fun httpClient(kotlin/Function1<io.ktor.client/HttpClientConfig<*>, kotlin/Unit>): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.httpClient|httpClient(kotlin.Function1<io.ktor.client.HttpClientConfig<*>,kotlin.Unit>){}[0]
         final fun jsonConfig(kotlin/Function1<kotlinx.serialization.json/JsonBuilder, kotlin/Unit>): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.jsonConfig|jsonConfig(kotlin.Function1<kotlinx.serialization.json.JsonBuilder,kotlin.Unit>){}[0]
         final fun jsonConfig(kotlinx.serialization.json/Json): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.jsonConfig|jsonConfig(kotlinx.serialization.json.Json){}[0]
         final fun logging(kotlin/Function1<org.oremif.deepseek.client/LoggingConfig, kotlin/Unit> = ...): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.logging|logging(kotlin.Function1<org.oremif.deepseek.client.LoggingConfig,kotlin.Unit>){}[0]
+        final fun uploadTimeout(kotlin.time/Duration): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.uploadTimeout|uploadTimeout(kotlin.time.Duration){}[0]
+        final fun uploadTimeout(kotlin/Int): org.oremif.deepseek.client/DeepSeekClientBase.Builder // org.oremif.deepseek.client/DeepSeekClientBase.Builder.uploadTimeout|uploadTimeout(kotlin.Int){}[0]
         open fun defaultHttpClient(): io.ktor.client/HttpClient // org.oremif.deepseek.client/DeepSeekClientBase.Builder.defaultHttpClient|defaultHttpClient(){}[0]
     }
 }
@@ -199,7 +224,7 @@ final class org.oremif.deepseek.client/DeepSeekClient : org.oremif.deepseek.clie
 }
 
 final class org.oremif.deepseek.client/DeepSeekClientConfig { // org.oremif.deepseek.client/DeepSeekClientConfig|null[0]
-    constructor <init>(kotlinx.serialization.json/Json = ..., kotlin/Long = ..., kotlin/Long = ...) // org.oremif.deepseek.client/DeepSeekClientConfig.<init>|<init>(kotlinx.serialization.json.Json;kotlin.Long;kotlin.Long){}[0]
+    constructor <init>(kotlinx.serialization.json/Json = ..., kotlin/Long = ..., kotlin/Long = ..., kotlin/Long = ...) // org.oremif.deepseek.client/DeepSeekClientConfig.<init>|<init>(kotlinx.serialization.json.Json;kotlin.Long;kotlin.Long;kotlin.Long){}[0]
 
     final val chatCompletionTimeout // org.oremif.deepseek.client/DeepSeekClientConfig.chatCompletionTimeout|{}chatCompletionTimeout[0]
         final fun <get-chatCompletionTimeout>(): kotlin/Long // org.oremif.deepseek.client/DeepSeekClientConfig.chatCompletionTimeout.<get-chatCompletionTimeout>|<get-chatCompletionTimeout>(){}[0]
@@ -207,6 +232,8 @@ final class org.oremif.deepseek.client/DeepSeekClientConfig { // org.oremif.deep
         final fun <get-fimCompletionTimeout>(): kotlin/Long // org.oremif.deepseek.client/DeepSeekClientConfig.fimCompletionTimeout.<get-fimCompletionTimeout>|<get-fimCompletionTimeout>(){}[0]
     final val jsonConfig // org.oremif.deepseek.client/DeepSeekClientConfig.jsonConfig|{}jsonConfig[0]
         final fun <get-jsonConfig>(): kotlinx.serialization.json/Json // org.oremif.deepseek.client/DeepSeekClientConfig.jsonConfig.<get-jsonConfig>|<get-jsonConfig>(){}[0]
+    final val uploadTimeout // org.oremif.deepseek.client/DeepSeekClientConfig.uploadTimeout|{}uploadTimeout[0]
+        final fun <get-uploadTimeout>(): kotlin/Long // org.oremif.deepseek.client/DeepSeekClientConfig.uploadTimeout.<get-uploadTimeout>|<get-uploadTimeout>(){}[0]
 }
 
 final class org.oremif.deepseek.client/DeepSeekClientStream : org.oremif.deepseek.client/DeepSeekClientBase { // org.oremif.deepseek.client/DeepSeekClientStream|null[0]
@@ -1046,6 +1073,104 @@ final class org.oremif.deepseek.models/FIMLogProbs { // org.oremif.deepseek.mode
     }
 }
 
+final class org.oremif.deepseek.models/FileDeleted { // org.oremif.deepseek.models/FileDeleted|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/Boolean) // org.oremif.deepseek.models/FileDeleted.<init>|<init>(kotlin.String;kotlin.String;kotlin.Boolean){}[0]
+
+    final val deleted // org.oremif.deepseek.models/FileDeleted.deleted|{}deleted[0]
+        final fun <get-deleted>(): kotlin/Boolean // org.oremif.deepseek.models/FileDeleted.deleted.<get-deleted>|<get-deleted>(){}[0]
+    final val id // org.oremif.deepseek.models/FileDeleted.id|{}id[0]
+        final fun <get-id>(): kotlin/String // org.oremif.deepseek.models/FileDeleted.id.<get-id>|<get-id>(){}[0]
+    final val object // org.oremif.deepseek.models/FileDeleted.object|{}object[0]
+        final fun <get-object>(): kotlin/String // org.oremif.deepseek.models/FileDeleted.object.<get-object>|<get-object>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // org.oremif.deepseek.models/FileDeleted.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // org.oremif.deepseek.models/FileDeleted.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // org.oremif.deepseek.models/FileDeleted.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<org.oremif.deepseek.models/FileDeleted> { // org.oremif.deepseek.models/FileDeleted.$serializer|null[0]
+        final val descriptor // org.oremif.deepseek.models/FileDeleted.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // org.oremif.deepseek.models/FileDeleted.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // org.oremif.deepseek.models/FileDeleted.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): org.oremif.deepseek.models/FileDeleted // org.oremif.deepseek.models/FileDeleted.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, org.oremif.deepseek.models/FileDeleted) // org.oremif.deepseek.models/FileDeleted.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;org.oremif.deepseek.models.FileDeleted){}[0]
+    }
+
+    final object Companion { // org.oremif.deepseek.models/FileDeleted.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<org.oremif.deepseek.models/FileDeleted> // org.oremif.deepseek.models/FileDeleted.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class org.oremif.deepseek.models/FileList { // org.oremif.deepseek.models/FileList|null[0]
+    constructor <init>(kotlin/String, kotlin.collections/List<org.oremif.deepseek.models/FileObject>, kotlin/Boolean, kotlin/String? = ..., kotlin/String? = ...) // org.oremif.deepseek.models/FileList.<init>|<init>(kotlin.String;kotlin.collections.List<org.oremif.deepseek.models.FileObject>;kotlin.Boolean;kotlin.String?;kotlin.String?){}[0]
+
+    final val data // org.oremif.deepseek.models/FileList.data|{}data[0]
+        final fun <get-data>(): kotlin.collections/List<org.oremif.deepseek.models/FileObject> // org.oremif.deepseek.models/FileList.data.<get-data>|<get-data>(){}[0]
+    final val firstId // org.oremif.deepseek.models/FileList.firstId|{}firstId[0]
+        final fun <get-firstId>(): kotlin/String? // org.oremif.deepseek.models/FileList.firstId.<get-firstId>|<get-firstId>(){}[0]
+    final val hasMore // org.oremif.deepseek.models/FileList.hasMore|{}hasMore[0]
+        final fun <get-hasMore>(): kotlin/Boolean // org.oremif.deepseek.models/FileList.hasMore.<get-hasMore>|<get-hasMore>(){}[0]
+    final val lastId // org.oremif.deepseek.models/FileList.lastId|{}lastId[0]
+        final fun <get-lastId>(): kotlin/String? // org.oremif.deepseek.models/FileList.lastId.<get-lastId>|<get-lastId>(){}[0]
+    final val object // org.oremif.deepseek.models/FileList.object|{}object[0]
+        final fun <get-object>(): kotlin/String // org.oremif.deepseek.models/FileList.object.<get-object>|<get-object>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // org.oremif.deepseek.models/FileList.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // org.oremif.deepseek.models/FileList.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // org.oremif.deepseek.models/FileList.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<org.oremif.deepseek.models/FileList> { // org.oremif.deepseek.models/FileList.$serializer|null[0]
+        final val descriptor // org.oremif.deepseek.models/FileList.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // org.oremif.deepseek.models/FileList.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // org.oremif.deepseek.models/FileList.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): org.oremif.deepseek.models/FileList // org.oremif.deepseek.models/FileList.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, org.oremif.deepseek.models/FileList) // org.oremif.deepseek.models/FileList.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;org.oremif.deepseek.models.FileList){}[0]
+    }
+
+    final object Companion { // org.oremif.deepseek.models/FileList.Companion|null[0]
+        final val $childSerializers // org.oremif.deepseek.models/FileList.Companion.$childSerializers|{}$childSerializers[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<org.oremif.deepseek.models/FileList> // org.oremif.deepseek.models/FileList.Companion.serializer|serializer(){}[0]
+    }
+}
+
+final class org.oremif.deepseek.models/FileObject { // org.oremif.deepseek.models/FileObject|null[0]
+    constructor <init>(kotlin/String, kotlin/String, kotlin/Long, kotlin/Long, kotlin/String, org.oremif.deepseek.models/FilePurpose, kotlin/Long? = ...) // org.oremif.deepseek.models/FileObject.<init>|<init>(kotlin.String;kotlin.String;kotlin.Long;kotlin.Long;kotlin.String;org.oremif.deepseek.models.FilePurpose;kotlin.Long?){}[0]
+
+    final val bytes // org.oremif.deepseek.models/FileObject.bytes|{}bytes[0]
+        final fun <get-bytes>(): kotlin/Long // org.oremif.deepseek.models/FileObject.bytes.<get-bytes>|<get-bytes>(){}[0]
+    final val createdAt // org.oremif.deepseek.models/FileObject.createdAt|{}createdAt[0]
+        final fun <get-createdAt>(): kotlin/Long // org.oremif.deepseek.models/FileObject.createdAt.<get-createdAt>|<get-createdAt>(){}[0]
+    final val expiresAt // org.oremif.deepseek.models/FileObject.expiresAt|{}expiresAt[0]
+        final fun <get-expiresAt>(): kotlin/Long? // org.oremif.deepseek.models/FileObject.expiresAt.<get-expiresAt>|<get-expiresAt>(){}[0]
+    final val filename // org.oremif.deepseek.models/FileObject.filename|{}filename[0]
+        final fun <get-filename>(): kotlin/String // org.oremif.deepseek.models/FileObject.filename.<get-filename>|<get-filename>(){}[0]
+    final val id // org.oremif.deepseek.models/FileObject.id|{}id[0]
+        final fun <get-id>(): kotlin/String // org.oremif.deepseek.models/FileObject.id.<get-id>|<get-id>(){}[0]
+    final val object // org.oremif.deepseek.models/FileObject.object|{}object[0]
+        final fun <get-object>(): kotlin/String // org.oremif.deepseek.models/FileObject.object.<get-object>|<get-object>(){}[0]
+    final val purpose // org.oremif.deepseek.models/FileObject.purpose|{}purpose[0]
+        final fun <get-purpose>(): org.oremif.deepseek.models/FilePurpose // org.oremif.deepseek.models/FileObject.purpose.<get-purpose>|<get-purpose>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // org.oremif.deepseek.models/FileObject.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // org.oremif.deepseek.models/FileObject.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // org.oremif.deepseek.models/FileObject.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<org.oremif.deepseek.models/FileObject> { // org.oremif.deepseek.models/FileObject.$serializer|null[0]
+        final val descriptor // org.oremif.deepseek.models/FileObject.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // org.oremif.deepseek.models/FileObject.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // org.oremif.deepseek.models/FileObject.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): org.oremif.deepseek.models/FileObject // org.oremif.deepseek.models/FileObject.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, org.oremif.deepseek.models/FileObject) // org.oremif.deepseek.models/FileObject.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;org.oremif.deepseek.models.FileObject){}[0]
+    }
+
+    final object Companion { // org.oremif.deepseek.models/FileObject.Companion|null[0]
+        final fun serializer(): kotlinx.serialization/KSerializer<org.oremif.deepseek.models/FileObject> // org.oremif.deepseek.models/FileObject.Companion.serializer|serializer(){}[0]
+    }
+}
+
 final class org.oremif.deepseek.models/FilePart : org.oremif.deepseek.models/ContentPart { // org.oremif.deepseek.models/FilePart|null[0]
     constructor <init>(kotlin/String? = ..., kotlin/String? = ..., kotlin/String? = ...) // org.oremif.deepseek.models/FilePart.<init>|<init>(kotlin.String?;kotlin.String?;kotlin.String?){}[0]
 
@@ -1767,6 +1892,33 @@ final value class org.oremif.deepseek.models/ChatModel { // org.oremif.deepseek.
     }
 }
 
+final value class org.oremif.deepseek.models/FilePurpose { // org.oremif.deepseek.models/FilePurpose|null[0]
+    constructor <init>(kotlin/String) // org.oremif.deepseek.models/FilePurpose.<init>|<init>(kotlin.String){}[0]
+
+    final val value // org.oremif.deepseek.models/FilePurpose.value|{}value[0]
+        final fun <get-value>(): kotlin/String // org.oremif.deepseek.models/FilePurpose.value.<get-value>|<get-value>(){}[0]
+
+    final fun equals(kotlin/Any?): kotlin/Boolean // org.oremif.deepseek.models/FilePurpose.equals|equals(kotlin.Any?){}[0]
+    final fun hashCode(): kotlin/Int // org.oremif.deepseek.models/FilePurpose.hashCode|hashCode(){}[0]
+    final fun toString(): kotlin/String // org.oremif.deepseek.models/FilePurpose.toString|toString(){}[0]
+
+    final object $serializer : kotlinx.serialization.internal/GeneratedSerializer<org.oremif.deepseek.models/FilePurpose> { // org.oremif.deepseek.models/FilePurpose.$serializer|null[0]
+        final val descriptor // org.oremif.deepseek.models/FilePurpose.$serializer.descriptor|{}descriptor[0]
+            final fun <get-descriptor>(): kotlinx.serialization.descriptors/SerialDescriptor // org.oremif.deepseek.models/FilePurpose.$serializer.descriptor.<get-descriptor>|<get-descriptor>(){}[0]
+
+        final fun childSerializers(): kotlin/Array<kotlinx.serialization/KSerializer<*>> // org.oremif.deepseek.models/FilePurpose.$serializer.childSerializers|childSerializers(){}[0]
+        final fun deserialize(kotlinx.serialization.encoding/Decoder): org.oremif.deepseek.models/FilePurpose // org.oremif.deepseek.models/FilePurpose.$serializer.deserialize|deserialize(kotlinx.serialization.encoding.Decoder){}[0]
+        final fun serialize(kotlinx.serialization.encoding/Encoder, org.oremif.deepseek.models/FilePurpose) // org.oremif.deepseek.models/FilePurpose.$serializer.serialize|serialize(kotlinx.serialization.encoding.Encoder;org.oremif.deepseek.models.FilePurpose){}[0]
+    }
+
+    final object Companion { // org.oremif.deepseek.models/FilePurpose.Companion|null[0]
+        final val USER_DATA // org.oremif.deepseek.models/FilePurpose.Companion.USER_DATA|{}USER_DATA[0]
+            final fun <get-USER_DATA>(): org.oremif.deepseek.models/FilePurpose // org.oremif.deepseek.models/FilePurpose.Companion.USER_DATA.<get-USER_DATA>|<get-USER_DATA>(){}[0]
+
+        final fun serializer(): kotlinx.serialization/KSerializer<org.oremif.deepseek.models/FilePurpose> // org.oremif.deepseek.models/FilePurpose.Companion.serializer|serializer(){}[0]
+    }
+}
+
 final value class org.oremif.deepseek.models/ReasoningEffort { // org.oremif.deepseek.models/ReasoningEffort|null[0]
     constructor <init>(kotlin/String) // org.oremif.deepseek.models/ReasoningEffort.<init>|<init>(kotlin.String){}[0]
 
@@ -1939,6 +2091,10 @@ final suspend fun (org.oremif.deepseek.client/DeepSeekClient).org.oremif.deepsee
 final suspend fun (org.oremif.deepseek.client/DeepSeekClient).org.oremif.deepseek.api/fim(org.oremif.deepseek.models/FIMCompletionParams, kotlin/String): org.oremif.deepseek.models/FIMCompletion // org.oremif.deepseek.api/fim|fim@org.oremif.deepseek.client.DeepSeekClient(org.oremif.deepseek.models.FIMCompletionParams;kotlin.String){}[0]
 final suspend fun (org.oremif.deepseek.client/DeepSeekClient).org.oremif.deepseek.api/fimCompletion(kotlin/Function1<org.oremif.deepseek.models/FIMCompletionRequest.Builder, kotlin/Unit>): org.oremif.deepseek.models/FIMCompletion // org.oremif.deepseek.api/fimCompletion|fimCompletion@org.oremif.deepseek.client.DeepSeekClient(kotlin.Function1<org.oremif.deepseek.models.FIMCompletionRequest.Builder,kotlin.Unit>){}[0]
 final suspend fun (org.oremif.deepseek.client/DeepSeekClientBase).org.oremif.deepseek.api/chatCompletion(org.oremif.deepseek.models/ChatCompletionRequest): org.oremif.deepseek.models/ChatCompletion // org.oremif.deepseek.api/chatCompletion|chatCompletion@org.oremif.deepseek.client.DeepSeekClientBase(org.oremif.deepseek.models.ChatCompletionRequest){}[0]
+final suspend fun (org.oremif.deepseek.client/DeepSeekClientBase).org.oremif.deepseek.api/deleteFile(kotlin/String): org.oremif.deepseek.models/FileDeleted // org.oremif.deepseek.api/deleteFile|deleteFile@org.oremif.deepseek.client.DeepSeekClientBase(kotlin.String){}[0]
 final suspend fun (org.oremif.deepseek.client/DeepSeekClientBase).org.oremif.deepseek.api/fimCompletion(org.oremif.deepseek.models/FIMCompletionRequest): org.oremif.deepseek.models/FIMCompletion // org.oremif.deepseek.api/fimCompletion|fimCompletion@org.oremif.deepseek.client.DeepSeekClientBase(org.oremif.deepseek.models.FIMCompletionRequest){}[0]
+final suspend fun (org.oremif.deepseek.client/DeepSeekClientBase).org.oremif.deepseek.api/listFiles(kotlin/String? = ..., kotlin/Int? = ..., org.oremif.deepseek.models/SortOrder? = ..., org.oremif.deepseek.models/FilePurpose? = ...): org.oremif.deepseek.models/FileList // org.oremif.deepseek.api/listFiles|listFiles@org.oremif.deepseek.client.DeepSeekClientBase(kotlin.String?;kotlin.Int?;org.oremif.deepseek.models.SortOrder?;org.oremif.deepseek.models.FilePurpose?){}[0]
 final suspend fun (org.oremif.deepseek.client/DeepSeekClientBase).org.oremif.deepseek.api/models(): org.oremif.deepseek.models/ListsModels // org.oremif.deepseek.api/models|models@org.oremif.deepseek.client.DeepSeekClientBase(){}[0]
+final suspend fun (org.oremif.deepseek.client/DeepSeekClientBase).org.oremif.deepseek.api/retrieveFile(kotlin/String): org.oremif.deepseek.models/FileObject // org.oremif.deepseek.api/retrieveFile|retrieveFile@org.oremif.deepseek.client.DeepSeekClientBase(kotlin.String){}[0]
+final suspend fun (org.oremif.deepseek.client/DeepSeekClientBase).org.oremif.deepseek.api/uploadFile(kotlin/ByteArray, kotlin/String, kotlin/Int? = ...): org.oremif.deepseek.models/FileObject // org.oremif.deepseek.api/uploadFile|uploadFile@org.oremif.deepseek.client.DeepSeekClientBase(kotlin.ByteArray;kotlin.String;kotlin.Int?){}[0]
 final suspend fun (org.oremif.deepseek.client/DeepSeekClientBase).org.oremif.deepseek.api/userBalance(): org.oremif.deepseek.models/UserBalance // org.oremif.deepseek.api/userBalance|userBalance@org.oremif.deepseek.client.DeepSeekClientBase(){}[0]
