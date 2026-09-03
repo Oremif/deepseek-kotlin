@@ -192,4 +192,113 @@ class ChatCompletionApiTests {
         body shouldContain "\"user_id\":\"user-42\""
         body shouldContain "\"strict\":true"
     }
+
+    @Test
+    fun `chat DSL sends a multimodal user message as content parts`() = runTest {
+        var capturedBody: String? = null
+        val engine = mockEngine { request ->
+            capturedBody = request.body.toByteArray().decodeToString()
+            respond(
+                content = successBody,
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            )
+        }
+        val client = testClient(engine)
+
+        client.chat {
+            user {
+                text("What is in this image?")
+                image("https://example.com/cat.jpg", ImageDetail.LOW)
+                imageFile("file-api-abc123")
+                imageData("data:image/png;base64,AAAA", filename = "inline.png")
+            }
+        }
+
+        val body = capturedBody.shouldNotBeNull()
+        body shouldContain """"content":[{"type":"text","text":"What is in this image?"}"""
+        body shouldContain """{"type":"image_url","image_url":{"url":"https://example.com/cat.jpg","detail":"low"}}"""
+        body shouldContain """{"type":"file","file_id":"file-api-abc123"}"""
+        body shouldContain """{"type":"file","file_data":"data:image/png;base64,AAAA","filename":"inline.png"}"""
+    }
+
+    @Test
+    fun `chat DSL rejects a user message with no content parts`() = runTest {
+        val engine = mockEngine {
+            respond(
+                content = successBody,
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            )
+        }
+        val client = testClient(engine)
+
+        shouldThrow<IllegalArgumentException> {
+            client.chat { user { } }
+        }
+    }
+
+    @Test
+    fun `chat routes a trailing prefix message to the beta endpoint`() = runTest {
+        var capturedPath: String? = null
+        val engine = mockEngine { request ->
+            capturedPath = request.url.encodedPath
+            respond(
+                content = successBody,
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            )
+        }
+        val client = testClient(engine)
+
+        client.chat(
+            listOf(
+                UserMessage("Write a Kotlin function that sums two numbers"),
+                AssistantMessage("fun sum(a: Int, b: Int) =", prefix = true),
+            )
+        )
+
+        capturedPath shouldBe "/beta/chat/completions"
+    }
+
+    @Test
+    fun `chat keeps the standard endpoint when the prefix message is not last`() = runTest {
+        var capturedPath: String? = null
+        val engine = mockEngine { request ->
+            capturedPath = request.url.encodedPath
+            respond(
+                content = successBody,
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            )
+        }
+        val client = testClient(engine)
+
+        client.chat(
+            listOf(
+                AssistantMessage("fun sum(a: Int, b: Int) =", prefix = true),
+                UserMessage("Now explain it"),
+            )
+        )
+
+        capturedPath shouldBe "/chat/completions"
+    }
+
+    @Test
+    fun `chat keeps the standard endpoint for an assistant message without prefix`() = runTest {
+        var capturedPath: String? = null
+        val engine = mockEngine { request ->
+            capturedPath = request.url.encodedPath
+            respond(
+                content = successBody,
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+            )
+        }
+        val client = testClient(engine)
+
+        client.chat(listOf(UserMessage("Hi"), AssistantMessage("Hello!")))
+
+        capturedPath shouldBe "/chat/completions"
+    }
 }

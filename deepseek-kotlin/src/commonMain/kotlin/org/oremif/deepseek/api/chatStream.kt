@@ -40,7 +40,7 @@ public fun DeepSeekClientBase.chatCompletionStream(request: ChatCompletionReques
     return flow {
         try {
             client.sse(
-                urlString = "chat/completions",
+                urlString = request.chatCompletionsPath(),
                 request = {
                     method = HttpMethod.Post
                     accept(ContentType.Text.EventStream)

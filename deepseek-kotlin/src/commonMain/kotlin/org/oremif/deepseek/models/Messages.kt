@@ -26,7 +26,8 @@ import kotlinx.serialization.json.*
  * for building a list of [ChatMessage] than instantiating these classes directly.
  *
  * @property content Message text; `null` is allowed for assistant/user messages that
- * only carry tool calls.
+ * only carry tool calls, and for a [UserMessage] built from multimodal
+ * [parts][UserMessage.parts].
  */
 @Serializable
 @JsonClassDiscriminator("role")
@@ -70,27 +71,106 @@ public class SystemMessage(override val content: String, public val name: String
 /**
  * User-role message — the end-user's input to the conversation.
  *
- * @property content User's message text. May be `null` only in unusual cases such as a
- * follow-up turn that carries no new text.
+ * Carries either plain text or a list of multimodal [ContentPart]s, never both: the two
+ * constructors pick the form, and the unused accessor reads back as `null`.
+ *
+ * ```kotlin
+ * val text = UserMessage("What is Kotlin?")
+ * val multimodal = UserMessage(listOf(TextPart("What is in this image?"), ImageUrlPart(url)))
+ * ```
+ *
+ * The `user { ... }` DSL builds the multimodal form more compactly — see
+ * [ChatCompletionRequest.UserContentBuilder].
+ *
+ * @property content User's message text, or `null` when the message carries [parts] instead
+ * (or no new text at all).
+ * @property parts Multimodal content of the message, or `null` when it is plain [content].
  * @property name Optional participant name forwarded to the model.
  */
 @Serializable
 @SerialName("user")
-public class UserMessage(override val content: String?, public val name: String? = null) : ChatMessage {
+public class UserMessage private constructor(
+    @SerialName("content")
+    internal val rawContent: UserContent?,
+    public val name: String? = null,
+) : ChatMessage {
+
+    /**
+     * Creates a plain-text user message.
+     *
+     * @param content User's text input
+     * @param name Optional participant name forwarded to the model
+     */
+    public constructor(content: String?, name: String? = null) : this(content?.let(UserContent::Text), name)
+
+    /**
+     * Creates a multimodal user message.
+     *
+     * @param parts Content parts, in the order the model should see them
+     * @param name Optional participant name forwarded to the model
+     */
+    public constructor(parts: List<ContentPart>, name: String? = null) : this(UserContent.Parts(parts), name)
+
+    override val content: String?
+        get() = (rawContent as? UserContent.Text)?.text
+
+    public val parts: List<ContentPart>?
+        get() = (rawContent as? UserContent.Parts)?.parts
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is UserMessage) return false
-        return content == other.content && name == other.name
+        return content == other.content && parts == other.parts && name == other.name
     }
 
     override fun hashCode(): Int {
-        var result = content?.hashCode() ?: 0
-        result = 31 * result + (name?.hashCode() ?: 0)
+        var result = content.hashCode()
+        result = 31 * result + parts.hashCode()
+        result = 31 * result + name.hashCode()
         return result
     }
 
     override fun toString(): String =
-        "UserMessage(content='$content', name=$name)"
+        "UserMessage(content=$content, parts=$parts, name=$name)"
+}
+
+/**
+ * The two shapes the `content` of a [UserMessage] takes on the wire: a bare string, or an
+ * array of [ContentPart]s. Kept internal — callers reach it through
+ * [UserMessage.content] and [UserMessage.parts].
+ */
+@Serializable(with = UserContentSerializer::class)
+internal sealed interface UserContent {
+    class Text(val text: String) : UserContent
+    class Parts(val parts: List<ContentPart>) : UserContent
+}
+
+/**
+ * Encodes [UserContent.Text] as a JSON string and [UserContent.Parts] as a JSON array,
+ * and reads either shape back.
+ */
+internal object UserContentSerializer : KSerializer<UserContent> {
+    private val partsSerializer = ListSerializer(ContentPart.serializer())
+
+    override val descriptor: SerialDescriptor =
+        SerialDescriptor("org.oremif.deepseek.models.UserContent", JsonElement.serializer().descriptor)
+
+    override fun serialize(encoder: Encoder, value: UserContent) {
+        val output = encoder as? JsonEncoder ?: error("Can be serialized only by JSON")
+        val element = when (value) {
+            is UserContent.Text -> JsonPrimitive(value.text)
+            is UserContent.Parts -> output.json.encodeToJsonElement(partsSerializer, value.parts)
+        }
+        output.encodeJsonElement(element)
+    }
+
+    override fun deserialize(decoder: Decoder): UserContent {
+        val input = decoder as? JsonDecoder ?: error("Can be deserialized only by JSON")
+        return when (val element = input.decodeJsonElement()) {
+            is JsonArray -> UserContent.Parts(input.json.decodeFromJsonElement(partsSerializer, element))
+            else -> UserContent.Text(element.jsonPrimitive.content)
+        }
+    }
 }
 
 /**
@@ -104,8 +184,9 @@ public class UserMessage(override val content: String?, public val name: String?
  * tool calls.
  * @property name Optional participant name forwarded to the model.
  * @property prefix When `true`, marks this message as a partial assistant response that
- * the model should continue generating from. Only served from the beta base URL, so the
- * client must be built with `baseUrl("https://api.deepseek.com/beta")`.
+ * the model should continue generating from. Prefix completion is only served from the
+ * beta base path: a request ending in such a message is routed to `beta/chat/completions`
+ * automatically, so the client needs no extra configuration.
  * @property reasoningContent Chain-of-thought that precedes [content] in thinking mode.
  * Seeds the model's reasoning for the continuation, so it takes effect only alongside
  * `prefix = true`.
@@ -128,10 +209,10 @@ public open class AssistantMessage(
     }
 
     override fun hashCode(): Int {
-        var result = content?.hashCode() ?: 0
-        result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (prefix?.hashCode() ?: 0)
-        result = 31 * result + (reasoningContent?.hashCode() ?: 0)
+        var result = content.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + prefix.hashCode()
+        result = 31 * result + reasoningContent.hashCode()
         return result
     }
 
