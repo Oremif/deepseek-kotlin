@@ -182,6 +182,48 @@ class ChatCompletionStreamApiTests {
     }
 
     @Test
+    fun `chat stream routes a trailing prefix message to the beta endpoint`() = runTest {
+        var capturedPath: String? = null
+        val engine = sseMockEngine { request ->
+            capturedPath = request.url.encodedPath
+            respond(
+                content = sseBody("[DONE]"),
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
+            )
+        }
+        val client = testStreamClient(engine)
+
+        client.chatCompletionStream(
+            ChatCompletionRequest(
+                messages = listOf(UserMessage("Write a haiku"), AssistantMessage("Silent code compiles", prefix = true)),
+                model = ChatModel.DEEPSEEK_V4_FLASH,
+                stream = true,
+            )
+        ).toList()
+
+        capturedPath shouldBe "/beta/chat/completions"
+    }
+
+    @Test
+    fun `chat stream keeps the standard endpoint without a prefix message`() = runTest {
+        var capturedPath: String? = null
+        val engine = sseMockEngine { request ->
+            capturedPath = request.url.encodedPath
+            respond(
+                content = sseBody("[DONE]"),
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
+            )
+        }
+        val client = testStreamClient(engine)
+
+        client.chatCompletionStream(request).toList()
+
+        capturedPath shouldBe "/chat/completions"
+    }
+
+    @Test
     fun `chat stream preserves tool_calls delta fields`() = runTest {
         val chunks = arrayOf(
             """{"id":"c1","choices":[{"delta":{"role":"assistant","tool_calls":[{"index":0,"id":"call_1","type":"function","function":{"name":"sum","arguments":""}}]},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",

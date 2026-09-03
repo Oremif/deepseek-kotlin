@@ -212,6 +212,25 @@ public class ChatCompletionRequest(
         }
 
         /**
+         * Appends a multimodal [UserMessage] assembled by a [UserContentBuilder] DSL.
+         *
+         * Example:
+         * ```kotlin
+         * client.chat {
+         *     user {
+         *         text("What is in this image?")
+         *         image("https://example.com/cat.jpg", ImageDetail.LOW)
+         *     }
+         * }
+         * ```
+         *
+         * @param block Builder block that appends the message's content parts
+         */
+        public fun user(block: UserContentBuilder.() -> Unit) {
+            messages.add(UserMessage(UserContentBuilder().apply(block).build()))
+        }
+
+        /**
          * Appends an [AssistantMessage] with the given [content].
          *
          * @param content Assistant text to replay as context
@@ -231,6 +250,70 @@ public class ChatCompletionRequest(
         }
 
         internal fun build(): List<ChatMessage> = messages.toList()
+    }
+
+    /**
+     * DSL for building the multimodal content of a single [UserMessage].
+     *
+     * Appends [ContentPart]s in call order; at least one part is required. Images are only
+     * interpreted by [ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP].
+     *
+     * Example:
+     * ```kotlin
+     * client.chat {
+     *     user {
+     *         text("Compare these two shots")
+     *         image("https://example.com/before.jpg")
+     *         imageFile("file-api-abc123")
+     *     }
+     * }
+     * ```
+     */
+    public class UserContentBuilder {
+        private val parts = mutableListOf<ContentPart>()
+
+        /**
+         * Appends a [TextPart].
+         *
+         * @param text Text fragment shown to the model
+         */
+        public fun text(text: String) {
+            parts.add(TextPart(text))
+        }
+
+        /**
+         * Appends an [ImageUrlPart] referencing the image by URL.
+         *
+         * @param url `http(s)` link to the image, or a `data:` URL carrying it inline
+         * @param detail How much of the image's resolution the model sees; see [ImageDetail]
+         */
+        public fun image(url: String, detail: ImageDetail? = null) {
+            parts.add(ImageUrlPart(url, detail))
+        }
+
+        /**
+         * Appends a [FilePart] referencing an image already uploaded to the Files API.
+         *
+         * @param fileId Identifier of the uploaded file, of the form `file-api-...`
+         */
+        public fun imageFile(fileId: String) {
+            parts.add(FilePart(fileId = fileId))
+        }
+
+        /**
+         * Appends a [FilePart] carrying the image inline.
+         *
+         * @param fileData Base64 data URL of the image (`data:image/jpeg;base64,...`)
+         * @param filename Optional name for the inlined image
+         */
+        public fun imageData(fileData: String, filename: String? = null) {
+            parts.add(FilePart(fileData = fileData, filename = filename))
+        }
+
+        internal fun build(): List<ContentPart> {
+            require(parts.isNotEmpty()) { "a user message built with the parts DSL must have at least one part" }
+            return parts.toList()
+        }
     }
 
     override fun equals(other: Any?): Boolean {

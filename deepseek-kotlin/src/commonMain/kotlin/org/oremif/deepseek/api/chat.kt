@@ -10,6 +10,20 @@ import org.oremif.deepseek.models.*
 import org.oremif.deepseek.utils.validateResponse
 
 /**
+ * Path the given [request] is sent to.
+ *
+ * Prefix completion — a trailing [AssistantMessage] with `prefix = true` that the model
+ * continues from — is only served from the beta base path, so such a request is routed
+ * there. Everything else goes to the standard endpoint.
+ */
+internal fun ChatCompletionRequest.chatCompletionsPath(): String =
+    if ((messages.lastOrNull() as? AssistantMessage)?.prefix == true) {
+        "beta/chat/completions"
+    } else {
+        "chat/completions"
+    }
+
+/**
  * Sends a chat completion request to the DeepSeek API.
  *
  * This is a low-level function that handles the direct HTTP communication with the API.
@@ -27,7 +41,7 @@ import org.oremif.deepseek.utils.validateResponse
  * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClientBase.chatCompletion(request: ChatCompletionRequest): ChatCompletion {
-    val response = client.post("chat/completions") {
+    val response = client.post(request.chatCompletionsPath()) {
         setBody(request)
         timeout {
             requestTimeoutMillis = config.chatCompletionTimeout
