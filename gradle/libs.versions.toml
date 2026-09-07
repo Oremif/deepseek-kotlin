@@ -10,7 +10,7 @@ ktor = "3.5.2"
 slf4j = "2.0.18"
 kotest = "6.2.4"
 maven-publish = "0.37.0"
-binary-compatibility-validator = "0.18.1"
+binary-compatibility-validator = "0.18.2"
 
 [libraries]
 # Coroutines
