@@ -5,8 +5,8 @@ package org.oremif.deepseek.models
 /**
  * Creates FIM completion parameters using a builder pattern.
  *
- * This function provides a convenient way to configure non-streaming FIM completion
- * parameters using Kotlin's DSL-style builder syntax.
+ * This function provides a convenient way to configure non-streaming FIM completion parameters
+ * using Kotlin's DSL-style builder syntax.
  *
  * Example:
  * ```kotlin
@@ -27,12 +27,12 @@ public fun fimCompletionParams(block: FIMCompletionParams.Builder.() -> Unit): F
 /**
  * Creates streaming FIM completion parameters using a builder pattern.
  *
- * This function provides a convenient way to configure streaming FIM completion
- * parameters using Kotlin's DSL-style builder syntax. The resulting parameters
- * will have `stream` set to `true` automatically.
+ * This function provides a convenient way to configure streaming FIM completion parameters using
+ * Kotlin's DSL-style builder syntax. The resulting parameters will have `stream` set to `true`
+ * automatically.
  *
- * Streaming is particularly useful for long completions, allowing you to process
- * and display results incrementally as they arrive.
+ * Streaming is particularly useful for long completions, allowing you to process and display
+ * results incrementally as they arrive.
  *
  * Example:
  * ```kotlin
@@ -50,7 +50,9 @@ public fun fimCompletionParams(block: FIMCompletionParams.Builder.() -> Unit): F
  * @param block Configuration block for setting parameter values
  * @return Configured [FIMCompletionParams] instance with streaming enabled
  */
-public fun fimCompletionStreamParams(block: FIMCompletionParams.StreamBuilder.() -> Unit): FIMCompletionParams {
+public fun fimCompletionStreamParams(
+    block: FIMCompletionParams.StreamBuilder.() -> Unit
+): FIMCompletionParams {
     return FIMCompletionParams.StreamBuilder().apply(block).build()
 }
 
@@ -64,8 +66,8 @@ internal fun requireFimModel(model: ChatModel) {
 /**
  * Parameters for configuring Fill-in-the-Middle (FIM) completion requests to DeepSeek models.
  *
- * FIM allows the model to complete text where you provide both a prefix and a suffix,
- * making it useful for code completion, text infilling, and template-based generation.
+ * FIM allows the model to complete text where you provide both a prefix and a suffix, making it
+ * useful for code completion, text infilling, and template-based generation.
  *
  * Example:
  * ```kotlin
@@ -80,21 +82,23 @@ internal fun requireFimModel(model: ChatModel) {
  * ```
  *
  * @property model The DeepSeek model to use; the FIM endpoint only accepts
- * [ChatModel.DEEPSEEK_V4_PRO], which is the default
+ *   [ChatModel.DEEPSEEK_V4_PRO], which is the default
  * @property echo Whether to include the prompt in the returned completion
  * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API
  * @property logprobs Maximum number of log probabilities to return (up to 20)
- * @property maxTokens Maximum number of tokens to generate; at least 1 and otherwise
- * bounded by the model's context length
+ * @property maxTokens Maximum number of tokens to generate; at least 1 and otherwise bounded by the
+ *   model's context length
  * @property presencePenalty Sent as `presence_penalty`, ignored by the API
  * @property stop Custom stop sequences that will cause the model to stop generating further tokens
  * @property stream Whether to stream the response back piece by piece
  * @property streamOptions Configuration options for streaming responses
  * @property suffix Text that the model should complete towards (the ending part in FIM)
- * @property temperature Controls randomness in responses, between 0.0 and 2.0 (lower is more deterministic)
+ * @property temperature Controls randomness in responses, between 0.0 and 2.0 (lower is more
+ *   deterministic)
  * @property topP Controls diversity by limiting to top-p probability mass in token selection
  */
-public class FIMCompletionParams internal constructor(
+public class FIMCompletionParams
+internal constructor(
     public val model: ChatModel = ChatModel.DEEPSEEK_V4_PRO,
     public val echo: Boolean? = null,
     frequencyPenalty: Double? = null,
@@ -108,20 +112,16 @@ public class FIMCompletionParams internal constructor(
     temperature: Double? = null,
     topP: Double? = null,
 ) : DeepSeekParams(frequencyPenalty, maxTokens, presencePenalty, stop, temperature, topP) {
-    /**
-     * Builder for creating [FIMCompletionParams] with standard (non-streaming) configuration.
-     */
+    /** Builder for creating [FIMCompletionParams] with standard (non-streaming) configuration. */
     public class Builder {
         public var model: ChatModel = ChatModel.DEEPSEEK_V4_PRO
         public var echo: Boolean? = null
 
-        @Deprecated(DEPRECATED_PENALTY)
-        public var frequencyPenalty: Double? = null
+        @Deprecated(DEPRECATED_PENALTY) public var frequencyPenalty: Double? = null
         public var logprobs: Int? = null
         public var maxTokens: Int? = null
 
-        @Deprecated(DEPRECATED_PENALTY)
-        public var presencePenalty: Double? = null
+        @Deprecated(DEPRECATED_PENALTY) public var presencePenalty: Double? = null
         public var stop: StopReason? = null
         public var suffix: String? = null
         public var temperature: Double? = null
@@ -130,7 +130,9 @@ public class FIMCompletionParams internal constructor(
         internal fun build(): FIMCompletionParams {
             requireFimModel(model)
             maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
-            temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
+            temperature?.let {
+                require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" }
+            }
             topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             logprobs?.let { require(it <= 20) { "logprobs must be <= 20" } }
 
@@ -156,13 +158,11 @@ public class FIMCompletionParams internal constructor(
         public var model: ChatModel = ChatModel.DEEPSEEK_V4_PRO
         public var echo: Boolean? = null
 
-        @Deprecated(DEPRECATED_PENALTY)
-        public var frequencyPenalty: Double? = null
+        @Deprecated(DEPRECATED_PENALTY) public var frequencyPenalty: Double? = null
         public var logprobs: Int? = null
         public var maxTokens: Int? = null
 
-        @Deprecated(DEPRECATED_PENALTY)
-        public var presencePenalty: Double? = null
+        @Deprecated(DEPRECATED_PENALTY) public var presencePenalty: Double? = null
         public var stop: StopReason? = null
         public var streamOptions: StreamOptions? = null
         public var suffix: String? = null
@@ -172,7 +172,9 @@ public class FIMCompletionParams internal constructor(
         internal fun build(): FIMCompletionParams {
             requireFimModel(model)
             maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
-            temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
+            temperature?.let {
+                require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" }
+            }
             topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             logprobs?.let { require(it <= 20) { "logprobs must be <= 20" } }
 
@@ -216,12 +218,11 @@ public class FIMCompletionParams internal constructor(
             topP = topP,
         )
 
-
     /**
      * Creates a copy of these parameters with optional changes to specific properties.
      *
-     * This is useful when you want to reuse a base configuration with slight modifications,
-     * such as changing from standard to streaming mode.
+     * This is useful when you want to reuse a base configuration with slight modifications, such as
+     * changing from standard to streaming mode.
      *
      * Example:
      * ```kotlin
@@ -273,23 +274,22 @@ public class FIMCompletionParams internal constructor(
         )
     }
 
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is FIMCompletionParams) return false
 
         return model == other.model &&
-                echo == other.echo &&
-                frequencyPenalty == other.frequencyPenalty &&
-                logprobs == other.logprobs &&
-                maxTokens == other.maxTokens &&
-                presencePenalty == other.presencePenalty &&
-                stop == other.stop &&
-                stream == other.stream &&
-                streamOptions == other.streamOptions &&
-                suffix == other.suffix &&
-                temperature == other.temperature &&
-                topP == other.topP
+            echo == other.echo &&
+            frequencyPenalty == other.frequencyPenalty &&
+            logprobs == other.logprobs &&
+            maxTokens == other.maxTokens &&
+            presencePenalty == other.presencePenalty &&
+            stop == other.stop &&
+            stream == other.stream &&
+            streamOptions == other.streamOptions &&
+            suffix == other.suffix &&
+            temperature == other.temperature &&
+            topP == other.topP
     }
 
     override fun hashCode(): Int {

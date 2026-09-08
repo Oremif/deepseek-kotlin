@@ -5,8 +5,8 @@ package org.oremif.deepseek.models
 /**
  * Creates chat completion parameters using a builder pattern.
  *
- * This function provides a convenient way to configure non-streaming chat completion
- * parameters using Kotlin's DSL-style builder syntax.
+ * This function provides a convenient way to configure non-streaming chat completion parameters
+ * using Kotlin's DSL-style builder syntax.
  *
  * Example:
  * ```kotlin
@@ -21,16 +21,18 @@ package org.oremif.deepseek.models
  * @param block Configuration block for setting parameter values
  * @return Configured [ChatCompletionParams] instance
  */
-public fun chatCompletionParams(block: ChatCompletionParams.Builder.() -> Unit): ChatCompletionParams {
+public fun chatCompletionParams(
+    block: ChatCompletionParams.Builder.() -> Unit
+): ChatCompletionParams {
     return ChatCompletionParams.Builder().apply(block).build()
 }
 
 /**
  * Creates streaming chat completion parameters using a builder pattern.
  *
- * This function provides a convenient way to configure streaming chat completion
- * parameters using Kotlin's DSL-style builder syntax. The resulting parameters
- * will have `stream` set to `true` automatically.
+ * This function provides a convenient way to configure streaming chat completion parameters using
+ * Kotlin's DSL-style builder syntax. The resulting parameters will have `stream` set to `true`
+ * automatically.
  *
  * Example:
  * ```kotlin
@@ -48,15 +50,17 @@ public fun chatCompletionParams(block: ChatCompletionParams.Builder.() -> Unit):
  * @param block Configuration block for setting parameter values
  * @return Configured [ChatCompletionParams] instance with streaming enabled
  */
-public fun chatCompletionStreamParams(block: ChatCompletionParams.StreamBuilder.() -> Unit): ChatCompletionParams {
+public fun chatCompletionStreamParams(
+    block: ChatCompletionParams.StreamBuilder.() -> Unit
+): ChatCompletionParams {
     return ChatCompletionParams.StreamBuilder().apply(block).build()
 }
 
 /**
  * Parameters for configuring chat completion requests to DeepSeek models.
  *
- * This class encapsulates all the options available when sending chat completion
- * requests, allowing fine-grained control over the model's behavior and output.
+ * This class encapsulates all the options available when sending chat completion requests, allowing
+ * fine-grained control over the model's behavior and output.
  *
  * Example:
  * ```kotlin
@@ -70,28 +74,30 @@ public fun chatCompletionStreamParams(block: ChatCompletionParams.StreamBuilder.
  * ```
  *
  * @property model The DeepSeek model to use for chat completion; defaults to
- * [ChatModel.DEEPSEEK_V4_FLASH]
+ *   [ChatModel.DEEPSEEK_V4_FLASH]
  * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API
- * @property maxTokens Maximum number of tokens to generate; at least 1 and otherwise
- * bounded by the model's context length
+ * @property maxTokens Maximum number of tokens to generate; at least 1 and otherwise bounded by the
+ *   model's context length
  * @property presencePenalty Sent as `presence_penalty`, ignored by the API
  * @property responseFormat Format specification for the model's output
  * @property stop Custom stop sequences that will cause the model to stop generating further tokens
  * @property stream Whether to stream the response back piece by piece
  * @property streamOptions Configuration options for streaming responses
- * @property temperature Controls randomness in responses, between 0.0 and 2.0 (lower is more deterministic)
+ * @property temperature Controls randomness in responses, between 0.0 and 2.0 (lower is more
+ *   deterministic)
  * @property topP Controls diversity by limiting to top-p probability mass in token selection
  * @property tools List of tools that the model may use during chat completion
  * @property toolChoice Controls how the model selects tools to use
  * @property logprobs Whether to return log probabilities of output tokens
  * @property topLogprobs How many most likely tokens to return at each position (max 20)
  * @property thinking Switches the model between thinking and non-thinking mode. See [Thinking].
- * @property reasoningEffort How much reasoning the model spends before answering, while
- * thinking mode is on; defaults to the API's own `high`. See [ReasoningEffort].
- * @property userId Custom identifier of the end user behind the request; 1 to 512
- * characters from `[a-zA-Z0-9\-_]`. Must not carry personal data.
+ * @property reasoningEffort How much reasoning the model spends before answering, while thinking
+ *   mode is on; defaults to the API's own `high`. See [ReasoningEffort].
+ * @property userId Custom identifier of the end user behind the request; 1 to 512 characters from
+ *   `[a-zA-Z0-9\-_]`. Must not carry personal data.
  */
-public class ChatCompletionParams internal constructor(
+public class ChatCompletionParams
+internal constructor(
     public val model: ChatModel,
     frequencyPenalty: Double? = null,
     maxTokens: Int? = null,
@@ -111,18 +117,14 @@ public class ChatCompletionParams internal constructor(
     public val userId: String? = null,
 ) : DeepSeekParams(frequencyPenalty, maxTokens, presencePenalty, stop, temperature, topP) {
 
-    /**
-     * Builder for creating [ChatCompletionParams] with standard (non-streaming) configuration.
-     */
+    /** Builder for creating [ChatCompletionParams] with standard (non-streaming) configuration. */
     public class Builder {
         public var model: ChatModel = ChatModel.DEEPSEEK_V4_FLASH
 
-        @Deprecated(DEPRECATED_PENALTY)
-        public var frequencyPenalty: Double? = null
+        @Deprecated(DEPRECATED_PENALTY) public var frequencyPenalty: Double? = null
         public var maxTokens: Int? = null
 
-        @Deprecated(DEPRECATED_PENALTY)
-        public var presencePenalty: Double? = null
+        @Deprecated(DEPRECATED_PENALTY) public var presencePenalty: Double? = null
         public var responseFormat: ResponseFormat? = null
         public var stop: StopReason? = null
         public var temperature: Double? = null
@@ -137,7 +139,9 @@ public class ChatCompletionParams internal constructor(
 
         internal fun build(): ChatCompletionParams {
             maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
-            temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
+            temperature?.let {
+                require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" }
+            }
             topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             topLogprobs?.let { require(it <= 20) { "topLogprobs must be <= 20" } }
             userId?.let(::requireValidUserId)
@@ -168,12 +172,10 @@ public class ChatCompletionParams internal constructor(
     public class StreamBuilder {
         public var model: ChatModel = ChatModel.DEEPSEEK_V4_FLASH
 
-        @Deprecated(DEPRECATED_PENALTY)
-        public var frequencyPenalty: Double? = null
+        @Deprecated(DEPRECATED_PENALTY) public var frequencyPenalty: Double? = null
         public var maxTokens: Int? = null
 
-        @Deprecated(DEPRECATED_PENALTY)
-        public var presencePenalty: Double? = null
+        @Deprecated(DEPRECATED_PENALTY) public var presencePenalty: Double? = null
         public var responseFormat: ResponseFormat? = null
         public var stop: StopReason? = null
         public var streamOptions: StreamOptions? = null
@@ -187,10 +189,11 @@ public class ChatCompletionParams internal constructor(
         public var reasoningEffort: ReasoningEffort? = null
         public var userId: String? = null
 
-
         internal fun build(): ChatCompletionParams {
             maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
-            temperature?.let { require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" } }
+            temperature?.let {
+                require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" }
+            }
             topP?.let { require(it in 0.0..1.0) { "topP must be between 0.0 and 1.0" } }
             topLogprobs?.let { require(it <= 20) { "topLogprobs must be <= 20" } }
             userId?.let(::requireValidUserId)
@@ -313,28 +316,27 @@ public class ChatCompletionParams internal constructor(
         )
     }
 
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is ChatCompletionParams) return false
 
         return model == other.model &&
-                frequencyPenalty == other.frequencyPenalty &&
-                maxTokens == other.maxTokens &&
-                presencePenalty == other.presencePenalty &&
-                responseFormat == other.responseFormat &&
-                stop == other.stop &&
-                stream == other.stream &&
-                streamOptions == other.streamOptions &&
-                temperature == other.temperature &&
-                topP == other.topP &&
-                tools == other.tools &&
-                toolChoice == other.toolChoice &&
-                logprobs == other.logprobs &&
-                topLogprobs == other.topLogprobs &&
-                thinking == other.thinking &&
-                reasoningEffort == other.reasoningEffort &&
-                userId == other.userId
+            frequencyPenalty == other.frequencyPenalty &&
+            maxTokens == other.maxTokens &&
+            presencePenalty == other.presencePenalty &&
+            responseFormat == other.responseFormat &&
+            stop == other.stop &&
+            stream == other.stream &&
+            streamOptions == other.streamOptions &&
+            temperature == other.temperature &&
+            topP == other.topP &&
+            tools == other.tools &&
+            toolChoice == other.toolChoice &&
+            logprobs == other.logprobs &&
+            topLogprobs == other.topLogprobs &&
+            thinking == other.thinking &&
+            reasoningEffort == other.reasoningEffort &&
+            userId == other.userId
     }
 
     override fun hashCode(): Int {
@@ -367,10 +369,12 @@ public class ChatCompletionParams internal constructor(
 private val USER_ID_REGEX = Regex("^[a-zA-Z0-9\\-_]+$")
 
 /**
- * Fails fast on a `user_id` the API would reject: the documented limit is 512 characters
- * drawn from `[a-zA-Z0-9\-_]`.
+ * Fails fast on a `user_id` the API would reject: the documented limit is 512 characters drawn from
+ * `[a-zA-Z0-9\-_]`.
  */
 private fun requireValidUserId(userId: String) {
-    require(userId.length <= 512) { "userId must be at most 512 characters long, was ${userId.length}" }
+    require(userId.length <= 512) {
+        "userId must be at most 512 characters long, was ${userId.length}"
+    }
     require(USER_ID_REGEX.matches(userId)) { "userId must be non-empty and match [a-zA-Z0-9\\-_]" }
 }

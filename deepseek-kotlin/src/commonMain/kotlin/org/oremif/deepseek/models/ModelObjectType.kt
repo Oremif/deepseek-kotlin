@@ -11,6 +11,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 public enum class ModelObjectType {
     /** The entry describes a DeepSeek model. Serializes to the string `model`. */
-    @SerialName("model")
-    MODEL,
+    @SerialName("model") MODEL
 }

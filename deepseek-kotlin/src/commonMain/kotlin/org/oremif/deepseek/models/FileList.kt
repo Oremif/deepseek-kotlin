@@ -19,8 +19,8 @@ import kotlinx.serialization.Serializable
  * @property data Files on this page, ordered by creation time per the requested [SortOrder].
  * @property hasMore `true` when further files follow this page.
  * @property firstId Identifier of the first file on the page; `null` for an empty page.
- * @property lastId Identifier of the last file on the page; pass it as `after` to fetch the
- * next page. `null` for an empty page.
+ * @property lastId Identifier of the last file on the page; pass it as `after` to fetch the next
+ *   page. `null` for an empty page.
  * @see <a href="https://api-docs.deepseek.com/api/list-files">List Files</a>
  */
 @Serializable
@@ -35,10 +35,10 @@ public class FileList(
         if (this === other) return true
         if (other !is FileList) return false
         return `object` == other.`object` &&
-                data == other.data &&
-                hasMore == other.hasMore &&
-                firstId == other.firstId &&
-                lastId == other.lastId
+            data == other.data &&
+            hasMore == other.hasMore &&
+            firstId == other.firstId &&
+            lastId == other.lastId
     }
 
     override fun hashCode(): Int {
@@ -62,10 +62,8 @@ public class FileList(
 @Serializable
 public enum class SortOrder(public val value: String) {
     /** Oldest first — what a listing endpoint falls back to when no order is requested. */
-    @SerialName("asc")
-    ASC("asc"),
+    @SerialName("asc") ASC("asc"),
 
     /** Newest first. */
-    @SerialName("desc")
-    DESC("desc"),
+    @SerialName("desc") DESC("desc"),
 }

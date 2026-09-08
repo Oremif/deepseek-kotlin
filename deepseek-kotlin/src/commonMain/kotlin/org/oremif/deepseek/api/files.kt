@@ -19,13 +19,13 @@ private val LIMIT_RANGE = 1..1000
 /**
  * Uploads an image for a vision model to read, and returns the stored [FileObject].
  *
- * The file is sent as `multipart/form-data` with purpose [FilePurpose.USER_DATA]. Its format
- * is detected from the bytes themselves — JPEG, PNG, GIF and WebP are supported — so
- * [filename] is only a label. The API caps an upload at 64 MiB.
+ * The file is sent as `multipart/form-data` with purpose [FilePurpose.USER_DATA]. Its format is
+ * detected from the bytes themselves — JPEG, PNG, GIF and WebP are supported — so [filename] is
+ * only a label. The API caps an upload at 64 MiB.
  *
- * Uploads use [uploadTimeout][org.oremif.deepseek.client.DeepSeekClientConfig.uploadTimeout]
- * rather than the client's default request timeout, since a large file on a slow link needs
- * longer than a chat call.
+ * Uploads use [uploadTimeout][org.oremif.deepseek.client.DeepSeekClientConfig.uploadTimeout] rather
+ * than the client's default request timeout, since a large file on a slow link needs longer than a
+ * chat call.
  *
  * Example:
  * ```kotlin
@@ -43,11 +43,11 @@ private val LIMIT_RANGE = 1..1000
  *
  * @param bytes Raw file content; must not be empty
  * @param filename Name to store the file under; must not be blank or contain a line break
- * @param expiresAfterSeconds Lifetime of the file, anchored at its creation, between 3600
- * and 2592000 seconds. Left `null`, the file is kept indefinitely.
+ * @param expiresAfterSeconds Lifetime of the file, anchored at its creation, between 3600 and
+ *   2592000 seconds. Left `null`, the file is kept indefinitely.
  * @return The stored [FileObject], whose `id` can be referenced from a chat message
  * @throws IllegalArgumentException if [bytes] is empty, [filename] is unusable, or
- * [expiresAfterSeconds] falls outside 3600..2592000
+ *   [expiresAfterSeconds] falls outside 3600..2592000
  * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClientBase.uploadFile(
@@ -65,9 +65,13 @@ public suspend fun DeepSeekClientBase.uploadFile(
     }
 
     val parts = formData {
-        append("file", bytes, Headers.build {
-            append(HttpHeaders.ContentDisposition, "filename=\"${filename.escapeQuotes()}\"")
-        })
+        append(
+            "file",
+            bytes,
+            Headers.build {
+                append(HttpHeaders.ContentDisposition, "filename=\"${filename.escapeQuotes()}\"")
+            },
+        )
         append("purpose", FilePurpose.USER_DATA.value)
         expiresAfterSeconds?.let {
             append("expires_after[anchor]", "created_at")
@@ -75,12 +79,11 @@ public suspend fun DeepSeekClientBase.uploadFile(
         }
     }
 
-    val response = client.post("files") {
-        setBody(MultiPartFormDataContent(parts))
-        timeout {
-            requestTimeoutMillis = config.uploadTimeout
+    val response =
+        client.post("files") {
+            setBody(MultiPartFormDataContent(parts))
+            timeout { requestTimeoutMillis = config.uploadTimeout }
         }
-    }
     validateResponse(response)
     return response.body()
 }
@@ -97,11 +100,11 @@ public suspend fun DeepSeekClientBase.uploadFile(
  * }
  * ```
  *
- * @param after Identifier of the file to resume after, typically [FileList.lastId] of the
- * previous page; `null` starts from the beginning
+ * @param after Identifier of the file to resume after, typically [FileList.lastId] of the previous
+ *   page; `null` starts from the beginning
  * @param limit How many files to return, between 1 and 1000; the API defaults to 1000
- * @param order Whether to sort by creation time ascending or descending; the API defaults
- * to [SortOrder.ASC]
+ * @param order Whether to sort by creation time ascending or descending; the API defaults to
+ *   [SortOrder.ASC]
  * @param purpose Restricts the listing to files with this purpose
  * @return One [FileList] page
  * @throws IllegalArgumentException if [limit] falls outside 1..1000
@@ -120,12 +123,13 @@ public suspend fun DeepSeekClientBase.listFiles(
     }
 
     // `parameter` drops a null value, so an unset argument leaves the query string alone.
-    val response = client.get("files") {
-        parameter("after", after)
-        parameter("limit", limit)
-        parameter("order", order?.value)
-        parameter("purpose", purpose?.value)
-    }
+    val response =
+        client.get("files") {
+            parameter("after", after)
+            parameter("limit", limit)
+            parameter("order", order?.value)
+            parameter("purpose", purpose?.value)
+        }
     validateResponse(response)
     return response.body()
 }
@@ -142,8 +146,7 @@ public suspend fun DeepSeekClientBase.listFiles(
  * @param fileId Identifier of the file, of the form `file-api-...`
  * @return The stored [FileObject]
  * @throws IllegalArgumentException if [fileId] is blank
- * @throws DeepSeekException if the API returns a non-2xx status, including when no such
- * file exists
+ * @throws DeepSeekException if the API returns a non-2xx status, including when no such file exists
  */
 public suspend fun DeepSeekClientBase.retrieveFile(fileId: String): FileObject {
     require(fileId.isNotBlank()) { "fileId must not be blank" }
@@ -164,8 +167,7 @@ public suspend fun DeepSeekClientBase.retrieveFile(fileId: String): FileObject {
  * @param fileId Identifier of the file, of the form `file-api-...`
  * @return A [FileDeleted] confirming the outcome
  * @throws IllegalArgumentException if [fileId] is blank
- * @throws DeepSeekException if the API returns a non-2xx status, including when no such
- * file exists
+ * @throws DeepSeekException if the API returns a non-2xx status, including when no such file exists
  */
 public suspend fun DeepSeekClientBase.deleteFile(fileId: String): FileDeleted {
     require(fileId.isNotBlank()) { "fileId must not be blank" }
@@ -176,7 +178,7 @@ public suspend fun DeepSeekClientBase.deleteFile(fileId: String): FileDeleted {
 }
 
 /**
- * Escapes a filename for the quoted-string form of the `Content-Disposition` header, so a
- * quote in the name cannot break out of the multipart part.
+ * Escapes a filename for the quoted-string form of the `Content-Disposition` header, so a quote in
+ * the name cannot break out of the multipart part.
  */
 private fun String.escapeQuotes(): String = replace("\\", "\\\\").replace("\"", "\\\"")

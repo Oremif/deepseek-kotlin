@@ -26,7 +26,8 @@ class FilesApiTests {
 
     private val imageBytes = byteArrayOf(0xFF.toByte(), 0xD8.toByte(), 0xFF.toByte(), 0xE0.toByte())
 
-    private val fileBody = """
+    private val fileBody =
+        """
         {
             "id": "file-api-abc123",
             "object": "file",
@@ -36,16 +37,18 @@ class FilesApiTests {
             "purpose": "user_data",
             "expires_at": 1700003600
         }
-    """.trimIndent()
+        """
+            .trimIndent()
 
     private fun MockRequestHandleScope.jsonResponse(
         body: String,
         status: HttpStatusCode = HttpStatusCode.OK,
-    ): HttpResponseData = respond(
-        content = body,
-        status = status,
-        headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-    )
+    ): HttpResponseData =
+        respond(
+            content = body,
+            status = status,
+            headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
+        )
 
     @Test
     fun `uploadFile posts multipart form data to the files endpoint`() = runTest {
@@ -124,15 +127,16 @@ class FilesApiTests {
         val engine = mockEngine {
             jsonResponse(
                 """
-                    {
-                        "id": "file-api-abc123",
-                        "object": "file",
-                        "bytes": 12,
-                        "created_at": 1700000000,
-                        "filename": "cat.jpg",
-                        "purpose": "user_data"
-                    }
-                """.trimIndent()
+                {
+                    "id": "file-api-abc123",
+                    "object": "file",
+                    "bytes": 12,
+                    "created_at": 1700000000,
+                    "filename": "cat.jpg",
+                    "purpose": "user_data"
+                }
+                """
+                    .trimIndent()
             )
         }
         val client = testClient(engine)
@@ -186,32 +190,33 @@ class FilesApiTests {
             capturedQuery = request.url.encodedQuery
             jsonResponse(
                 """
-                    {
-                        "object": "list",
-                        "data": [
-                            {
-                                "id": "file-api-abc123",
-                                "object": "file",
-                                "bytes": 102400,
-                                "created_at": 1700000000,
-                                "filename": "cat.jpg",
-                                "purpose": "user_data"
-                            },
-                            {
-                                "id": "file-api-def456",
-                                "object": "file",
-                                "bytes": 2048,
-                                "created_at": 1700000100,
-                                "filename": "dog.png",
-                                "purpose": "user_data",
-                                "expires_at": 1700003700
-                            }
-                        ],
-                        "first_id": "file-api-abc123",
-                        "last_id": "file-api-def456",
-                        "has_more": true
-                    }
-                """.trimIndent()
+                {
+                    "object": "list",
+                    "data": [
+                        {
+                            "id": "file-api-abc123",
+                            "object": "file",
+                            "bytes": 102400,
+                            "created_at": 1700000000,
+                            "filename": "cat.jpg",
+                            "purpose": "user_data"
+                        },
+                        {
+                            "id": "file-api-def456",
+                            "object": "file",
+                            "bytes": 2048,
+                            "created_at": 1700000100,
+                            "filename": "dog.png",
+                            "purpose": "user_data",
+                            "expires_at": 1700003700
+                        }
+                    ],
+                    "first_id": "file-api-abc123",
+                    "last_id": "file-api-def456",
+                    "has_more": true
+                }
+                """
+                    .trimIndent()
             )
         }
         val client = testClient(engine)
@@ -240,12 +245,13 @@ class FilesApiTests {
         }
         val client = testClient(engine)
 
-        val page = client.listFiles(
-            after = "file-api-abc123",
-            limit = 50,
-            order = SortOrder.DESC,
-            purpose = FilePurpose.USER_DATA,
-        )
+        val page =
+            client.listFiles(
+                after = "file-api-abc123",
+                limit = 50,
+                order = SortOrder.DESC,
+                purpose = FilePurpose.USER_DATA,
+            )
 
         val parameters = capturedParameters.shouldNotBeNull()
         parameters["after"] shouldBe "file-api-abc123"
@@ -260,7 +266,10 @@ class FilesApiTests {
 
     @Test
     fun `listFiles rejects a page size outside the accepted range`() = runTest {
-        val client = testClient(mockEngine { jsonResponse("""{"object": "list", "data": [], "has_more": false}""") })
+        val client =
+            testClient(
+                mockEngine { jsonResponse("""{"object": "list", "data": [], "has_more": false}""") }
+            )
 
         shouldThrow<IllegalArgumentException> { client.listFiles(limit = 0) }
         shouldThrow<IllegalArgumentException> { client.listFiles(limit = 1001) }
@@ -322,21 +331,22 @@ class FilesApiTests {
                 capturedChatBody = request.body.toByteArray().decodeToString()
                 jsonResponse(
                     """
-                        {
-                            "id": "abc-123",
-                            "choices": [
-                                {
-                                    "finish_reason": "stop",
-                                    "index": 0,
-                                    "message": {"content": "A cat.", "role": "assistant"}
-                                }
-                            ],
-                            "created": 1705651092,
-                            "model": "deepseek-v4-flash-vision-exp",
-                            "object": "chat.completion",
-                            "usage": {"completion_tokens": 3, "prompt_tokens": 8, "total_tokens": 11}
-                        }
-                    """.trimIndent()
+                    {
+                        "id": "abc-123",
+                        "choices": [
+                            {
+                                "finish_reason": "stop",
+                                "index": 0,
+                                "message": {"content": "A cat.", "role": "assistant"}
+                            }
+                        ],
+                        "created": 1705651092,
+                        "model": "deepseek-v4-flash-vision-exp",
+                        "object": "chat.completion",
+                        "usage": {"completion_tokens": 3, "prompt_tokens": 8, "total_tokens": 11}
+                    }
+                    """
+                        .trimIndent()
                 )
             }
         }
@@ -368,7 +378,10 @@ class FilesApiTests {
         }
         val client = testClient(engine)
 
-        val ex = shouldThrow<DeepSeekException.NotFoundException> { client.retrieveFile("file-api-missing") }
+        val ex =
+            shouldThrow<DeepSeekException.NotFoundException> {
+                client.retrieveFile("file-api-missing")
+            }
 
         ex.statusCode shouldBe 404
         ex.error?.error?.message shouldBe "No such file"

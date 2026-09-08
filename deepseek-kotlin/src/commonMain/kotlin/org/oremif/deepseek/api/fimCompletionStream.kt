@@ -19,8 +19,8 @@ import org.oremif.deepseek.models.FIMCompletionRequest
 /**
  * Streams Fill-In-the-Middle (FIM) completions chunk by chunk from the DeepSeek API.
  *
- * This function handles the low-level streaming communication with the API, allowing
- * you to receive and process completions in real-time as they're generated.
+ * This function handles the low-level streaming communication with the API, allowing you to receive
+ * and process completions in real-time as they're generated.
  *
  * Example:
  * ```kotlin
@@ -34,10 +34,12 @@ import org.oremif.deepseek.models.FIMCompletionRequest
  *
  * @param request The FIM completion request with streaming enabled
  * @return A [Flow] of [FIMCompletion] objects representing incremental updates
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
-public fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletionRequest): Flow<FIMCompletion> {
+public fun DeepSeekClientBase.fimCompletionStream(
+    request: FIMCompletionRequest
+): Flow<FIMCompletion> {
     return flow {
         try {
             client.sse(
@@ -50,24 +52,30 @@ public fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletionRequest)
                         append(HttpHeaders.Connection, "keep-alive")
                     }
                     setBody(request)
-                    timeout {
-                        requestTimeoutMillis = config.fimCompletionTimeout
-                    }
-                }
+                    timeout { requestTimeoutMillis = config.fimCompletionTimeout }
+                },
             ) {
                 incoming.collect { event ->
-                    event.data?.trim()?.takeIf { it != "[DONE]" }?.let { data ->
-                        val fimChunk = config.jsonConfig.decodeFromString<FIMCompletion>(data)
-                        emit(fimChunk)
-                    }
+                    event.data
+                        ?.trim()
+                        ?.takeIf { it != "[DONE]" }
+                        ?.let { data ->
+                            val fimChunk = config.jsonConfig.decodeFromString<FIMCompletion>(data)
+                            emit(fimChunk)
+                        }
                 }
             }
         } catch (e: SSEClientException) {
             val response = e.response ?: throw e
             val error = runCatching {
                 config.jsonConfig.decodeFromString<DeepSeekError>(response.bodyAsText())
-            }.getOrNull()
-            throw DeepSeekException.from(response.status.value, response.headers.toDeepSeekHeaders(), error)
+            }
+                .getOrNull()
+            throw DeepSeekException.from(
+                response.status.value,
+                response.headers.toDeepSeekHeaders(),
+                error,
+            )
         }
     }
 }
@@ -75,8 +83,8 @@ public fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletionRequest)
 /**
  * Streams FIM completions using custom parameters and a prompt.
  *
- * This function gives you control over generation behavior while receiving
- * streaming responses for Fill-In-the-Middle completions.
+ * This function gives you control over generation behavior while receiving streaming responses for
+ * Fill-In-the-Middle completions.
  *
  * Example:
  * ```kotlin
@@ -94,23 +102,24 @@ public fun DeepSeekClientBase.fimCompletionStream(request: FIMCompletionRequest)
  * @param params Parameters controlling the completion behavior
  * @param prompt The text to start the completion from
  * @return A [Flow] of [FIMCompletion] objects representing the streaming response
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
 public fun DeepSeekClientStream.fim(
     params: FIMCompletionParams,
-    prompt: String
+    prompt: String,
 ): Flow<FIMCompletion> {
     val request =
-        (if (params.stream == null || !params.stream) params.copy(stream = true) else params).createRequest(prompt)
+        (if (params.stream == null || !params.stream) params.copy(stream = true) else params)
+            .createRequest(prompt)
     return fimCompletionStream(request)
 }
 
 /**
  * Streams FIM completions with default parameters.
  *
- * This simplified function streams completions with default settings,
- * requiring only the prompt text to get started.
+ * This simplified function streams completions with default settings, requiring only the prompt
+ * text to get started.
  *
  * Example:
  * ```kotlin
@@ -121,8 +130,8 @@ public fun DeepSeekClientStream.fim(
  *
  * @param prompt The text to start the completion from
  * @return A [Flow] of [FIMCompletion] objects representing the streaming response
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
 public fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> =
     fim(FIMCompletionParams(stream = true), prompt)
@@ -130,8 +139,8 @@ public fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> =
 /**
  * Streams a fully customizable FIM completion using a builder pattern.
  *
- * This approach gives you complete control over all aspects of the streaming
- * FIM request through a dedicated builder pattern.
+ * This approach gives you complete control over all aspects of the streaming FIM request through a
+ * dedicated builder pattern.
  *
  * Example:
  * ```kotlin
@@ -149,8 +158,8 @@ public fun DeepSeekClientStream.fim(prompt: String): Flow<FIMCompletion> =
  *
  * @param block A builder block for constructing the complete streaming request
  * @return A [Flow] of [FIMCompletion] objects representing the streaming response
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
 public fun DeepSeekClientStream.fimCompletion(
     block: FIMCompletionRequest.StreamBuilder.() -> Unit

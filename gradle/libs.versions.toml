@@ -11,6 +11,7 @@ slf4j = "2.0.19"
 kotest = "6.2.4"
 maven-publish = "0.37.0"
 binary-compatibility-validator = "0.18.2"
+ktfmt = "0.27.0"
 
 [libraries]
 # Coroutines
@@ -42,3 +43,4 @@ kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", vers
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "maven-publish"}
 binary-compatibility-validator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "binary-compatibility-validator" }
+ktfmt = { id = "com.ncorti.ktfmt.gradle", version.ref = "ktfmt" }

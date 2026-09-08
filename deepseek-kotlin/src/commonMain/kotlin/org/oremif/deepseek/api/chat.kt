@@ -12,9 +12,9 @@ import org.oremif.deepseek.utils.validateResponse
 /**
  * Path the given [request] is sent to.
  *
- * Prefix completion — a trailing [AssistantMessage] with `prefix = true` that the model
- * continues from — is only served from the beta base path, so such a request is routed
- * there. Everything else goes to the standard endpoint.
+ * Prefix completion — a trailing [AssistantMessage] with `prefix = true` that the model continues
+ * from — is only served from the beta base path, so such a request is routed there. Everything else
+ * goes to the standard endpoint.
  */
 internal fun ChatCompletionRequest.chatCompletionsPath(): String =
     if ((messages.lastOrNull() as? AssistantMessage)?.prefix == true) {
@@ -26,8 +26,8 @@ internal fun ChatCompletionRequest.chatCompletionsPath(): String =
 /**
  * Sends a chat completion request to the DeepSeek API.
  *
- * This is a low-level function that handles the direct HTTP communication with the API.
- * Most users will prefer the higher-level [chat] functions instead.
+ * This is a low-level function that handles the direct HTTP communication with the API. Most users
+ * will prefer the higher-level [chat] functions instead.
  *
  * Example:
  * ```kotlin
@@ -40,13 +40,14 @@ internal fun ChatCompletionRequest.chatCompletionsPath(): String =
  * @return A [ChatCompletion] containing the model's response
  * @throws DeepSeekException if the API returns a non-2xx status
  */
-public suspend fun DeepSeekClientBase.chatCompletion(request: ChatCompletionRequest): ChatCompletion {
-    val response = client.post(request.chatCompletionsPath()) {
-        setBody(request)
-        timeout {
-            requestTimeoutMillis = config.chatCompletionTimeout
+public suspend fun DeepSeekClientBase.chatCompletion(
+    request: ChatCompletionRequest
+): ChatCompletion {
+    val response =
+        client.post(request.chatCompletionsPath()) {
+            setBody(request)
+            timeout { requestTimeoutMillis = config.chatCompletionTimeout }
         }
-    }
     validateResponse(response)
     return response.body()
 }
@@ -54,8 +55,8 @@ public suspend fun DeepSeekClientBase.chatCompletion(request: ChatCompletionRequ
 /**
  * Sends a chat request with custom parameters and messages.
  *
- * This is a versatile function that gives you control over both the model's behavior
- * and the conversation context.
+ * This is a versatile function that gives you control over both the model's behavior and the
+ * conversation context.
  *
  * Example:
  * ```kotlin
@@ -81,16 +82,20 @@ public suspend fun DeepSeekClientBase.chatCompletion(request: ChatCompletionRequ
  * @return A [ChatCompletion] containing the model's response
  * @throws DeepSeekException if the API returns a non-2xx status
  */
-public suspend fun DeepSeekClient.chat(params: ChatCompletionParams, messages: List<ChatMessage>): ChatCompletion {
-    val request = (if (params.stream == true) params.copy(stream = false) else params).createRequest(messages)
+public suspend fun DeepSeekClient.chat(
+    params: ChatCompletionParams,
+    messages: List<ChatMessage>,
+): ChatCompletion {
+    val request =
+        (if (params.stream == true) params.copy(stream = false) else params).createRequest(messages)
     return chatCompletion(request)
 }
 
 /**
  * Sends a chat request with default parameters.
  *
- * This simplified version uses the default model settings and only requires
- * providing the conversation history.
+ * This simplified version uses the default model settings and only requires providing the
+ * conversation history.
  *
  * Example:
  * ```kotlin
@@ -111,8 +116,7 @@ public suspend fun DeepSeekClient.chat(messages: List<ChatMessage>): ChatComplet
 /**
  * Sends a single user message to the chat API.
  *
- * This is the simplest way to interact with the DeepSeek chat API,
- * perfect for quick queries.
+ * This is the simplest way to interact with the DeepSeek chat API, perfect for quick queries.
  *
  * Example:
  * ```kotlin
@@ -130,8 +134,8 @@ public suspend fun DeepSeekClient.chat(message: String): ChatCompletion =
 /**
  * Sends a chat request with custom parameters and a DSL for building messages.
  *
- * This approach combines the flexibility of custom parameters with an intuitive
- * way to construct the conversation.
+ * This approach combines the flexibility of custom parameters with an intuitive way to construct
+ * the conversation.
  *
  * Example:
  * ```kotlin
@@ -159,8 +163,8 @@ public suspend fun DeepSeekClient.chat(
 /**
  * Sends a chat request with default parameters and a DSL for building messages.
  *
- * This approach provides a clean, readable way to construct conversations with
- * default model settings.
+ * This approach provides a clean, readable way to construct conversations with default model
+ * settings.
  *
  * Example:
  * ```kotlin
@@ -176,14 +180,15 @@ public suspend fun DeepSeekClient.chat(
  * @return A [ChatCompletion] containing the model's response
  * @throws DeepSeekException if the API returns a non-2xx status
  */
-public suspend fun DeepSeekClient.chat(blockMessage: ChatCompletionRequest.MessageBuilder.() -> Unit): ChatCompletion =
-    chat(ChatCompletionRequest.MessageBuilder().apply(blockMessage).build())
+public suspend fun DeepSeekClient.chat(
+    blockMessage: ChatCompletionRequest.MessageBuilder.() -> Unit
+): ChatCompletion = chat(ChatCompletionRequest.MessageBuilder().apply(blockMessage).build())
 
 /**
  * Sends a fully customizable chat completion request.
  *
- * This approach gives you complete control over all aspects of the request
- * through a convenient builder pattern.
+ * This approach gives you complete control over all aspects of the request through a convenient
+ * builder pattern.
  *
  * Example:
  * ```kotlin
@@ -204,7 +209,9 @@ public suspend fun DeepSeekClient.chat(blockMessage: ChatCompletionRequest.Messa
  * @return A [ChatCompletion] containing the model's response
  * @throws DeepSeekException if the API returns a non-2xx status
  */
-public suspend fun DeepSeekClient.chatCompletion(block: ChatCompletionRequest.Builder.() -> Unit): ChatCompletion {
+public suspend fun DeepSeekClient.chatCompletion(
+    block: ChatCompletionRequest.Builder.() -> Unit
+): ChatCompletion {
     val request = ChatCompletionRequest.Builder().apply(block).build()
     return chatCompletion(request)
 }

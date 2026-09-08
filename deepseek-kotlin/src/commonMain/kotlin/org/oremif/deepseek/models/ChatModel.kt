@@ -6,8 +6,7 @@ import kotlin.jvm.JvmInline
 /**
  * Identifier of a DeepSeek model, serialized as the raw slug the API expects.
  *
- * Any slug can be wrapped directly, so a model the SDK declares no constant for is still
- * usable:
+ * Any slug can be wrapped directly, so a model the SDK declares no constant for is still usable:
  * ```kotlin
  * val params = chatCompletionParams { model = ChatModel.DEEPSEEK_V4_PRO }
  * val preview = chatCompletionParams { model = ChatModel("deepseek-v4-preview") }
@@ -27,23 +26,23 @@ public value class ChatModel(public val id: String) {
 
     public companion object {
         /**
-         * `deepseek-v4-flash` — general-purpose model with a 1M token context and up to
-         * 384K output tokens. Thinks unless [Thinking] disables it.
+         * `deepseek-v4-flash` — general-purpose model with a 1M token context and up to 384K output
+         * tokens. Thinks unless [Thinking] disables it.
          */
         public val DEEPSEEK_V4_FLASH: ChatModel = ChatModel("deepseek-v4-flash")
 
         /**
-         * `deepseek-v4-pro` — same limits and features as [DEEPSEEK_V4_FLASH], with the
-         * strongest capability and a lower concurrency limit. The only model the FIM
-         * endpoint accepts.
+         * `deepseek-v4-pro` — same limits and features as [DEEPSEEK_V4_FLASH], with the strongest
+         * capability and a lower concurrency limit. The only model the FIM endpoint accepts.
          */
         public val DEEPSEEK_V4_PRO: ChatModel = ChatModel("deepseek-v4-pro")
 
         /**
-         * `deepseek-v4-flash-vision-exp` — [DEEPSEEK_V4_FLASH] plus image content parts in
-         * user messages. Rejected by the FIM endpoint.
+         * `deepseek-v4-flash-vision-exp` — [DEEPSEEK_V4_FLASH] plus image content parts in user
+         * messages. Rejected by the FIM endpoint.
          */
-        public val DEEPSEEK_V4_FLASH_VISION_EXP: ChatModel = ChatModel("deepseek-v4-flash-vision-exp")
+        public val DEEPSEEK_V4_FLASH_VISION_EXP: ChatModel =
+            ChatModel("deepseek-v4-flash-vision-exp")
 
         /** `deepseek-chat` — no longer served; requests naming it fail. */
         @Deprecated(

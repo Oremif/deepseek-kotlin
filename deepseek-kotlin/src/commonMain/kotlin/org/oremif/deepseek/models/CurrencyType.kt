@@ -1,8 +1,6 @@
 package org.oremif.deepseek.models
 
-/**
- * Currency used to denominate a [BalanceInfo] entry.
- */
+/** Currency used to denominate a [BalanceInfo] entry. */
 public enum class CurrencyType {
     /** Chinese yuan. */
     CNY,

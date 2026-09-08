@@ -14,9 +14,7 @@ fun main(): Unit = runBlocking {
 
     // Send a FIM request and collect the streaming response
     // Each chunk of the completed code is printed as it arrives
-    client.fim("fun main () {").collect {
-        print(it.choices.first().text)
-    }
+    client.fim("fun main () {").collect { print(it.choices.first().text) }
 
     // Close the client to release resources
     client.close()

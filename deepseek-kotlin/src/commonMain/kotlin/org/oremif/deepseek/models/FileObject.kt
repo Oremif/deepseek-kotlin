@@ -6,8 +6,8 @@ import kotlin.jvm.JvmInline
 /**
  * A file stored by the DeepSeek Files API.
  *
- * Feed [id] to a [FilePart] — or to the `imageFile(...)` step of the `user { }` DSL — to let
- * a vision model read the file:
+ * Feed [id] to a [FilePart] — or to the `imageFile(...)` step of the `user { }` DSL — to let a
+ * vision model read the file:
  * ```kotlin
  * val uploaded = client.uploadFile(imageBytes, "cat.jpg")
  * client.chatCompletion {
@@ -27,8 +27,8 @@ import kotlin.jvm.JvmInline
  * @property createdAt Unix timestamp, in seconds, of when the file was created.
  * @property filename Name the file was uploaded under.
  * @property purpose What the file may be used for; currently always [FilePurpose.USER_DATA].
- * @property expiresAt Unix timestamp, in seconds, of when the file expires. `null` for a
- * file uploaded without an expiry, which the API keeps indefinitely.
+ * @property expiresAt Unix timestamp, in seconds, of when the file expires. `null` for a file
+ *   uploaded without an expiry, which the API keeps indefinitely.
  * @see <a href="https://api-docs.deepseek.com/api/create-file">Create File</a>
  */
 @Serializable
@@ -45,12 +45,12 @@ public class FileObject(
         if (this === other) return true
         if (other !is FileObject) return false
         return id == other.id &&
-                `object` == other.`object` &&
-                bytes == other.bytes &&
-                createdAt == other.createdAt &&
-                filename == other.filename &&
-                purpose == other.purpose &&
-                expiresAt == other.expiresAt
+            `object` == other.`object` &&
+            bytes == other.bytes &&
+            createdAt == other.createdAt &&
+            filename == other.filename &&
+            purpose == other.purpose &&
+            expiresAt == other.expiresAt
     }
 
     override fun hashCode(): Int {
@@ -66,15 +66,15 @@ public class FileObject(
 
     override fun toString(): String =
         "FileObject(id='$id', object='$`object`', bytes=$bytes, createdAt=$createdAt, " +
-                "filename='$filename', purpose=$purpose, expiresAt=$expiresAt)"
+            "filename='$filename', purpose=$purpose, expiresAt=$expiresAt)"
 }
 
 /**
  * What an uploaded file may be used for, serialized as the raw value the API expects.
  *
- * The API currently defines a single purpose, [USER_DATA], which is what the SDK sends on
- * upload. Any other value can be wrapped directly, so a purpose the SDK declares no
- * constant for still round-trips.
+ * The API currently defines a single purpose, [USER_DATA], which is what the SDK sends on upload.
+ * Any other value can be wrapped directly, so a purpose the SDK declares no constant for still
+ * round-trips.
  *
  * @property value Raw purpose sent in — and returned by — the Files API. Must not be blank.
  */

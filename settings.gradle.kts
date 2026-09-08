@@ -5,9 +5,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 
-    plugins {
-        id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
-    }
+    plugins { id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0" }
 }
 
 dependencyResolutionManagement {
@@ -18,4 +16,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "deepseek-kotlin"
+
 include("deepseek-kotlin")

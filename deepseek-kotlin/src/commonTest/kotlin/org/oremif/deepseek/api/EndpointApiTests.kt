@@ -23,7 +23,8 @@ class EndpointApiTests {
             capturedMethod = request.method
             capturedPath = request.url.encodedPath
             respond(
-                content = """
+                content =
+                    """
                     {
                         "is_available": true,
                         "balance_infos": [
@@ -41,9 +42,11 @@ class EndpointApiTests {
                             }
                         ]
                     }
-                """.trimIndent(),
+                    """
+                        .trimIndent(),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -72,7 +75,8 @@ class EndpointApiTests {
             capturedMethod = request.method
             capturedPath = request.url.encodedPath
             respond(
-                content = """
+                content =
+                    """
                     {
                         "object": "list",
                         "data": [
@@ -80,9 +84,11 @@ class EndpointApiTests {
                             {"id": "deepseek-v4-pro", "object": "model", "owned_by": "deepseek"}
                         ]
                     }
-                """.trimIndent(),
+                    """
+                        .trimIndent(),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)

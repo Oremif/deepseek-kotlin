@@ -17,9 +17,8 @@ import org.oremif.deepseek.models.*
 /**
  * Streams chat completion responses chunk by chunk from the DeepSeek API.
  *
- * This function handles the low-level communication with the Server-Sent Events (SSE)
- * endpoint, allowing you to receive and process model responses in real-time as they're
- * generated.
+ * This function handles the low-level communication with the Server-Sent Events (SSE) endpoint,
+ * allowing you to receive and process model responses in real-time as they're generated.
  *
  * Example:
  * ```kotlin
@@ -33,10 +32,12 @@ import org.oremif.deepseek.models.*
  *
  * @param request The chat completion request with streaming enabled
  * @return A [Flow] of [ChatCompletionChunk] objects representing incremental updates
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
-public fun DeepSeekClientBase.chatCompletionStream(request: ChatCompletionRequest): Flow<ChatCompletionChunk> {
+public fun DeepSeekClientBase.chatCompletionStream(
+    request: ChatCompletionRequest
+): Flow<ChatCompletionChunk> {
     return flow {
         try {
             client.sse(
@@ -49,24 +50,31 @@ public fun DeepSeekClientBase.chatCompletionStream(request: ChatCompletionReques
                         append(HttpHeaders.Connection, "keep-alive")
                     }
                     setBody(request)
-                    timeout {
-                        requestTimeoutMillis = config.chatCompletionTimeout
-                    }
-                }
+                    timeout { requestTimeoutMillis = config.chatCompletionTimeout }
+                },
             ) {
                 incoming.collect { event ->
-                    event.data?.trim()?.takeIf { it != "[DONE]" }?.let { data ->
-                        val chatChunk = config.jsonConfig.decodeFromString<ChatCompletionChunk>(data)
-                        emit(chatChunk)
-                    }
+                    event.data
+                        ?.trim()
+                        ?.takeIf { it != "[DONE]" }
+                        ?.let { data ->
+                            val chatChunk =
+                                config.jsonConfig.decodeFromString<ChatCompletionChunk>(data)
+                            emit(chatChunk)
+                        }
                 }
             }
         } catch (e: SSEClientException) {
             val response = e.response ?: throw e
             val error = runCatching {
                 config.jsonConfig.decodeFromString<DeepSeekError>(response.bodyAsText())
-            }.getOrNull()
-            throw DeepSeekException.from(response.status.value, response.headers.toDeepSeekHeaders(), error)
+            }
+                .getOrNull()
+            throw DeepSeekException.from(
+                response.status.value,
+                response.headers.toDeepSeekHeaders(),
+                error,
+            )
         }
     }
 }
@@ -74,8 +82,8 @@ public fun DeepSeekClientBase.chatCompletionStream(request: ChatCompletionReques
 /**
  * Streams chat responses using custom parameters and messages.
  *
- * This function lets you specify both behavioral parameters and conversation messages
- * while getting real-time streaming responses from the model.
+ * This function lets you specify both behavioral parameters and conversation messages while getting
+ * real-time streaming responses from the model.
  *
  * Example:
  * ```kotlin
@@ -97,24 +105,24 @@ public fun DeepSeekClientBase.chatCompletionStream(request: ChatCompletionReques
  * @param params Parameters controlling the model's behavior
  * @param messages The conversation history as a list of messages
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
 public fun DeepSeekClientStream.chat(
     params: ChatCompletionParams,
-    messages: List<ChatMessage>
+    messages: List<ChatMessage>,
 ): Flow<ChatCompletionChunk> {
     val request =
-        (if (params.stream == null || !params.stream) params.copy(stream = true) else params).createRequest(messages)
+        (if (params.stream == null || !params.stream) params.copy(stream = true) else params)
+            .createRequest(messages)
     return chatCompletionStream(request)
 }
 
 /**
  * Streams chat responses using default parameters.
  *
- * This simplified function uses the default [ChatModel.DEEPSEEK_V4_FLASH] model with
- * streaming enabled, providing a clean way to get streaming responses with minimal
- * configuration.
+ * This simplified function uses the default [ChatModel.DEEPSEEK_V4_FLASH] model with streaming
+ * enabled, providing a clean way to get streaming responses with minimal configuration.
  *
  * Example:
  * ```kotlin
@@ -130,8 +138,8 @@ public fun DeepSeekClientStream.chat(
  *
  * @param messages The conversation history as a list of messages
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
 public fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<ChatCompletionChunk> =
     chat(ChatCompletionParams(ChatModel.DEEPSEEK_V4_FLASH, stream = true), messages)
@@ -139,8 +147,8 @@ public fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<ChatComp
 /**
  * Streams chat responses for a single user message.
  *
- * This is the most straightforward way to get streaming responses from the model,
- * requiring only a simple text message.
+ * This is the most straightforward way to get streaming responses from the model, requiring only a
+ * simple text message.
  *
  * Example:
  * ```kotlin
@@ -151,8 +159,8 @@ public fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<ChatComp
  *
  * @param message The message text to send to the model
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
 public fun DeepSeekClientStream.chat(message: String): Flow<ChatCompletionChunk> =
     chat(listOf(UserMessage(content = message)))
@@ -160,8 +168,7 @@ public fun DeepSeekClientStream.chat(message: String): Flow<ChatCompletionChunk>
 /**
  * Streams chat responses using custom parameters and a message builder DSL.
  *
- * This approach combines custom parameters with an intuitive way to build
- * the conversation history.
+ * This approach combines custom parameters with an intuitive way to build the conversation history.
  *
  * Example:
  * ```kotlin
@@ -181,8 +188,8 @@ public fun DeepSeekClientStream.chat(message: String): Flow<ChatCompletionChunk>
  * @param params Parameters controlling the model's behavior
  * @param blockMessage A builder block for constructing the conversation
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
 public fun DeepSeekClientStream.chat(
     params: ChatCompletionParams,
@@ -193,8 +200,8 @@ public fun DeepSeekClientStream.chat(
 /**
  * Streams chat responses using default parameters and a message builder DSL.
  *
- * This function offers a clean, readable way to build conversations with
- * default streaming settings.
+ * This function offers a clean, readable way to build conversations with default streaming
+ * settings.
  *
  * Example:
  * ```kotlin
@@ -208,8 +215,8 @@ public fun DeepSeekClientStream.chat(
  *
  * @param blockMessage A builder block for constructing the conversation
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
 public fun DeepSeekClientStream.chat(
     blockMessage: ChatCompletionRequest.MessageBuilder.() -> Unit
@@ -219,8 +226,8 @@ public fun DeepSeekClientStream.chat(
 /**
  * Streams a fully customizable chat completion request.
  *
- * This approach gives you complete control over all aspects of the streaming
- * request through a dedicated builder pattern.
+ * This approach gives you complete control over all aspects of the streaming request through a
+ * dedicated builder pattern.
  *
  * Example:
  * ```kotlin
@@ -241,8 +248,8 @@ public fun DeepSeekClientStream.chat(
  *
  * @param block A builder block for constructing the complete streaming request
  * @return A [Flow] of [ChatCompletionChunk] objects representing the streaming response
- * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a
- * non-2xx status
+ * @throws DeepSeekException from the returned [Flow]'s collector if the API returns a non-2xx
+ *   status
  */
 public fun DeepSeekClientStream.chatCompletion(
     block: ChatCompletionRequest.StreamBuilder.() -> Unit

@@ -12,10 +12,9 @@ internal const val DEFAULT_RETRY_JITTER_MILLIS: Long = 250L
 /**
  * Exponential backoff with jitter.
  *
- * Delay formula: `min(baseMillis * 2^retry, maxMillis) + Random.nextLong(jitterMillis)`.
- * `retry` is clamped to [1, 30] so `baseMillis shl retry` never overflows `Long`.
- * The [maxMillis] cap also protects against runaway delays when the plugin is configured
- * with a large `maxRetries`.
+ * Delay formula: `min(baseMillis * 2^retry, maxMillis) + Random.nextLong(jitterMillis)`. `retry` is
+ * clamped to [1, 30] so `baseMillis shl retry` never overflows `Long`. The [maxMillis] cap also
+ * protects against runaway delays when the plugin is configured with a large `maxRetries`.
  */
 internal fun computeRetryDelayMillis(
     retry: Int,

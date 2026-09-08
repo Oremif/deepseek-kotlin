@@ -8,33 +8,26 @@ class FIMCompletionRequestBuilderTests {
 
     @Test
     fun builderFailsWhenPromptIsNotCalled() {
-        val ex = shouldThrow<IllegalArgumentException> {
-            FIMCompletionRequest.Builder().build()
-        }
+        val ex = shouldThrow<IllegalArgumentException> { FIMCompletionRequest.Builder().build() }
         ex.message shouldBe "prompt(...) must be called"
     }
 
     @Test
     fun streamBuilderFailsWhenPromptIsNotCalled() {
-        val ex = shouldThrow<IllegalArgumentException> {
-            FIMCompletionRequest.StreamBuilder().build()
-        }
+        val ex =
+            shouldThrow<IllegalArgumentException> { FIMCompletionRequest.StreamBuilder().build() }
         ex.message shouldBe "prompt(...) must be called"
     }
 
     @Test
     fun builderSucceedsWhenPromptIsCalled() {
-        val request = FIMCompletionRequest.Builder().apply {
-            prompt("def fib(n):")
-        }.build()
+        val request = FIMCompletionRequest.Builder().apply { prompt("def fib(n):") }.build()
         request.prompt shouldBe "def fib(n):"
     }
 
     @Test
     fun streamBuilderSucceedsWhenPromptIsCalled() {
-        val request = FIMCompletionRequest.StreamBuilder().apply {
-            prompt("def fib(n):")
-        }.build()
+        val request = FIMCompletionRequest.StreamBuilder().apply { prompt("def fib(n):") }.build()
         request.prompt shouldBe "def fib(n):"
     }
 }

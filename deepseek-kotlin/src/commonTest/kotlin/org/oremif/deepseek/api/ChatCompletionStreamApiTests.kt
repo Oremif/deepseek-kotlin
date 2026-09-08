@@ -16,28 +16,31 @@ import kotlin.test.Test
 
 class ChatCompletionStreamApiTests {
 
-    private val request = ChatCompletionRequest(
-        messages = listOf(UserMessage("Hi")),
-        model = ChatModel.DEEPSEEK_V4_FLASH,
-        stream = true,
-    )
+    private val request =
+        ChatCompletionRequest(
+            messages = listOf(UserMessage("Hi")),
+            model = ChatModel.DEEPSEEK_V4_FLASH,
+            stream = true,
+        )
 
     private fun sseBody(vararg events: String): String =
         events.joinToString(separator = "") { "data: $it\n\n" }
 
     @Test
     fun `chat stream delivers chunks and ignores DONE marker`() = runTest {
-        val chunks = arrayOf(
-            """{"id":"c1","choices":[{"delta":{"role":"assistant","content":""},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-            """{"id":"c1","choices":[{"delta":{"content":"Hello"},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-            """{"id":"c1","choices":[{"delta":{"content":"!"},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-            "[DONE]",
-        )
+        val chunks =
+            arrayOf(
+                """{"id":"c1","choices":[{"delta":{"role":"assistant","content":""},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[{"delta":{"content":"Hello"},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[{"delta":{"content":"!"},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
+                "[DONE]",
+            )
         val engine = sseMockEngine {
             respond(
                 content = sseBody(*chunks),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
             )
         }
         val client = testStreamClient(engine)
@@ -53,26 +56,31 @@ class ChatCompletionStreamApiTests {
 
     @Test
     fun `chat stream with include_usage reports usage on the final content chunk`() = runTest {
-        val chunks = arrayOf(
-            """{"id":"c1","choices":[{"delta":{"content":"Hi"},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk","usage":null}""",
-            """{"id":"c1","choices":[{"delta":{},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk","usage":{"prompt_tokens":3,"completion_tokens":2,"prompt_cache_hit_tokens":0,"prompt_cache_miss_tokens":3,"total_tokens":5,"completion_tokens_details":{"reasoning_tokens":1}}}""",
-            "[DONE]",
-        )
+        val chunks =
+            arrayOf(
+                """{"id":"c1","choices":[{"delta":{"content":"Hi"},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk","usage":null}""",
+                """{"id":"c1","choices":[{"delta":{},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk","usage":{"prompt_tokens":3,"completion_tokens":2,"prompt_cache_hit_tokens":0,"prompt_cache_miss_tokens":3,"total_tokens":5,"completion_tokens_details":{"reasoning_tokens":1}}}""",
+                "[DONE]",
+            )
         val engine = sseMockEngine {
             respond(
                 content = sseBody(*chunks),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
             )
         }
         val client = testStreamClient(engine)
 
-        val received = client.chat(
-            chatCompletionStreamParams {
-                streamOptions = StreamOptions(includeUsage = true)
-            },
-            listOf(UserMessage("Hi")),
-        ).toList()
+        val received =
+            client
+                .chat(
+                    chatCompletionStreamParams {
+                        streamOptions = StreamOptions(includeUsage = true)
+                    },
+                    listOf(UserMessage("Hi")),
+                )
+                .toList()
 
         received shouldHaveSize 2
         received[0].usage.shouldBeNull()
@@ -94,7 +102,7 @@ class ChatCompletionStreamApiTests {
 
         fun chunk(delta: String, finishReason: String = "null", tail: String = "") =
             """{$id, "choices": [{"index": 0, "delta": {$delta}, "finish_reason": $finishReason, "logprobs": null}], """ +
-                    """"created": 1718345013, "model": "deepseek-v4-pro", $fp, "object": "chat.completion.chunk"$tail}"""
+                """"created": 1718345013, "model": "deepseek-v4-pro", $fp, "object": "chat.completion.chunk"$tail}"""
 
         val words = listOf("Hello", "!", " How", " can", " I", " assist", " you", " today", "?")
         val chunks = buildList {
@@ -104,7 +112,8 @@ class ChatCompletionStreamApiTests {
                 chunk(
                     """"content": "", "role": null""",
                     finishReason = "\"stop\"",
-                    tail = """, "usage": {"completion_tokens": 9, "prompt_tokens": 17, "total_tokens": 26}""",
+                    tail =
+                        """, "usage": {"completion_tokens": 9, "prompt_tokens": 17, "total_tokens": 26}""",
                 )
             )
             add("[DONE]")
@@ -114,7 +123,8 @@ class ChatCompletionStreamApiTests {
             respond(
                 content = sseBody(*chunks.toTypedArray()),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
             )
         }
         val client = testStreamClient(engine)
@@ -123,7 +133,7 @@ class ChatCompletionStreamApiTests {
 
         received shouldHaveSize 11
         received.joinToString("") { it.choices.single().delta.content.orEmpty() } shouldBe
-                "Hello! How can I assist you today?"
+            "Hello! How can I assist you today?"
         received.forEach { it.systemFingerprint shouldBe "fp_a49d71b8a1" }
 
         val first = received.first()
@@ -143,16 +153,18 @@ class ChatCompletionStreamApiTests {
 
     @Test
     fun `chat stream still accepts a legacy usage-only chunk with empty choices`() = runTest {
-        val chunks = arrayOf(
-            """{"id":"c1","choices":[{"delta":{"content":"Hi"},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-            """{"id":"c1","choices":[],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk","usage":{"prompt_tokens":3,"completion_tokens":2,"total_tokens":5}}""",
-            "[DONE]",
-        )
+        val chunks =
+            arrayOf(
+                """{"id":"c1","choices":[{"delta":{"content":"Hi"},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk","usage":{"prompt_tokens":3,"completion_tokens":2,"total_tokens":5}}""",
+                "[DONE]",
+            )
         val engine = sseMockEngine {
             respond(
                 content = sseBody(*chunks),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
             )
         }
         val client = testStreamClient(engine)
@@ -171,7 +183,8 @@ class ChatCompletionStreamApiTests {
             respond(
                 content = sseBody("[DONE]"),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
             )
         }
         val client = testStreamClient(engine)
@@ -189,18 +202,25 @@ class ChatCompletionStreamApiTests {
             respond(
                 content = sseBody("[DONE]"),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
             )
         }
         val client = testStreamClient(engine)
 
-        client.chatCompletionStream(
-            ChatCompletionRequest(
-                messages = listOf(UserMessage("Write a haiku"), AssistantMessage("Silent code compiles", prefix = true)),
-                model = ChatModel.DEEPSEEK_V4_FLASH,
-                stream = true,
+        client
+            .chatCompletionStream(
+                ChatCompletionRequest(
+                    messages =
+                        listOf(
+                            UserMessage("Write a haiku"),
+                            AssistantMessage("Silent code compiles", prefix = true),
+                        ),
+                    model = ChatModel.DEEPSEEK_V4_FLASH,
+                    stream = true,
+                )
             )
-        ).toList()
+            .toList()
 
         capturedPath shouldBe "/beta/chat/completions"
     }
@@ -213,7 +233,8 @@ class ChatCompletionStreamApiTests {
             respond(
                 content = sseBody("[DONE]"),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
             )
         }
         val client = testStreamClient(engine)
@@ -225,17 +246,19 @@ class ChatCompletionStreamApiTests {
 
     @Test
     fun `chat stream preserves tool_calls delta fields`() = runTest {
-        val chunks = arrayOf(
-            """{"id":"c1","choices":[{"delta":{"role":"assistant","tool_calls":[{"index":0,"id":"call_1","type":"function","function":{"name":"sum","arguments":""}}]},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-            """{"id":"c1","choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"a\":1,\"b\":2}"}}]},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-            """{"id":"c1","choices":[{"delta":{},"index":0,"finish_reason":"tool_calls"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-            "[DONE]",
-        )
+        val chunks =
+            arrayOf(
+                """{"id":"c1","choices":[{"delta":{"role":"assistant","tool_calls":[{"index":0,"id":"call_1","type":"function","function":{"name":"sum","arguments":""}}]},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"a\":1,\"b\":2}"}}]},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[{"delta":{},"index":0,"finish_reason":"tool_calls"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
+                "[DONE]",
+            )
         val engine = sseMockEngine {
             respond(
                 content = sseBody(*chunks),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Text.EventStream.toString()),
             )
         }
         val client = testStreamClient(engine)

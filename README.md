@@ -518,6 +518,7 @@ Contributions are welcome! Please read the [Oremif contribution guide](https://g
 A few project-specific notes:
 
 - Run the JVM test suite with `./gradlew :deepseek-kotlin:jvmTest`.
+- Code is formatted with [ktfmt](https://github.com/Kotlin/ktfmt) in `kotlinlang` style. Run `./gradlew ktfmtFormat ktfmtFormatScripts` before pushing; CI enforces it with `ktfmtCheck`.
 - Any change to the public API must be accompanied by a regenerated ABI dump: `./gradlew :deepseek-kotlin:apiDump`.
 - See [`AGENTS.md`](AGENTS.md) for an overview of the project structure, build commands, and conventions.
 

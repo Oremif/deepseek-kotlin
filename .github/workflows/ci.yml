@@ -20,6 +20,29 @@ env:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v6
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+        with:
+          validate-wrappers: true
+          add-job-summary: always
+          cache-read-only: ${{ github.ref != 'refs/heads/master' }}
+
+      - name: Check formatting
+        run: ./gradlew ktfmtCheck ktfmtCheckScripts --continue --parallel
+
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30

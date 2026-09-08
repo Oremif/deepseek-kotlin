@@ -111,12 +111,13 @@ class RetryPolicyTests {
         val base = 500L
         val jitter = 250L
         repeat(50) { seed ->
-            val d = computeRetryDelayMillis(
-                retry = 1,
-                baseMillis = base,
-                jitterMillis = jitter,
-                random = Random(seed.toLong()),
-            )
+            val d =
+                computeRetryDelayMillis(
+                    retry = 1,
+                    baseMillis = base,
+                    jitterMillis = jitter,
+                    random = Random(seed.toLong()),
+                )
             d.shouldBeGreaterThanOrEqual(1_000L)
             d.shouldBeLessThan(1_000L + jitter)
         }
@@ -133,12 +134,20 @@ class RetryPolicyTests {
     @Test
     fun `same seed produces same delay`() {
         val seed = 42L
-        val d1 = computeRetryDelayMillis(
-            retry = 2, baseMillis = 500L, jitterMillis = 250L, random = Random(seed),
-        )
-        val d2 = computeRetryDelayMillis(
-            retry = 2, baseMillis = 500L, jitterMillis = 250L, random = Random(seed),
-        )
+        val d1 =
+            computeRetryDelayMillis(
+                retry = 2,
+                baseMillis = 500L,
+                jitterMillis = 250L,
+                random = Random(seed),
+            )
+        val d2 =
+            computeRetryDelayMillis(
+                retry = 2,
+                baseMillis = 500L,
+                jitterMillis = 250L,
+                random = Random(seed),
+            )
         d1 shouldBe d2
     }
 }

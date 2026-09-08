@@ -5,15 +5,15 @@ import kotlinx.serialization.Serializable
 /**
  * One choice slice carried by a streamed [ChatCompletionChunk].
  *
- * Each chunk's choice delivers only the tokens produced since the previous chunk via
- * [delta]. [finishReason] is `null` until the stream terminates on this choice.
+ * Each chunk's choice delivers only the tokens produced since the previous chunk via [delta].
+ * [finishReason] is `null` until the stream terminates on this choice.
  *
  * @property delta Incremental message fragment produced on this step.
- * @property finishReason Reason the model stopped generating tokens for this choice, or
- * `null` if generation is still in progress.
+ * @property finishReason Reason the model stopped generating tokens for this choice, or `null` if
+ *   generation is still in progress.
  * @property index Position of the choice in [ChatCompletionChunk.choices].
- * @property logprobs Log-probability information for the tokens in [delta], if requested
- * via the `logprobs` parameter.
+ * @property logprobs Log-probability information for the tokens in [delta], if requested via the
+ *   `logprobs` parameter.
  */
 @Serializable
 public class ChatChoiceChunk(
@@ -27,9 +27,9 @@ public class ChatChoiceChunk(
         if (other !is ChatChoiceChunk) return false
 
         return delta == other.delta &&
-                finishReason == other.finishReason &&
-                index == other.index &&
-                logprobs == other.logprobs
+            finishReason == other.finishReason &&
+            index == other.index &&
+            logprobs == other.logprobs
     }
 
     override fun hashCode(): Int {

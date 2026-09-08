@@ -10,8 +10,8 @@ import org.oremif.deepseek.utils.validateResponse
 /**
  * Retrieves the current user's available API balance.
  *
- * Returns a snapshot of whether the account has sufficient funds for further API calls
- * and a per-currency breakdown (granted vs. topped-up balance).
+ * Returns a snapshot of whether the account has sufficient funds for further API calls and a
+ * per-currency breakdown (granted vs. topped-up balance).
  *
  * Example:
  * ```kotlin

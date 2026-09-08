@@ -20,7 +20,8 @@ import kotlin.test.Test
 
 class FIMCompletionApiTests {
 
-    private val successBody = """
+    private val successBody =
+        """
         {
             "id": "fim-1",
             "choices": [
@@ -39,7 +40,8 @@ class FIMCompletionApiTests {
                 "total_tokens": 12
             }
         }
-    """.trimIndent()
+        """
+            .trimIndent()
 
     @Test
     fun `fim posts to beta completions endpoint with prompt in body`() = runTest {
@@ -53,7 +55,8 @@ class FIMCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -73,7 +76,8 @@ class FIMCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -96,7 +100,8 @@ class FIMCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -122,7 +127,8 @@ class FIMCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -139,7 +145,8 @@ class FIMCompletionApiTests {
     fun `fim parses the documented response shape with logprobs and cache usage`() = runTest {
         val engine = mockEngine {
             respond(
-                content = """
+                content =
+                    """
                     {
                       "id": "fim-1",
                       "choices": [
@@ -168,9 +175,11 @@ class FIMCompletionApiTests {
                         "completion_tokens_details": {"reasoning_tokens": 2}
                       }
                     }
-                """.trimIndent(),
+                    """
+                        .trimIndent(),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -198,16 +207,17 @@ class FIMCompletionApiTests {
     fun `fim maps 402 to InsufficientBalanceException`() = runTest {
         val engine = mockEngine {
             respond(
-                content = """{"error":{"message":"Insufficient Balance","type":"insufficient_balance_error"}}""",
+                content =
+                    """{"error":{"message":"Insufficient Balance","type":"insufficient_balance_error"}}""",
                 status = HttpStatusCode.PaymentRequired,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
 
-        val ex = shouldThrow<DeepSeekException.InsufficientBalanceException> {
-            client.fim("def foo():")
-        }
+        val ex =
+            shouldThrow<DeepSeekException.InsufficientBalanceException> { client.fim("def foo():") }
         ex.statusCode shouldBe 402
         ex.error?.error?.message shouldBe "Insufficient Balance"
     }

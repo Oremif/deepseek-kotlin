@@ -28,32 +28,25 @@ class ParamsValidationTests {
 
     @Test
     fun `chat params reject topP above 1_0`() {
-        val ex = shouldThrow<IllegalArgumentException> {
-            chatCompletionParams { topP = 1.5 }
-        }
+        val ex = shouldThrow<IllegalArgumentException> { chatCompletionParams { topP = 1.5 } }
         ex.message!! shouldContain "topP"
     }
 
     @Test
     fun `chat params reject negative topP`() {
-        shouldThrow<IllegalArgumentException> {
-            chatCompletionParams { topP = -0.1 }
-        }
+        shouldThrow<IllegalArgumentException> { chatCompletionParams { topP = -0.1 } }
     }
 
     @Test
     fun `chat params reject temperature above 2_0`() {
-        val ex = shouldThrow<IllegalArgumentException> {
-            chatCompletionParams { temperature = 2.5 }
-        }
+        val ex =
+            shouldThrow<IllegalArgumentException> { chatCompletionParams { temperature = 2.5 } }
         ex.message!! shouldContain "temperature"
     }
 
     @Test
     fun `chat params reject maxTokens of 0`() {
-        shouldThrow<IllegalArgumentException> {
-            chatCompletionParams { maxTokens = 0 }
-        }
+        shouldThrow<IllegalArgumentException> { chatCompletionParams { maxTokens = 0 } }
     }
 
     @Test
@@ -68,19 +61,13 @@ class ParamsValidationTests {
 
     @Test
     fun `chat params reject topLogprobs above 20`() {
-        shouldThrow<IllegalArgumentException> {
-            chatCompletionParams { topLogprobs = 21 }
-        }
+        shouldThrow<IllegalArgumentException> { chatCompletionParams { topLogprobs = 21 } }
     }
 
     @Test
     fun `chat stream params validate the same boundaries`() {
-        shouldThrow<IllegalArgumentException> {
-            chatCompletionStreamParams { topP = 1.01 }
-        }
-        shouldThrow<IllegalArgumentException> {
-            chatCompletionStreamParams { maxTokens = 0 }
-        }
+        shouldThrow<IllegalArgumentException> { chatCompletionStreamParams { topP = 1.01 } }
+        shouldThrow<IllegalArgumentException> { chatCompletionStreamParams { maxTokens = 0 } }
     }
 
     @Test
@@ -91,16 +78,12 @@ class ParamsValidationTests {
 
     @Test
     fun `fim params reject logprobs above 20`() {
-        shouldThrow<IllegalArgumentException> {
-            fimCompletionParams { logprobs = 21 }
-        }
+        shouldThrow<IllegalArgumentException> { fimCompletionParams { logprobs = 21 } }
     }
 
     @Test
     fun `fim params reject topP above 1_0`() {
-        val ex = shouldThrow<IllegalArgumentException> {
-            fimCompletionParams { topP = 1.1 }
-        }
+        val ex = shouldThrow<IllegalArgumentException> { fimCompletionParams { topP = 1.1 } }
         ex.message!! shouldContain "topP"
     }
 
@@ -124,15 +107,16 @@ class ParamsValidationTests {
 
     @Test
     fun `fim params default to the only model the endpoint accepts`() {
-        fimCompletionParams { }.model shouldBe ChatModel.DEEPSEEK_V4_PRO
-        fimCompletionStreamParams { }.model shouldBe ChatModel.DEEPSEEK_V4_PRO
+        fimCompletionParams {}.model shouldBe ChatModel.DEEPSEEK_V4_PRO
+        fimCompletionStreamParams {}.model shouldBe ChatModel.DEEPSEEK_V4_PRO
     }
 
     @Test
     fun `fim params reject the vision model`() {
-        val ex = shouldThrow<IllegalArgumentException> {
-            fimCompletionParams { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
-        }
+        val ex =
+            shouldThrow<IllegalArgumentException> {
+                fimCompletionParams { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
+            }
         ex.message!! shouldContain "deepseek-v4-flash-vision-exp"
         shouldThrow<IllegalArgumentException> {
             fimCompletionStreamParams { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
@@ -150,9 +134,10 @@ class ParamsValidationTests {
 
     @Test
     fun `chat params reject a userId longer than 512 characters`() {
-        val ex = shouldThrow<IllegalArgumentException> {
-            chatCompletionParams { userId = "u".repeat(513) }
-        }
+        val ex =
+            shouldThrow<IllegalArgumentException> {
+                chatCompletionParams { userId = "u".repeat(513) }
+            }
         ex.message!! shouldContain "512"
         shouldThrow<IllegalArgumentException> {
             chatCompletionStreamParams { userId = "u".repeat(513) }
@@ -161,21 +146,18 @@ class ParamsValidationTests {
 
     @Test
     fun `chat params reject a userId outside the allowed charset`() {
-        val ex = shouldThrow<IllegalArgumentException> {
-            chatCompletionParams { userId = "user@example.com" }
-        }
+        val ex =
+            shouldThrow<IllegalArgumentException> {
+                chatCompletionParams { userId = "user@example.com" }
+            }
         ex.message!! shouldContain "userId"
-        shouldThrow<IllegalArgumentException> {
-            chatCompletionParams { userId = "" }
-        }
-        shouldThrow<IllegalArgumentException> {
-            chatCompletionStreamParams { userId = "user id" }
-        }
+        shouldThrow<IllegalArgumentException> { chatCompletionParams { userId = "" } }
+        shouldThrow<IllegalArgumentException> { chatCompletionStreamParams { userId = "user id" } }
     }
 
     @Test
     fun `chat params default to the flash model`() {
-        chatCompletionParams { }.model shouldBe ChatModel.DEEPSEEK_V4_FLASH
-        chatCompletionStreamParams { }.model shouldBe ChatModel.DEEPSEEK_V4_FLASH
+        chatCompletionParams {}.model shouldBe ChatModel.DEEPSEEK_V4_FLASH
+        chatCompletionStreamParams {}.model shouldBe ChatModel.DEEPSEEK_V4_FLASH
     }
 }

@@ -5,19 +5,19 @@ import kotlinx.serialization.Serializable
 /**
  * Response payload of a Fill-In-the-Middle completion.
  *
- * Streaming FIM endpoints emit a [kotlinx.coroutines.flow.Flow] of [FIMCompletion] chunks;
- * all chunks from the same response share [id] and [created]. For non-streaming calls the
- * single returned instance contains the full completion.
+ * Streaming FIM endpoints emit a [kotlinx.coroutines.flow.Flow] of [FIMCompletion] chunks; all
+ * chunks from the same response share [id] and [created]. For non-streaming calls the single
+ * returned instance contains the full completion.
  *
- * @property id Unique identifier for the completion. Identical across all chunks of a
- * streamed response.
+ * @property id Unique identifier for the completion. Identical across all chunks of a streamed
+ *   response.
  * @property choices Completion alternatives generated for the input prompt.
  * @property created Unix timestamp (seconds) of when the completion was created.
  * @property model Model that produced the completion.
  * @property systemFingerprint Backend configuration fingerprint, if the API returned one.
  * @property object Object type discriminator; always `text_completion`.
- * @property usage Token usage statistics. For streaming requests they arrive on the last
- * content chunk — the one with a non-null `finish_reason`. See [StreamOptions.includeUsage].
+ * @property usage Token usage statistics. For streaming requests they arrive on the last content
+ *   chunk — the one with a non-null `finish_reason`. See [StreamOptions.includeUsage].
  */
 @Serializable
 public class FIMCompletion(
@@ -34,12 +34,12 @@ public class FIMCompletion(
         if (other !is FIMCompletion) return false
 
         return id == other.id &&
-                choices == other.choices &&
-                created == other.created &&
-                model == other.model &&
-                systemFingerprint == other.systemFingerprint &&
-                `object` == other.`object` &&
-                usage == other.usage
+            choices == other.choices &&
+            created == other.created &&
+            model == other.model &&
+            systemFingerprint == other.systemFingerprint &&
+            `object` == other.`object` &&
+            usage == other.usage
     }
 
     override fun hashCode(): Int {

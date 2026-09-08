@@ -3,11 +3,12 @@ package org.oremif.deepseek.models
 import kotlinx.serialization.Serializable
 
 /**
- * Snapshot of the current user's account balance, as returned by [org.oremif.deepseek.api.userBalance].
+ * Snapshot of the current user's account balance, as returned by
+ * [org.oremif.deepseek.api.userBalance].
  *
  * @property isAvailable `true` when the account has sufficient balance for further API calls.
- * @property balanceInfos Per-currency balance breakdown; typically contains one entry per
- * currency the account holds.
+ * @property balanceInfos Per-currency balance breakdown; typically contains one entry per currency
+ *   the account holds.
  */
 @Serializable
 public class UserBalance(
