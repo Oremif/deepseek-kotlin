@@ -1,9 +1,9 @@
 package org.oremif.deepseek.client
 
 import io.kotest.matchers.booleans.shouldBeTrue
+import kotlin.test.Test
 import kotlinx.coroutines.job
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
 
 class DeepSeekClientLifecycleTests {
 

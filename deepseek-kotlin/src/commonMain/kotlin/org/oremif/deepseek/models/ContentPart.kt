@@ -10,13 +10,13 @@ import kotlinx.serialization.json.JsonClassDiscriminator
 /**
  * One element of a [UserMessage]'s multimodal content array.
  *
- * A user message carries either plain text or a list of these parts. The concrete subtypes
- * — [TextPart], [ImageUrlPart], [FilePart] — are distinguished on the wire by the `type`
+ * A user message carries either plain text or a list of these parts. The concrete subtypes —
+ * [TextPart], [ImageUrlPart], [FilePart] — are distinguished on the wire by the `type`
  * discriminator.
  *
- * Images are only interpreted by [ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP]; other models
- * replace them with a placeholder text. The API rejects image parts in system and assistant
- * messages, which is why parts are only available on [UserMessage].
+ * Images are only interpreted by [ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP]; other models replace
+ * them with a placeholder text. The API rejects image parts in system and assistant messages, which
+ * is why parts are only available on [UserMessage].
  *
  * Prefer the `user { ... }` DSL over instantiating parts directly:
  * ```kotlin
@@ -30,9 +30,7 @@ import kotlinx.serialization.json.JsonClassDiscriminator
  *
  * @see <a href="https://api-docs.deepseek.com/guides/vision">DeepSeek vision guide</a>
  */
-@Serializable
-@JsonClassDiscriminator("type")
-public sealed interface ContentPart
+@Serializable @JsonClassDiscriminator("type") public sealed interface ContentPart
 
 /**
  * Text fragment of a multimodal user message.
@@ -84,10 +82,10 @@ public class ImageUrlPart(public val imageUrl: ImageUrl) : ContentPart {
 /**
  * Location of an image referenced by an [ImageUrlPart].
  *
- * @property url Either an `http(s)` link the API fetches, or a base64 data URL that inlines
- * the image (`data:image/jpeg;base64,...`). JPEG, PNG, GIF and WebP are supported.
- * @property detail How much of the image's resolution reaches the model; defaults to the
- * API's own choice when left unset.
+ * @property url Either an `http(s)` link the API fetches, or a base64 data URL that inlines the
+ *   image (`data:image/jpeg;base64,...`). JPEG, PNG, GIF and WebP are supported.
+ * @property detail How much of the image's resolution reaches the model; defaults to the API's own
+ *   choice when left unset.
  */
 @Serializable
 public class ImageUrl(
@@ -113,26 +111,20 @@ public class ImageUrl(
     override fun toString(): String = "ImageUrl(url='$url', detail=$detail)"
 }
 
-/**
- * Values accepted by [ImageUrl.detail].
- */
+/** Values accepted by [ImageUrl.detail]. */
 @Serializable
 public enum class ImageDetail {
     /** Downscales the image to 512×512 before the model sees it: faster and cheaper. */
-    @SerialName("low")
-    LOW,
+    @SerialName("low") LOW,
 
     /** Keeps the image at its original resolution. */
-    @SerialName("high")
-    HIGH,
+    @SerialName("high") HIGH,
 
     /** Keeps the image at its original resolution. */
-    @SerialName("original")
-    ORIGINAL,
+    @SerialName("original") ORIGINAL,
 
     /** Lets the API pick the detail level. */
-    @SerialName("auto")
-    AUTO,
+    @SerialName("auto") AUTO,
 }
 
 /**
@@ -141,10 +133,10 @@ public enum class ImageDetail {
  *
  * Exactly one of [fileId] and [fileData] must be set.
  *
- * @property fileId Identifier of a file uploaded to the Files API, of the form
- * `file-api-...`. Mutually exclusive with [fileData].
- * @property fileData Base64 data URL carrying the image inline
- * (`data:image/jpeg;base64,...`). Mutually exclusive with [fileId].
+ * @property fileId Identifier of a file uploaded to the Files API, of the form `file-api-...`.
+ *   Mutually exclusive with [fileData].
+ * @property fileData Base64 data URL carrying the image inline (`data:image/jpeg;base64,...`).
+ *   Mutually exclusive with [fileId].
  * @property filename Optional name for the inlined image; only valid alongside [fileData].
  */
 @Serializable

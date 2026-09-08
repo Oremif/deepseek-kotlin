@@ -26,14 +26,15 @@ internal class SseMockEngine(config: MockEngineConfig) : MockEngine(config) {
         val body = response.body
         if (body !is ByteReadChannel) return response
         val adapter = data.attributes.getOrNull(ResponseAdapterAttributeKey) ?: return response
-        val adapted = adapter.adapt(
-            data,
-            response.statusCode,
-            response.headers,
-            body,
-            data.body,
-            response.callContext,
-        ) ?: return response
+        val adapted =
+            adapter.adapt(
+                data,
+                response.statusCode,
+                response.headers,
+                body,
+                data.body,
+                response.callContext,
+            ) ?: return response
         return HttpResponseData(
             response.statusCode,
             response.requestTime,
@@ -61,14 +62,15 @@ internal fun testClient(
     engine: HttpClientEngine,
     token: String = "test-token",
 ): DeepSeekClient {
-    val http = HttpClient(engine) {
-        install(ContentNegotiation) { json(TestJson) }
-        defaultRequest {
-            url("https://api.deepseek.com")
-            contentType(ContentType.Application.Json)
-            header(HttpHeaders.Authorization, "Bearer $token")
+    val http =
+        HttpClient(engine) {
+            install(ContentNegotiation) { json(TestJson) }
+            defaultRequest {
+                url("https://api.deepseek.com")
+                contentType(ContentType.Application.Json)
+                header(HttpHeaders.Authorization, "Bearer $token")
+            }
         }
-    }
     return DeepSeekClient {
         jsonConfig(TestJson)
         httpClient(http)
@@ -79,15 +81,16 @@ internal fun testStreamClient(
     engine: HttpClientEngine,
     token: String = "test-token",
 ): DeepSeekClientStream {
-    val http = HttpClient(engine) {
-        install(ContentNegotiation) { json(TestJson) }
-        install(SSE)
-        defaultRequest {
-            url("https://api.deepseek.com")
-            contentType(ContentType.Application.Json)
-            header(HttpHeaders.Authorization, "Bearer $token")
+    val http =
+        HttpClient(engine) {
+            install(ContentNegotiation) { json(TestJson) }
+            install(SSE)
+            defaultRequest {
+                url("https://api.deepseek.com")
+                contentType(ContentType.Application.Json)
+                header(HttpHeaders.Authorization, "Bearer $token")
+            }
         }
-    }
     return DeepSeekClientStream {
         jsonConfig(TestJson)
         httpClient(http)

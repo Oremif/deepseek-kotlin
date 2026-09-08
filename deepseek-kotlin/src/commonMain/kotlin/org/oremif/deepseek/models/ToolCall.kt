@@ -46,20 +46,19 @@ public class Tool(
         return result
     }
 
-    override fun toString(): String =
-        "Tool(type=$type, function=$function)"
+    override fun toString(): String = "Tool(type=$type, function=$function)"
 }
 
 /**
  * A tool invocation emitted by the model inside a [ChatCompletionMessage].
  *
- * Echo [id] back in a follow-up [ToolMessage] so the model can correlate the tool result
- * with its original call.
+ * Echo [id] back in a follow-up [ToolMessage] so the model can correlate the tool result with its
+ * original call.
  *
  * @property id Identifier that must be echoed back in the matching [ToolMessage].
  * @property type Tool type discriminator; currently always [ToolCallType.FUNCTION].
- * @property function Function name the model asked to call, together with the JSON
- * arguments it produced.
+ * @property function Function name the model asked to call, together with the JSON arguments it
+ *   produced.
  */
 @Serializable
 public class ToolCall(
@@ -80,6 +79,5 @@ public class ToolCall(
         return result
     }
 
-    override fun toString(): String =
-        "ToolCall(id='$id', type=$type, function=$function)"
+    override fun toString(): String = "ToolCall(id='$id', type=$type, function=$function)"
 }

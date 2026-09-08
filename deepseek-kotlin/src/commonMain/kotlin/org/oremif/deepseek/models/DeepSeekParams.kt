@@ -8,26 +8,25 @@ internal const val DEPRECATED_PENALTY: String =
  * Shared sampling parameters for the DeepSeek chat and FIM endpoints.
  *
  * This class carries the fields common to both endpoints and acts as the base of
- * [ChatCompletionParams] and [FIMCompletionParams]. It also exposes shortcut factory
- * methods ([chat], [chatStream], [fim], [fimStream]) so any existing param instance can
- * be used as an entry point to produce a differently-typed one.
+ * [ChatCompletionParams] and [FIMCompletionParams]. It also exposes shortcut factory methods
+ * ([chat], [chatStream], [fim], [fimStream]) so any existing param instance can be used as an entry
+ * point to produce a differently-typed one.
  *
  * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API.
- * @property maxTokens Maximum number of tokens to generate in the response. At least `1`,
- * and otherwise bounded by the model's context length.
+ * @property maxTokens Maximum number of tokens to generate in the response. At least `1`, and
+ *   otherwise bounded by the model's context length.
  * @property presencePenalty Sent as `presence_penalty`, ignored by the API.
  * @property stop Custom stop sequences that cause the model to stop generating further tokens.
- * @property temperature Controls randomness in output generation (higher = more random).
- * Expected range: `0.0..2.0`.
- * @property topP Controls diversity via nucleus sampling (consider only tokens with top_p probability mass).
- * Expected range: `0.0..1.0`.
+ * @property temperature Controls randomness in output generation (higher = more random). Expected
+ *   range: `0.0..2.0`.
+ * @property topP Controls diversity via nucleus sampling (consider only tokens with top_p
+ *   probability mass). Expected range: `0.0..1.0`.
  */
-public open class DeepSeekParams internal constructor(
-    @Deprecated(DEPRECATED_PENALTY)
-    public val frequencyPenalty: Double? = null,
+public open class DeepSeekParams
+internal constructor(
+    @Deprecated(DEPRECATED_PENALTY) public val frequencyPenalty: Double? = null,
     public val maxTokens: Int? = null,
-    @Deprecated(DEPRECATED_PENALTY)
-    public val presencePenalty: Double? = null,
+    @Deprecated(DEPRECATED_PENALTY) public val presencePenalty: Double? = null,
     public val stop: StopReason? = null,
     public val temperature: Double? = null,
     public val topP: Double? = null,
@@ -65,8 +64,9 @@ public open class DeepSeekParams internal constructor(
      * @param block Configuration block for building streaming chat parameters
      * @return Configured [ChatCompletionParams] with `stream = true`
      */
-    public fun chatStream(block: ChatCompletionParams.StreamBuilder.() -> Unit): ChatCompletionParams =
-        chatCompletionStreamParams(block)
+    public fun chatStream(
+        block: ChatCompletionParams.StreamBuilder.() -> Unit
+    ): ChatCompletionParams = chatCompletionStreamParams(block)
 
     /**
      * Shortcut to [fimCompletionParams], available on any existing [DeepSeekParams].
@@ -82,7 +82,8 @@ public open class DeepSeekParams internal constructor(
      * @param block Configuration block for building FIM parameters
      * @return Configured [FIMCompletionParams] for use with FIM endpoints
      */
-    public fun fim(block: FIMCompletionParams.Builder.() -> Unit): FIMCompletionParams = fimCompletionParams(block)
+    public fun fim(block: FIMCompletionParams.Builder.() -> Unit): FIMCompletionParams =
+        fimCompletionParams(block)
 
     /**
      * Shortcut to [fimCompletionStreamParams], available on any existing [DeepSeekParams].

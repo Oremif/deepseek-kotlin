@@ -7,6 +7,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldNotBeInstanceOf
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
+import kotlin.test.Test
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.oremif.deepseek.errors.DeepSeekException
@@ -16,35 +17,39 @@ import org.oremif.deepseek.models.FIMCompletionRequest
 import org.oremif.deepseek.models.UserMessage
 import org.oremif.deepseek.testing.sseMockEngine
 import org.oremif.deepseek.testing.testStreamClient
-import kotlin.test.Test
 
 class StreamErrorTests {
 
-    private val chatRequest = ChatCompletionRequest(
-        messages = listOf(UserMessage("Hi")),
-        model = ChatModel.DEEPSEEK_V4_FLASH,
-        stream = true
-    )
+    private val chatRequest =
+        ChatCompletionRequest(
+            messages = listOf(UserMessage("Hi")),
+            model = ChatModel.DEEPSEEK_V4_FLASH,
+            stream = true,
+        )
 
-    private val fimRequest = FIMCompletionRequest(
-        model = ChatModel.DEEPSEEK_V4_FLASH,
-        prompt = "def foo():",
-        stream = true
-    )
+    private val fimRequest =
+        FIMCompletionRequest(
+            model = ChatModel.DEEPSEEK_V4_FLASH,
+            prompt = "def foo():",
+            stream = true,
+        )
 
     @Test
     fun `chat stream 400 with JSON body becomes BadRequestException with parsed error`() = runTest {
         val engine = sseMockEngine {
             respond(
-                content = """{"error":{"message":"Invalid model","type":"invalid_request_error","code":"model_not_found"}}""",
+                content =
+                    """{"error":{"message":"Invalid model","type":"invalid_request_error","code":"model_not_found"}}""",
                 status = HttpStatusCode.BadRequest,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testStreamClient(engine)
-        val ex = shouldThrow<DeepSeekException.BadRequestException> {
-            client.chatCompletionStream(chatRequest).toList()
-        }
+        val ex =
+            shouldThrow<DeepSeekException.BadRequestException> {
+                client.chatCompletionStream(chatRequest).toList()
+            }
         ex.statusCode shouldBe 400
         val error = ex.error.shouldNotBeNull()
         error.error.message shouldBe "Invalid model"
@@ -56,15 +61,18 @@ class StreamErrorTests {
     fun `chat stream 401 with JSON body becomes UnauthorizedException`() = runTest {
         val engine = sseMockEngine {
             respond(
-                content = """{"error":{"message":"Invalid API key","type":"authentication_error"}}""",
+                content =
+                    """{"error":{"message":"Invalid API key","type":"authentication_error"}}""",
                 status = HttpStatusCode.Unauthorized,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testStreamClient(engine)
-        val ex = shouldThrow<DeepSeekException.UnauthorizedException> {
-            client.chatCompletionStream(chatRequest).toList()
-        }
+        val ex =
+            shouldThrow<DeepSeekException.UnauthorizedException> {
+                client.chatCompletionStream(chatRequest).toList()
+            }
         ex.statusCode shouldBe 401
         ex.error?.error?.message shouldBe "Invalid API key"
     }
@@ -75,72 +83,74 @@ class StreamErrorTests {
             respond(
                 content = """{"error":{"message":"Server overloaded"}}""",
                 status = HttpStatusCode.ServiceUnavailable,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testStreamClient(engine)
-        val ex = shouldThrow<DeepSeekException.OverloadServerException> {
-            client.chatCompletionStream(chatRequest).toList()
-        }
+        val ex =
+            shouldThrow<DeepSeekException.OverloadServerException> {
+                client.chatCompletionStream(chatRequest).toList()
+            }
         ex.statusCode shouldBe 503
         ex.error?.error?.message shouldBe "Server overloaded"
     }
 
     @Test
-    fun `chat stream 500 with non-JSON body still throws typed exception with null error`() = runTest {
-        val engine = sseMockEngine {
-            respond(
-                content = "Internal server error",
-                status = HttpStatusCode.InternalServerError,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.Plain.toString())
-            )
+    fun `chat stream 500 with non-JSON body still throws typed exception with null error`() =
+        runTest {
+            val engine = sseMockEngine {
+                respond(
+                    content = "Internal server error",
+                    status = HttpStatusCode.InternalServerError,
+                    headers = headersOf(HttpHeaders.ContentType, ContentType.Text.Plain.toString()),
+                )
+            }
+            val client = testStreamClient(engine)
+            val ex =
+                shouldThrow<DeepSeekException.InternalServerException> {
+                    client.chatCompletionStream(chatRequest).toList()
+                }
+            ex.statusCode shouldBe 500
+            ex.error.shouldBeNull()
         }
-        val client = testStreamClient(engine)
-        val ex = shouldThrow<DeepSeekException.InternalServerException> {
-            client.chatCompletionStream(chatRequest).toList()
-        }
-        ex.statusCode shouldBe 500
-        ex.error.shouldBeNull()
-    }
 
     @Test
-    fun `chat stream network error before response propagates instead of being swallowed`() = runTest {
-        val engine = sseMockEngine {
-            throw RuntimeException("Network unreachable")
+    fun `chat stream network error before response propagates instead of being swallowed`() =
+        runTest {
+            val engine = sseMockEngine { throw RuntimeException("Network unreachable") }
+            val client = testStreamClient(engine)
+            val thrown =
+                shouldThrow<Throwable> { client.chatCompletionStream(chatRequest).toList() }
+            thrown.shouldNotBeInstanceOf<DeepSeekException>()
         }
-        val client = testStreamClient(engine)
-        val thrown = shouldThrow<Throwable> {
-            client.chatCompletionStream(chatRequest).toList()
-        }
-        thrown.shouldNotBeInstanceOf<DeepSeekException>()
-    }
 
     @Test
     fun `fim stream 400 with JSON body becomes BadRequestException with parsed error`() = runTest {
         val engine = sseMockEngine {
             respond(
-                content = """{"error":{"message":"Bad FIM prompt","type":"invalid_request_error"}}""",
+                content =
+                    """{"error":{"message":"Bad FIM prompt","type":"invalid_request_error"}}""",
                 status = HttpStatusCode.BadRequest,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testStreamClient(engine)
-        val ex = shouldThrow<DeepSeekException.BadRequestException> {
-            client.fimCompletionStream(fimRequest).toList()
-        }
+        val ex =
+            shouldThrow<DeepSeekException.BadRequestException> {
+                client.fimCompletionStream(fimRequest).toList()
+            }
         ex.statusCode shouldBe 400
         ex.error?.error?.message shouldBe "Bad FIM prompt"
     }
 
     @Test
-    fun `fim stream network error before response propagates instead of being swallowed`() = runTest {
-        val engine = sseMockEngine {
-            throw RuntimeException("Network unreachable")
+    fun `fim stream network error before response propagates instead of being swallowed`() =
+        runTest {
+            val engine = sseMockEngine { throw RuntimeException("Network unreachable") }
+            val client = testStreamClient(engine)
+            val thrown = shouldThrow<Throwable> { client.fimCompletionStream(fimRequest).toList() }
+            thrown.shouldNotBeInstanceOf<DeepSeekException>()
         }
-        val client = testStreamClient(engine)
-        val thrown = shouldThrow<Throwable> {
-            client.fimCompletionStream(fimRequest).toList()
-        }
-        thrown.shouldNotBeInstanceOf<DeepSeekException>()
-    }
 }

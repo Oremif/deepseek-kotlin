@@ -61,6 +61,17 @@ Supported targets: JVM, Android, Apple (`iosX64`, `iosArm64`, `iosSimulatorArm64
 
 Tests use `kotlin.test` + Kotest assertions (`io.kotest.matchers.*`).
 
+### Formatting (ktfmt)
+
+```bash
+./gradlew ktfmtFormat ktfmtFormatScripts   # reformat sources + build scripts
+./gradlew ktfmtCheck ktfmtCheckScripts     # verify (what the `lint` CI job runs)
+./gradlew -p example ktfmtFormat ktfmtFormatScripts   # standalone example project
+```
+
+Run the format tasks after editing Kotlin code; CI fails otherwise. ktfmt is non-configurable by design, so
+style debates are settled by the tool.
+
 ### Binary compatibility (ABI) validation
 
 The `binary-compatibility-validator` plugin locks the public API for JVM and klib targets. Intentional API changes must be accompanied by regenerated dumps under `deepseek-kotlin/api/`.
@@ -90,6 +101,7 @@ Published to GitHub Pages by `.github/workflows/docs.yml` on each release (and o
 - Kotlin **2.3.20**, AGP **9.1.0**, Dokka **2.2.0**
 - Ktor **3.4.2**, Kotlinx Serialization **1.11.0**, Coroutines **1.10.2**
 - Kotest **6.1.11**, binary-compatibility-validator **0.18.1**, vanniktech maven-publish **0.36.0**
+- ktfmt-gradle **0.27.0** (bundles ktfmt **0.64**)
 
 ## Configuration Notes
 
@@ -108,6 +120,7 @@ Published to GitHub Pages by `.github/workflows/docs.yml` on each release (and o
 
 ## CI (`.github/workflows/ci.yml`)
 
+- `lint` job: Ubuntu, JDK 21, runs `./gradlew ktfmtCheck ktfmtCheckScripts --continue --parallel`.
 - `build` job: Ubuntu, JDK 21, runs `./gradlew jvmTest --continue --parallel`, uploads JUnit XML, renders a test report.
 - `api-check` job: macOS, JDK 21, runs `./gradlew :deepseek-kotlin:apiCheck --parallel` (macOS needed so klib targets resolve).
 - Both jobs trigger on PRs to `master` and pushes to `master`. Gradle cache is read-only on non-master refs.

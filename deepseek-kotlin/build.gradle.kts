@@ -1,9 +1,9 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
+import java.time.Year
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.time.Year
 
 plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -12,34 +12,27 @@ plugins {
     alias(libs.plugins.dokka)
     alias(libs.plugins.maven.publish)
     alias(libs.plugins.binary.compatibility.validator)
+    alias(libs.plugins.ktfmt)
 }
 
 group = "org.oremif"
+
 version = "0.4.0"
 
-apiValidation {
-    @OptIn(kotlinx.validation.ExperimentalBCVApi::class)
-    klib {
-        enabled = true
-    }
-}
+ktfmt { kotlinLangStyle() }
+
+apiValidation { @OptIn(kotlinx.validation.ExperimentalBCVApi::class) klib { enabled = true } }
 
 kotlin {
     explicitApi()
 
-    jvm {
-        compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
-        }
-    }
+    jvm { compilerOptions { jvmTarget = JvmTarget.JVM_11 } }
 
     android {
         namespace = "org.oremif.deepseek"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
+        compilerOptions { jvmTarget.set(JvmTarget.JVM_11) }
     }
 
     iosX64()
@@ -52,20 +45,8 @@ kotlin {
     mingwX64()
 
     wasmJs {
-        nodejs {
-            testTask {
-                useMocha {
-                    timeout = "30s"
-                }
-            }
-        }
-        browser {
-            testTask {
-                useMocha {
-                    timeout = "30s"
-                }
-            }
-        }
+        nodejs { testTask { useMocha { timeout = "30s" } } }
+        browser { testTask { useMocha { timeout = "30s" } } }
     }
 
     sourceSets {
@@ -89,47 +70,21 @@ kotlin {
             }
         }
 
-        jvmMain {
-            dependencies {
-                api(libs.ktor.client.okhttp)
-            }
-        }
+        jvmMain { dependencies { api(libs.ktor.client.okhttp) } }
 
-        jvmTest {
-            dependencies {
-                implementation(libs.slf4j.simple)
-            }
-        }
+        jvmTest { dependencies { implementation(libs.slf4j.simple) } }
 
-        androidMain {
-            dependencies {
-                api(libs.ktor.client.okhttp)
-            }
-        }
+        androidMain { dependencies { api(libs.ktor.client.okhttp) } }
 
-        appleMain {
-            dependencies {
-                api(libs.ktor.client.darwin)
-            }
-        }
+        appleMain { dependencies { api(libs.ktor.client.darwin) } }
 
-        linuxMain.dependencies {
-            api(libs.ktor.client.cio)
-        }
+        linuxMain.dependencies { api(libs.ktor.client.cio) }
 
-        macosMain.dependencies {
-            api(libs.ktor.client.cio)
-        }
+        macosMain.dependencies { api(libs.ktor.client.cio) }
 
-        mingwMain.dependencies {
-            api(libs.ktor.client.cio)
-        }
+        mingwMain.dependencies { api(libs.ktor.client.cio) }
 
-        wasmJsMain {
-            dependencies {
-                api(libs.ktor.client.js)
-            }
-        }
+        wasmJsMain { dependencies { api(libs.ktor.client.js) } }
     }
 }
 

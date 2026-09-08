@@ -59,10 +59,11 @@ class DeepSeekHeadersTests {
 
     @Test
     fun `toDeepSeekHeaders maps Ktor headers preserving case of first occurrence`() {
-        val ktorHeaders = headersOf(
-            "Content-Type" to listOf("application/json"),
-            "X-Request-Id" to listOf("abc-123"),
-        )
+        val ktorHeaders =
+            headersOf(
+                "Content-Type" to listOf("application/json"),
+                "X-Request-Id" to listOf("abc-123"),
+            )
         val mapped = ktorHeaders.toDeepSeekHeaders()
         mapped["content-type"] shouldBe "application/json"
         mapped["x-request-id"] shouldBe "abc-123"
@@ -70,10 +71,13 @@ class DeepSeekHeadersTests {
 
     @Test
     fun `toDeepSeekHeaders preserves multi-valued headers`() {
-        val ktorHeaders = HeadersBuilder().apply {
-            append("Set-Cookie", "a=1")
-            append("Set-Cookie", "b=2")
-        }.build()
+        val ktorHeaders =
+            HeadersBuilder()
+                .apply {
+                    append("Set-Cookie", "a=1")
+                    append("Set-Cookie", "b=2")
+                }
+                .build()
         val mapped = ktorHeaders.toDeepSeekHeaders()
         mapped.getAll("Set-Cookie") shouldBe listOf("a=1", "b=2")
     }

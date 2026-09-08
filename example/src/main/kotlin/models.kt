@@ -13,7 +13,7 @@ fun main(): Unit = runBlocking {
 
     // Fetch and iterate through the list of available models
     client.models().data.forEach { model ->
-        println("Model: ${model.id}")      // Display model identifier
+        println("Model: ${model.id}") // Display model identifier
         println("Owner: ${model.ownedBy}") // Display model owner
     }
 

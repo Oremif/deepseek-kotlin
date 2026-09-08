@@ -5,15 +5,13 @@ import kotlinx.serialization.Serializable
 /**
  * Breakdown of how the `completion_tokens` count in [Usage] was spent.
  *
- * Populated when the model runs in thinking mode, which produces separate reasoning output
- * in addition to the visible assistant message.
+ * Populated when the model runs in thinking mode, which produces separate reasoning output in
+ * addition to the visible assistant message.
  *
  * @property reasoningTokens Number of tokens the model produced as reasoning content.
  */
 @Serializable
-public class CompletionTokenDetails(
-    public val reasoningTokens: Int,
-) {
+public class CompletionTokenDetails(public val reasoningTokens: Int) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is CompletionTokenDetails) return false
@@ -24,6 +22,5 @@ public class CompletionTokenDetails(
         return reasoningTokens.hashCode()
     }
 
-    override fun toString(): String =
-        "CompletionTokenDetails(reasoningTokens=$reasoningTokens)"
+    override fun toString(): String = "CompletionTokenDetails(reasoningTokens=$reasoningTokens)"
 }

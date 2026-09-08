@@ -24,9 +24,9 @@ public class BalanceInfo(
         if (other !is BalanceInfo) return false
 
         return currency == other.currency &&
-                totalBalance == other.totalBalance &&
-                grantedBalance == other.grantedBalance &&
-                toppedUpBalance == other.toppedUpBalance
+            totalBalance == other.totalBalance &&
+            grantedBalance == other.grantedBalance &&
+            toppedUpBalance == other.toppedUpBalance
     }
 
     override fun hashCode(): Int {

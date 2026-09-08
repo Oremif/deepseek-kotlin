@@ -7,11 +7,11 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldEndWith
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
+import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import org.oremif.deepseek.models.CurrencyType
 import org.oremif.deepseek.testing.mockEngine
 import org.oremif.deepseek.testing.testClient
-import kotlin.test.Test
 
 class EndpointApiTests {
 
@@ -23,7 +23,8 @@ class EndpointApiTests {
             capturedMethod = request.method
             capturedPath = request.url.encodedPath
             respond(
-                content = """
+                content =
+                    """
                     {
                         "is_available": true,
                         "balance_infos": [
@@ -41,9 +42,11 @@ class EndpointApiTests {
                             }
                         ]
                     }
-                """.trimIndent(),
+                    """
+                        .trimIndent(),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -72,7 +75,8 @@ class EndpointApiTests {
             capturedMethod = request.method
             capturedPath = request.url.encodedPath
             respond(
-                content = """
+                content =
+                    """
                     {
                         "object": "list",
                         "data": [
@@ -80,9 +84,11 @@ class EndpointApiTests {
                             {"id": "deepseek-v4-pro", "object": "model", "owned_by": "deepseek"}
                         ]
                     }
-                """.trimIndent(),
+                    """
+                        .trimIndent(),
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)

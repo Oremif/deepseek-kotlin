@@ -29,6 +29,5 @@ public class FileDeleted(
         return result
     }
 
-    override fun toString(): String =
-        "FileDeleted(id='$id', object='$`object`', deleted=$deleted)"
+    override fun toString(): String = "FileDeleted(id='$id', object='$`object`', deleted=$deleted)"
 }

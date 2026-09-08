@@ -14,8 +14,8 @@ import org.oremif.deepseek.utils.validateResponse
 /**
  * Sends a Fill-In-the-Middle (FIM) completion request to the DeepSeek API.
  *
- * This function handles the low-level API communication for FIM completions,
- * which allow the model to complete text given a prompt (and optionally a suffix).
+ * This function handles the low-level API communication for FIM completions, which allow the model
+ * to complete text given a prompt (and optionally a suffix).
  *
  * Example:
  * ```kotlin
@@ -30,12 +30,11 @@ import org.oremif.deepseek.utils.validateResponse
  * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClientBase.fimCompletion(request: FIMCompletionRequest): FIMCompletion {
-    val response = client.post("beta/completions") {
-        setBody(request)
-        timeout {
-            requestTimeoutMillis = config.fimCompletionTimeout
+    val response =
+        client.post("beta/completions") {
+            setBody(request)
+            timeout { requestTimeoutMillis = config.fimCompletionTimeout }
         }
-    }
     validateResponse(response)
     return response.body()
 }
@@ -43,8 +42,8 @@ public suspend fun DeepSeekClientBase.fimCompletion(request: FIMCompletionReques
 /**
  * Generates a completion using the Fill-In-the-Middle capability with custom parameters.
  *
- * FIM allows the model to complete text given a prompt and optional parameters like
- * suffix text, temperature, and other generation controls.
+ * FIM allows the model to complete text given a prompt and optional parameters like suffix text,
+ * temperature, and other generation controls.
  *
  * Example:
  * ```kotlin
@@ -64,15 +63,15 @@ public suspend fun DeepSeekClientBase.fimCompletion(request: FIMCompletionReques
  * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.fim(params: FIMCompletionParams, prompt: String): FIMCompletion {
-    val request = (if (params.stream == true) params.copy(stream = false) else params).createRequest(prompt)
+    val request =
+        (if (params.stream == true) params.copy(stream = false) else params).createRequest(prompt)
     return fimCompletion(request)
 }
 
 /**
  * Generates a completion using the Fill-In-the-Middle capability with default parameters.
  *
- * This is the simplest way to use FIM completions when you only need to specify
- * the starting text.
+ * This is the simplest way to use FIM completions when you only need to specify the starting text.
  *
  * Example:
  * ```kotlin
@@ -90,8 +89,8 @@ public suspend fun DeepSeekClient.fim(prompt: String): FIMCompletion =
 /**
  * Creates a fully customizable FIM completion request using a builder pattern.
  *
- * This approach gives you complete control over all aspects of the FIM request,
- * including prompt, suffix, and generation parameters.
+ * This approach gives you complete control over all aspects of the FIM request, including prompt,
+ * suffix, and generation parameters.
  *
  * Example:
  * ```kotlin
@@ -110,7 +109,9 @@ public suspend fun DeepSeekClient.fim(prompt: String): FIMCompletion =
  * @return A [FIMCompletion] containing the model's response
  * @throws DeepSeekException if the API returns a non-2xx status
  */
-public suspend fun DeepSeekClient.fimCompletion(block: FIMCompletionRequest.Builder.() -> Unit): FIMCompletion {
+public suspend fun DeepSeekClient.fimCompletion(
+    block: FIMCompletionRequest.Builder.() -> Unit
+): FIMCompletion {
     val request = FIMCompletionRequest.Builder().apply(block).build()
     return fimCompletion(request)
 }

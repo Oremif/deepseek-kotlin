@@ -5,11 +5,11 @@ import io.ktor.http.*
 /**
  * Immutable, Ktor-free snapshot of HTTP response headers attached to a [DeepSeekException].
  *
- * Provided so that error-handling code does not need to depend on `io.ktor.http.Headers`
- * and remains stable across Ktor major versions.
+ * Provided so that error-handling code does not need to depend on `io.ktor.http.Headers` and
+ * remains stable across Ktor major versions.
  *
- * Lookups are case-insensitive, matching RFC 7230 semantics. The order of [names] reflects
- * the insertion order of the backing map.
+ * Lookups are case-insensitive, matching RFC 7230 semantics. The order of [names] reflects the
+ * insertion order of the backing map.
  *
  * Example:
  * ```kotlin
@@ -21,22 +21,18 @@ import io.ktor.http.*
  * }
  * ```
  */
-public class DeepSeekHeaders(
-    private val entries: Map<String, List<String>>,
-) {
+public class DeepSeekHeaders(private val entries: Map<String, List<String>>) {
     /**
-     * Returns the first value associated with [name] using case-insensitive comparison,
-     * or `null` if the header is not present.
+     * Returns the first value associated with [name] using case-insensitive comparison, or `null`
+     * if the header is not present.
      */
-    public operator fun get(name: String): String? =
-        findEntry(name)?.value?.firstOrNull()
+    public operator fun get(name: String): String? = findEntry(name)?.value?.firstOrNull()
 
     /**
-     * Returns all values associated with [name] using case-insensitive comparison,
-     * or an empty list if the header is not present.
+     * Returns all values associated with [name] using case-insensitive comparison, or an empty list
+     * if the header is not present.
      */
-    public fun getAll(name: String): List<String> =
-        findEntry(name)?.value ?: emptyList()
+    public fun getAll(name: String): List<String> = findEntry(name)?.value ?: emptyList()
 
     /** Returns `true` if the header [name] is present (case-insensitive). */
     public operator fun contains(name: String): Boolean = findEntry(name) != null

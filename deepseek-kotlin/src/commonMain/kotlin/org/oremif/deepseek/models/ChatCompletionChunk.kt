@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 /**
  * One chunk of a streamed chat completion response.
  *
- * Streaming chat endpoints emit a [kotlinx.coroutines.flow.Flow] of these chunks; all
- * chunks from the same response share [id] and [created]. Clients typically concatenate
+ * Streaming chat endpoints emit a [kotlinx.coroutines.flow.Flow] of these chunks; all chunks from
+ * the same response share [id] and [created]. Clients typically concatenate
  * [ChatCompletionDelta.content] across chunks to reconstruct the full assistant message.
  *
  * @property id Unique identifier shared by every chunk of a single response.
@@ -15,9 +15,9 @@ import kotlinx.serialization.Serializable
  * @property model Model that produced the response.
  * @property systemFingerprint Backend configuration fingerprint, if the API returned one.
  * @property object Object type discriminator; always `chat.completion.chunk`.
- * @property usage Token usage statistics for the whole request, carried by the last content
- * chunk — the one whose single choice adds no content and has a non-null `finish_reason`;
- * `null` on the chunks before it. See [StreamOptions.includeUsage].
+ * @property usage Token usage statistics for the whole request, carried by the last content chunk —
+ *   the one whose single choice adds no content and has a non-null `finish_reason`; `null` on the
+ *   chunks before it. See [StreamOptions.includeUsage].
  */
 @Serializable
 public class ChatCompletionChunk(
@@ -34,12 +34,12 @@ public class ChatCompletionChunk(
         if (other !is ChatCompletionChunk) return false
 
         return id == other.id &&
-                choices == other.choices &&
-                created == other.created &&
-                model == other.model &&
-                systemFingerprint == other.systemFingerprint &&
-                `object` == other.`object` &&
-                usage == other.usage
+            choices == other.choices &&
+            created == other.created &&
+            model == other.model &&
+            systemFingerprint == other.systemFingerprint &&
+            `object` == other.`object` &&
+            usage == other.usage
     }
 
     override fun hashCode(): Int {

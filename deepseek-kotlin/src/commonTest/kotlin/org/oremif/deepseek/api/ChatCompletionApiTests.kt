@@ -8,6 +8,7 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldEndWith
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
+import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -15,11 +16,11 @@ import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.models.*
 import org.oremif.deepseek.testing.mockEngine
 import org.oremif.deepseek.testing.testClient
-import kotlin.test.Test
 
 class ChatCompletionApiTests {
 
-    private val successBody = """
+    private val successBody =
+        """
         {
             "id": "abc-123",
             "choices": [
@@ -41,7 +42,8 @@ class ChatCompletionApiTests {
                 "total_tokens": 11
             }
         }
-    """.trimIndent()
+        """
+            .trimIndent()
 
     @Test
     fun `chat posts to chat completions endpoint with JSON body`() = runTest {
@@ -55,7 +57,8 @@ class ChatCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -75,7 +78,8 @@ class ChatCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -94,16 +98,16 @@ class ChatCompletionApiTests {
     fun `chat maps 401 to UnauthorizedException with parsed error`() = runTest {
         val engine = mockEngine {
             respond(
-                content = """{"error":{"message":"Invalid API key","type":"authentication_error"}}""",
+                content =
+                    """{"error":{"message":"Invalid API key","type":"authentication_error"}}""",
                 status = HttpStatusCode.Unauthorized,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
 
-        val ex = shouldThrow<DeepSeekException.UnauthorizedException> {
-            client.chat("Hi")
-        }
+        val ex = shouldThrow<DeepSeekException.UnauthorizedException> { client.chat("Hi") }
         ex.statusCode shouldBe 401
         ex.error?.error?.message shouldBe "Invalid API key"
     }
@@ -114,14 +118,13 @@ class ChatCompletionApiTests {
             respond(
                 content = """{"error":{"message":"overloaded"}}""",
                 status = HttpStatusCode.ServiceUnavailable,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
 
-        val ex = shouldThrow<DeepSeekException.OverloadServerException> {
-            client.chat("Hi")
-        }
+        val ex = shouldThrow<DeepSeekException.OverloadServerException> { client.chat("Hi") }
         ex.statusCode shouldBe 503
     }
 
@@ -133,7 +136,8 @@ class ChatCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -160,7 +164,8 @@ class ChatCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -171,17 +176,20 @@ class ChatCompletionApiTests {
                 thinking = Thinking(ThinkingType.ENABLED)
                 reasoningEffort = ReasoningEffort.MAX
                 userId = "user-42"
-                tools = listOf(
-                    Tool(
-                        type = ToolCallType.FUNCTION,
-                        function = FunctionRequest(
-                            name = "get_weather",
-                            description = "Get the weather",
-                            parameters = buildJsonObject { put("type", JsonPrimitive("object")) },
-                            strict = true,
-                        ),
+                tools =
+                    listOf(
+                        Tool(
+                            type = ToolCallType.FUNCTION,
+                            function =
+                                FunctionRequest(
+                                    name = "get_weather",
+                                    description = "Get the weather",
+                                    parameters =
+                                        buildJsonObject { put("type", JsonPrimitive("object")) },
+                                    strict = true,
+                                ),
+                        )
                     )
-                )
             }
             messages { user("Hi") }
         }
@@ -201,7 +209,8 @@ class ChatCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -217,9 +226,11 @@ class ChatCompletionApiTests {
 
         val body = capturedBody.shouldNotBeNull()
         body shouldContain """"content":[{"type":"text","text":"What is in this image?"}"""
-        body shouldContain """{"type":"image_url","image_url":{"url":"https://example.com/cat.jpg","detail":"low"}}"""
+        body shouldContain
+            """{"type":"image_url","image_url":{"url":"https://example.com/cat.jpg","detail":"low"}}"""
         body shouldContain """{"type":"file","file_id":"file-api-abc123"}"""
-        body shouldContain """{"type":"file","file_data":"data:image/png;base64,AAAA","filename":"inline.png"}"""
+        body shouldContain
+            """{"type":"file","file_data":"data:image/png;base64,AAAA","filename":"inline.png"}"""
     }
 
     @Test
@@ -228,14 +239,13 @@ class ChatCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
 
-        shouldThrow<IllegalArgumentException> {
-            client.chat { user { } }
-        }
+        shouldThrow<IllegalArgumentException> { client.chat { user {} } }
     }
 
     @Test
@@ -246,7 +256,8 @@ class ChatCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -269,7 +280,8 @@ class ChatCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)
@@ -292,7 +304,8 @@ class ChatCompletionApiTests {
             respond(
                 content = successBody,
                 status = HttpStatusCode.OK,
-                headers = headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+                headers =
+                    headersOf(HttpHeaders.ContentType, ContentType.Application.Json.toString()),
             )
         }
         val client = testClient(engine)

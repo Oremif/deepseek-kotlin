@@ -11,14 +11,15 @@ fun main(): Unit = runBlocking {
     // Get API key from environment variable or use default placeholder
     val apiKey = System.getenv("DEEPSEEK_API_KEY") ?: "YOUR_API_KEY"
     // Initialize the streaming client with configuration parameters
-    val client = DeepSeekClientStream(apiKey) {
-        params {
-            chatStream {
-                model = ChatModel.DEEPSEEK_CHAT  // Specify which model to use
-                maxTokens = 2048                 // Set maximum response length
+    val client =
+        DeepSeekClientStream(apiKey) {
+            params {
+                chatStream {
+                    model = ChatModel.DEEPSEEK_CHAT // Specify which model to use
+                    maxTokens = 2048 // Set maximum response length
+                }
             }
         }
-    }
 
     // Send a chat request and collect the streaming response
     // Each chunk of the response is printed as it arrives

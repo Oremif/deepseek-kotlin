@@ -8,8 +8,8 @@ import kotlinx.serialization.Serializable
  * Populated only when the request sets `logprobs = true`.
  *
  * @property content Per-token log-probabilities for the assistant's visible content.
- * @property reasoningContent Per-token log-probabilities for the reasoning trace produced
- * in thinking mode, when applicable.
+ * @property reasoningContent Per-token log-probabilities for the reasoning trace produced in
+ *   thinking mode, when applicable.
  */
 @Serializable
 public class LogProbs(
@@ -38,20 +38,23 @@ public class LogProbs(
  * @property token The token as text.
  * @property logprob Natural-log probability the model assigned to [token].
  * @property bytes UTF-8 byte values of [token], or `null` if the token is not byte-aligned.
- * @property topLogprobs Up to `topLogprobs` most likely alternatives considered at this
- * position, each with its own log-probability.
+ * @property topLogprobs Up to `topLogprobs` most likely alternatives considered at this position,
+ *   each with its own log-probability.
  */
 @Serializable
 public class LogProb(
     public val token: String,
     public val logprob: Double,
     public val bytes: List<Int>?,
-    public val topLogprobs: List<TopLogProb>
+    public val topLogprobs: List<TopLogProb>,
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is LogProb) return false
-        return token == other.token && logprob == other.logprob && bytes == other.bytes && topLogprobs == other.topLogprobs
+        return token == other.token &&
+            logprob == other.logprob &&
+            bytes == other.bytes &&
+            topLogprobs == other.topLogprobs
     }
 
     override fun hashCode(): Int {
@@ -92,26 +95,25 @@ public class TopLogProb(
         return result
     }
 
-    override fun toString(): String =
-        "TopLogProb(token='$token', logprob=$logprob, bytes=$bytes)"
+    override fun toString(): String = "TopLogProb(token='$token', logprob=$logprob, bytes=$bytes)"
 }
 
 /**
  * Log-probability information attached to a [FIMChoice].
  *
- * Uses the legacy completions shape — aligned parallel lists over the generated tokens —
- * which differs from the per-token [LogProb] shape returned by chat endpoints.
+ * Uses the legacy completions shape — aligned parallel lists over the generated tokens — which
+ * differs from the per-token [LogProb] shape returned by chat endpoints.
  *
  * @property textOffset Character offset of each token into the generated text.
  * @property tokenLogprobs Natural-log probability of each token in [tokens].
  * @property tokens The generated tokens as text.
- * @property topLogprobs For each generated token position, a map from candidate token
- * text to its natural-log probability. Populated only when the request sets
- * `logprobs > 0`; `null` otherwise. Candidates that were considered but scored out of
- * range typically appear with a sentinel value of `-9999.0`.
+ * @property topLogprobs For each generated token position, a map from candidate token text to its
+ *   natural-log probability. Populated only when the request sets `logprobs > 0`; `null` otherwise.
+ *   Candidates that were considered but scored out of range typically appear with a sentinel value
+ *   of `-9999.0`.
  *
- * Note: this shape is specific to the legacy completions endpoint and differs from
- * chat's [LogProb.topLogprobs], which is a list of [TopLogProb] objects.
+ * Note: this shape is specific to the legacy completions endpoint and differs from chat's
+ * [LogProb.topLogprobs], which is a list of [TopLogProb] objects.
  */
 @Serializable
 public class FIMLogProbs(
@@ -123,7 +125,10 @@ public class FIMLogProbs(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is FIMLogProbs) return false
-        return textOffset == other.textOffset && tokenLogprobs == other.tokenLogprobs && tokens == other.tokens && topLogprobs == other.topLogprobs
+        return textOffset == other.textOffset &&
+            tokenLogprobs == other.tokenLogprobs &&
+            tokens == other.tokens &&
+            topLogprobs == other.topLogprobs
     }
 
     override fun hashCode(): Int {

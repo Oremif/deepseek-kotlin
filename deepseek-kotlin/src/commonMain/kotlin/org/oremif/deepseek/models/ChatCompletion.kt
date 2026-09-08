@@ -9,7 +9,8 @@ import kotlinx.serialization.Serializable
  * @property choices A list of chat completion choices.
  * @property created The Unix timestamp (in seconds) of when the chat completion was created.
  * @property model The model used for the chat completion.
- * @property systemFingerprint This fingerprint represents the backend configuration that the model runs with.
+ * @property systemFingerprint This fingerprint represents the backend configuration that the model
+ *   runs with.
  * @property object The object type, which is always `chat.completion`.
  * @property usage Usage statistics for the completion request.
  */
@@ -28,12 +29,12 @@ public class ChatCompletion(
         if (other !is ChatCompletion) return false
 
         return id == other.id &&
-                choices == other.choices &&
-                created == other.created &&
-                model == other.model &&
-                systemFingerprint == other.systemFingerprint &&
-                `object` == other.`object` &&
-                usage == other.usage
+            choices == other.choices &&
+            created == other.created &&
+            model == other.model &&
+            systemFingerprint == other.systemFingerprint &&
+            `object` == other.`object` &&
+            usage == other.usage
     }
 
     override fun hashCode(): Int {

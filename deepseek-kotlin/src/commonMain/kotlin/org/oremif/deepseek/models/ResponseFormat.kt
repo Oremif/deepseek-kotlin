@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 /**
  * Format the model must use for its response.
  *
- * Use [jsonObject] to request a response guaranteed to be a valid JSON object; use [text]
- * for the default free-form output.
+ * Use [jsonObject] to request a response guaranteed to be a valid JSON object; use [text] for the
+ * default free-form output.
  *
  * Example:
  * ```kotlin
@@ -24,8 +24,8 @@ public class ResponseFormat private constructor(public val type: String) {
         public val text: ResponseFormat = ResponseFormat("text")
 
         /**
-         * Response guaranteed to be a valid JSON object. The request must also instruct the
-         * model to produce JSON (e.g. via a system prompt).
+         * Response guaranteed to be a valid JSON object. The request must also instruct the model
+         * to produce JSON (e.g. via a system prompt).
          */
         public val jsonObject: ResponseFormat = ResponseFormat("json_object")
     }

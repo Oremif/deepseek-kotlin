@@ -9,13 +9,11 @@ import kotlinx.serialization.Serializable
  * Current responses omit that key and report cache accounting through the flat
  * [Usage.promptCacheHitTokens] / [Usage.promptCacheMissTokens] fields instead.
  *
- * @property cachedTokens Number of prompt tokens served from the context cache, or
- * `null` when the server did not report this breakdown.
+ * @property cachedTokens Number of prompt tokens served from the context cache, or `null` when the
+ *   server did not report this breakdown.
  */
 @Serializable
-public class PromptTokensDetails(
-    public val cachedTokens: Int? = null,
-) {
+public class PromptTokensDetails(public val cachedTokens: Int? = null) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is PromptTokensDetails) return false

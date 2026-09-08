@@ -12,13 +12,13 @@ import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.sse.*
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
 
 private inline fun <T : DeepSeekClientBase, R> T.use(block: (T) -> R): R =
     try {
@@ -32,28 +32,30 @@ class DeepSeekClientBuilderTests {
     @Test
     fun `httpClient block preserves default plugins on DeepSeekClient`() {
         DeepSeekClient("test-token") {
-            httpClient { /* additive configuration — intentionally empty */ }
-        }.use { client ->
-            val http = client.client
-            http.pluginOrNull(Auth).shouldNotBeNull()
-            http.pluginOrNull(ContentNegotiation).shouldNotBeNull()
-            http.pluginOrNull(HttpRequestRetry).shouldNotBeNull()
-            http.pluginOrNull(HttpTimeout).shouldNotBeNull()
-        }
+                httpClient { /* additive configuration — intentionally empty */ }
+            }
+            .use { client ->
+                val http = client.client
+                http.pluginOrNull(Auth).shouldNotBeNull()
+                http.pluginOrNull(ContentNegotiation).shouldNotBeNull()
+                http.pluginOrNull(HttpRequestRetry).shouldNotBeNull()
+                http.pluginOrNull(HttpTimeout).shouldNotBeNull()
+            }
     }
 
     @Test
     fun `httpClient block preserves SSE and base plugins on DeepSeekClientStream`() {
         DeepSeekClientStream("test-token") {
-            httpClient { /* additive configuration — intentionally empty */ }
-        }.use { client ->
-            val http = client.client
-            http.pluginOrNull(SSE).shouldNotBeNull()
-            http.pluginOrNull(Auth).shouldNotBeNull()
-            http.pluginOrNull(ContentNegotiation).shouldNotBeNull()
-            http.pluginOrNull(HttpRequestRetry).shouldNotBeNull()
-            http.pluginOrNull(HttpTimeout).shouldNotBeNull()
-        }
+                httpClient { /* additive configuration — intentionally empty */ }
+            }
+            .use { client ->
+                val http = client.client
+                http.pluginOrNull(SSE).shouldNotBeNull()
+                http.pluginOrNull(Auth).shouldNotBeNull()
+                http.pluginOrNull(ContentNegotiation).shouldNotBeNull()
+                http.pluginOrNull(HttpRequestRetry).shouldNotBeNull()
+                http.pluginOrNull(HttpTimeout).shouldNotBeNull()
+            }
     }
 
     @Test
@@ -65,85 +67,74 @@ class DeepSeekClientBuilderTests {
 
     @Test
     fun `logging block installs Logging plugin`() {
-        DeepSeekClient("test-token") {
-            logging { level = LogLevel.BODY }
-        }.use { client ->
-            client.client.pluginOrNull(Logging).shouldNotBeNull()
-        }
+        DeepSeekClient("test-token") { logging { level = LogLevel.BODY } }
+            .use { client -> client.client.pluginOrNull(Logging).shouldNotBeNull() }
     }
 
     @Test
     fun `logging block with no args installs Logging with defaults`() {
-        DeepSeekClient("test-token") {
-            logging()
-        }.use { client ->
-            client.client.pluginOrNull(Logging).shouldNotBeNull()
-        }
+        DeepSeekClient("test-token") { logging() }
+            .use { client -> client.client.pluginOrNull(Logging).shouldNotBeNull() }
     }
 
     @Test
     fun `logging block applies to stream client and survives httpClient block`() {
         DeepSeekClientStream("test-token") {
-            logging { level = LogLevel.HEADERS }
-            httpClient { /* additive configuration — intentionally empty */ }
-        }.use { client ->
-            client.client.pluginOrNull(Logging).shouldNotBeNull()
-            client.client.pluginOrNull(SSE).shouldNotBeNull()
-        }
+                logging { level = LogLevel.HEADERS }
+                httpClient { /* additive configuration — intentionally empty */ }
+            }
+            .use { client ->
+                client.client.pluginOrNull(Logging).shouldNotBeNull()
+                client.client.pluginOrNull(SSE).shouldNotBeNull()
+            }
     }
 
     @Test
     fun `logging block can be called multiple times and accumulates sanitizers`() {
         DeepSeekClient("test-token") {
-            logging { level = LogLevel.BODY }
-            logging {
-                sanitizeHeader { header -> header == "Cookie" }
-                sanitizeHeader { header -> header == "X-Trace-Id" }
+                logging { level = LogLevel.BODY }
+                logging {
+                    sanitizeHeader { header -> header == "Cookie" }
+                    sanitizeHeader { header -> header == "X-Trace-Id" }
+                }
             }
-        }.use { client ->
-            client.client.pluginOrNull(Logging).shouldNotBeNull()
-        }
+            .use { client -> client.client.pluginOrNull(Logging).shouldNotBeNull() }
     }
 
     @Test
     fun `httpClient with full replacement drops default plugins`() {
         val replacement = HttpClient { /* no plugins */ }
-        DeepSeekClient("test-token") {
-            httpClient(replacement)
-        }.use { client ->
-            client.client.pluginOrNull(Auth).shouldBeNull()
-        }
+        DeepSeekClient("test-token") { httpClient(replacement) }
+            .use { client -> client.client.pluginOrNull(Auth).shouldBeNull() }
     }
 
     @Test
     fun `jsonConfig block mutates settings through JsonBuilder receiver`() {
         DeepSeekClient("test-token") {
-            jsonConfig {
-                prettyPrint = false
-                ignoreUnknownKeys = false
-                isLenient = false
+                jsonConfig {
+                    prettyPrint = false
+                    ignoreUnknownKeys = false
+                    isLenient = false
+                }
             }
-        }.use { client ->
-            val cfg = client.config.jsonConfig.configuration
-            cfg.prettyPrint.shouldBeFalse()
-            cfg.ignoreUnknownKeys.shouldBeFalse()
-            cfg.isLenient.shouldBeFalse()
-        }
+            .use { client ->
+                val cfg = client.config.jsonConfig.configuration
+                cfg.prettyPrint.shouldBeFalse()
+                cfg.ignoreUnknownKeys.shouldBeFalse()
+                cfg.isLenient.shouldBeFalse()
+            }
     }
 
     @OptIn(ExperimentalSerializationApi::class)
     @Test
     fun `jsonConfig block preserves unset defaults`() {
-        DeepSeekClient("test-token") {
-            jsonConfig {
-                prettyPrint = false
+        DeepSeekClient("test-token") { jsonConfig { prettyPrint = false } }
+            .use { client ->
+                val cfg = client.config.jsonConfig.configuration
+                cfg.prettyPrint.shouldBeFalse()
+                cfg.ignoreUnknownKeys.shouldBeTrue()
+                cfg.namingStrategy.shouldNotBeNull()
             }
-        }.use { client ->
-            val cfg = client.config.jsonConfig.configuration
-            cfg.prettyPrint.shouldBeFalse()
-            cfg.ignoreUnknownKeys.shouldBeTrue()
-            cfg.namingStrategy.shouldNotBeNull()
-        }
     }
 
     @Test
@@ -152,58 +143,51 @@ class DeepSeekClientBuilderTests {
             prettyPrint = false
             coerceInputValues = true
         }
-        DeepSeekClient("test-token") {
-            jsonConfig(custom)
-        }.use { client ->
-            client.config.jsonConfig shouldBeSameInstanceAs custom
-        }
+        DeepSeekClient("test-token") { jsonConfig(custom) }
+            .use { client -> client.config.jsonConfig shouldBeSameInstanceAs custom }
     }
 
     @Test
     fun `jsonConfig block applies to stream client`() {
-        DeepSeekClientStream("test-token") {
-            jsonConfig {
-                prettyPrint = false
+        DeepSeekClientStream("test-token") { jsonConfig { prettyPrint = false } }
+            .use { client ->
+                client.config.jsonConfig.configuration.prettyPrint.shouldBeFalse()
+                client.client.pluginOrNull(SSE).shouldNotBeNull()
+                client.client.pluginOrNull(ContentNegotiation).shouldNotBeNull()
             }
-        }.use { client ->
-            client.config.jsonConfig.configuration.prettyPrint.shouldBeFalse()
-            client.client.pluginOrNull(SSE).shouldNotBeNull()
-            client.client.pluginOrNull(ContentNegotiation).shouldNotBeNull()
-        }
     }
 
     @Test
     fun `timeouts given in milliseconds reach the config`() {
         DeepSeekClient("test-token") {
-            chatCompletionTimeout(1_000)
-            fimCompletionTimeout(2_000)
-            uploadTimeout(3_000)
-        }.use { client ->
-            client.config.chatCompletionTimeout shouldBe 1_000L
-            client.config.fimCompletionTimeout shouldBe 2_000L
-            client.config.uploadTimeout shouldBe 3_000L
-        }
+                chatCompletionTimeout(1_000)
+                fimCompletionTimeout(2_000)
+                uploadTimeout(3_000)
+            }
+            .use { client ->
+                client.config.chatCompletionTimeout shouldBe 1_000L
+                client.config.fimCompletionTimeout shouldBe 2_000L
+                client.config.uploadTimeout shouldBe 3_000L
+            }
     }
 
     @Test
     fun `timeouts given as a Duration reach the config in milliseconds`() {
         DeepSeekClientStream("test-token") {
-            chatCompletionTimeout(10.minutes)
-            fimCompletionTimeout(90.seconds)
-            uploadTimeout(2.hours)
-        }.use { client ->
-            client.config.chatCompletionTimeout shouldBe 600_000L
-            client.config.fimCompletionTimeout shouldBe 90_000L
-            client.config.uploadTimeout shouldBe 7_200_000L
-        }
+                chatCompletionTimeout(10.minutes)
+                fimCompletionTimeout(90.seconds)
+                uploadTimeout(2.hours)
+            }
+            .use { client ->
+                client.config.chatCompletionTimeout shouldBe 600_000L
+                client.config.fimCompletionTimeout shouldBe 90_000L
+                client.config.uploadTimeout shouldBe 7_200_000L
+            }
     }
 
     @Test
     fun `an infinite Duration timeout survives without truncation`() {
-        DeepSeekClient("test-token") {
-            uploadTimeout(Duration.INFINITE)
-        }.use { client ->
-            client.config.uploadTimeout shouldBe Long.MAX_VALUE
-        }
+        DeepSeekClient("test-token") { uploadTimeout(Duration.INFINITE) }
+            .use { client -> client.config.uploadTimeout shouldBe Long.MAX_VALUE }
     }
 }

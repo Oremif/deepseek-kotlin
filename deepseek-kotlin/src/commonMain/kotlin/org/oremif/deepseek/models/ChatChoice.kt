@@ -5,14 +5,14 @@ import kotlinx.serialization.Serializable
 /**
  * One completion alternative returned inside a [ChatCompletion].
  *
- * A [ChatCompletion] may contain several choices when the request asked the model to
- * produce multiple candidates; each choice has its own message and finish reason.
+ * A [ChatCompletion] may contain several choices when the request asked the model to produce
+ * multiple candidates; each choice has its own message and finish reason.
  *
  * @property finishReason Reason the model stopped generating tokens for this choice.
  * @property index Position of the choice in [ChatCompletion.choices].
  * @property message Assistant message produced by the model.
- * @property logprobs Log-probability information for the generated tokens, if requested
- * via the `logprobs` parameter.
+ * @property logprobs Log-probability information for the generated tokens, if requested via the
+ *   `logprobs` parameter.
  */
 @Serializable
 public class ChatChoice(
@@ -26,9 +26,9 @@ public class ChatChoice(
         if (other !is ChatChoice) return false
 
         return index == other.index &&
-                finishReason == other.finishReason &&
-                message == other.message &&
-                logprobs == other.logprobs
+            finishReason == other.finishReason &&
+            message == other.message &&
+            logprobs == other.logprobs
     }
 
     override fun hashCode(): Int {

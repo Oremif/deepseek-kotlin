@@ -15,42 +15,39 @@ import kotlinx.serialization.json.jsonObject
  * - [ChatCompletionToolChoice] — coarse strategies (`none`, `auto`, `required`).
  * - [ChatCompletionNamedToolChoice] — pin the model to a specific tool by name.
  *
- * When omitted, the DeepSeek API defaults to `auto` if tools are provided and `none`
- * otherwise.
+ * When omitted, the DeepSeek API defaults to `auto` if tools are provided and `none` otherwise.
  */
-@Serializable(with = ToolChoiceSerializer::class)
-public sealed interface ToolChoice
+@Serializable(with = ToolChoiceSerializer::class) public sealed interface ToolChoice
 
-/**
- * Coarse tool-selection strategy.
- */
+/** Coarse tool-selection strategy. */
 @Serializable
 public enum class ChatCompletionToolChoice : ToolChoice {
     /** The model must not call any tool and must instead produce a message. */
-    @SerialName("none")
-    NONE,
+    @SerialName("none") NONE,
 
-    /** The model decides whether to produce a message or call tools. This is the default when tools are provided. */
-    @SerialName("auto")
-    AUTO,
+    /**
+     * The model decides whether to produce a message or call tools. This is the default when tools
+     * are provided.
+     */
+    @SerialName("auto") AUTO,
 
     /** The model must call one or more of the provided tools. */
-    @SerialName("required")
-    REQUIRED
+    @SerialName("required") REQUIRED,
 }
 
 /**
  * Forces the model to call a specific tool.
  *
- * Construct via the JSON the DeepSeek API expects, e.g.
- * `{"type": "function", "function": {"name": "my_function"}}`.
+ * Construct via the JSON the DeepSeek API expects, e.g. `{"type": "function", "function": {"name":
+ * "my_function"}}`.
  *
  * @property type Tool type discriminator; currently always [ToolCallType.FUNCTION].
- * @property function Reference to the tool that must be called; only the `name` field is
- * consumed by the API.
+ * @property function Reference to the tool that must be called; only the `name` field is consumed
+ *   by the API.
  */
 @Serializable
-public class ChatCompletionNamedToolChoice internal constructor(
+public class ChatCompletionNamedToolChoice
+internal constructor(
     public val type: ToolCallType,
     public val function: ToolFunction,
 ) : ToolChoice {
@@ -70,11 +67,12 @@ public class ChatCompletionNamedToolChoice internal constructor(
         "ChatCompletionNamedToolChoice(type=$type, function=$function)"
 }
 
-
-internal object ToolChoiceSerializer : JsonContentPolymorphicSerializer<ToolChoice>(ToolChoice::class) {
+internal object ToolChoiceSerializer :
+    JsonContentPolymorphicSerializer<ToolChoice>(ToolChoice::class) {
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<ToolChoice> {
         return when {
-            element is JsonObject && "type" in element.jsonObject -> ChatCompletionNamedToolChoice.serializer()
+            element is JsonObject && "type" in element.jsonObject ->
+                ChatCompletionNamedToolChoice.serializer()
             else -> ChatCompletionToolChoice.serializer()
         }
     }

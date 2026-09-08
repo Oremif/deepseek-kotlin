@@ -10,55 +10,56 @@ import kotlinx.serialization.Serializable
  * @property model ID of the model to use.
  *
  * **Possible values: {`deepseek-v4-pro`}**
+ *
  * @property prompt The prompt to generate completions for.
  * @property echo Echo back the prompt in addition to the completion
  * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API.
- * @property logprobs Include the log probabilities on the `logprobs` most likely output tokens,
- * as well the chosen tokens.
- * For example, if `logprobs` is 20, the API will return a list of the 20 most likely tokens.
- * The API will always return the `logprob` of the sampled token,
- * so there may be up to `logprobs+1` elements in the response.
+ * @property logprobs Include the log probabilities on the `logprobs` most likely output tokens, as
+ *   well the chosen tokens. For example, if `logprobs` is 20, the API will return a list of the 20
+ *   most likely tokens. The API will always return the `logprob` of the sampled token, so there may
+ *   be up to `logprobs+1` elements in the response.
  *
  * The maximum value for `logprobs` is 20.
  *
  * **Possible values: `<= 20`.**
+ *
  * @property maxTokens The maximum number of tokens that can be generated in the completion.
  * @property presencePenalty Sent as `presence_penalty`, ignored by the API.
  * @property stop Up to 16 sequences where the API will stop generating further tokens.
- * @property stream Whether to stream back partial progress.
- * If set, tokens will be sent as data-only server-sent events as they become available,
- * with the stream terminated by a data: `[DONE]` message.
- * @property streamOptions Options for streaming response. Only set this when you set `stream: true`.
+ * @property stream Whether to stream back partial progress. If set, tokens will be sent as
+ *   data-only server-sent events as they become available, with the stream terminated by a data:
+ *   `[DONE]` message.
+ * @property streamOptions Options for streaming response. Only set this when you set `stream:
+ *   true`.
  * @property suffix The suffix that comes after a completion of inserted text.
- * @property temperature What sampling temperature to use, between 0 and 2.
- * Higher values like 0.8 will make the output more random,
- * while lower values like 0.2 will make it more focused and deterministic.
+ * @property temperature What sampling temperature to use, between 0 and 2. Higher values like 0.8
+ *   will make the output more random, while lower values like 0.2 will make it more focused and
+ *   deterministic.
  *
  * We generally recommend altering this or `top_p` but not both.
  *
  * **Possible values: `<= 2`.**
  *
  * **Default value: `1`.**
- * @property topP An alternative to sampling with temperature,
- * called nucleus sampling, where the model considers the results of the tokens with top_p probability mass.
- * So 0.1 means only the tokens comprising the top 10% probability mass are considered.
  *
- * We generally recommend altering this or `temperature` but not both.
- * **Possible values: `<= 1`.**
+ * @property topP An alternative to sampling with temperature, called nucleus sampling, where the
+ *   model considers the results of the tokens with top_p probability mass. So 0.1 means only the
+ *   tokens comprising the top 10% probability mass are considered.
+ *
+ * We generally recommend altering this or `temperature` but not both. **Possible values: `<= 1`.**
  *
  * **Default value: `1`.**
  */
 @Serializable
-public class FIMCompletionRequest internal constructor(
+public class FIMCompletionRequest
+internal constructor(
     public val model: ChatModel,
     public val prompt: String,
     public val echo: Boolean? = null,
-    @Deprecated(DEPRECATED_PENALTY)
-    public val frequencyPenalty: Double? = null,
+    @Deprecated(DEPRECATED_PENALTY) public val frequencyPenalty: Double? = null,
     public val logprobs: Int? = null,
     public val maxTokens: Int? = null,
-    @Deprecated(DEPRECATED_PENALTY)
-    public val presencePenalty: Double? = null,
+    @Deprecated(DEPRECATED_PENALTY) public val presencePenalty: Double? = null,
     public val stop: StopReason? = null,
     public val stream: Boolean? = null,
     public val streamOptions: StreamOptions? = null,
@@ -105,8 +106,8 @@ public class FIMCompletionRequest internal constructor(
     /**
      * Builder for streaming FIM completion requests.
      *
-     * Used by `DeepSeekClientStream.fimCompletion { ... }`; [prompt] is required. The
-     * resulting request has `stream = true`.
+     * Used by `DeepSeekClientStream.fimCompletion { ... }`; [prompt] is required. The resulting
+     * request has `stream = true`.
      */
     public class StreamBuilder {
         private var prompt: String? = null
@@ -143,18 +144,18 @@ public class FIMCompletionRequest internal constructor(
         if (other !is FIMCompletionRequest) return false
 
         return model == other.model &&
-                prompt == other.prompt &&
-                echo == other.echo &&
-                frequencyPenalty == other.frequencyPenalty &&
-                logprobs == other.logprobs &&
-                maxTokens == other.maxTokens &&
-                presencePenalty == other.presencePenalty &&
-                stop == other.stop &&
-                stream == other.stream &&
-                streamOptions == other.streamOptions &&
-                suffix == other.suffix &&
-                temperature == other.temperature &&
-                topP == other.topP
+            prompt == other.prompt &&
+            echo == other.echo &&
+            frequencyPenalty == other.frequencyPenalty &&
+            logprobs == other.logprobs &&
+            maxTokens == other.maxTokens &&
+            presencePenalty == other.presencePenalty &&
+            stop == other.stop &&
+            stream == other.stream &&
+            streamOptions == other.streamOptions &&
+            suffix == other.suffix &&
+            temperature == other.temperature &&
+            topP == other.topP
     }
 
     override fun hashCode(): Int {
