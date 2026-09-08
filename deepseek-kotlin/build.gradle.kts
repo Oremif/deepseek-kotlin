@@ -1,9 +1,10 @@
-@file:OptIn(ExperimentalWasmDsl::class)
+@file:OptIn(ExperimentalWasmDsl::class, ExperimentalAbiValidation::class)
 
-import java.time.Year
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
+import java.time.Year
 
 plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -11,7 +12,6 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.dokka)
     alias(libs.plugins.maven.publish)
-    alias(libs.plugins.binary.compatibility.validator)
     alias(libs.plugins.ktfmt)
 }
 
@@ -21,10 +21,10 @@ version = "0.4.0"
 
 ktfmt { kotlinLangStyle() }
 
-apiValidation { @OptIn(kotlinx.validation.ExperimentalBCVApi::class) klib { enabled = true } }
-
 kotlin {
     explicitApi()
+
+    abiValidation()
 
     jvm { compilerOptions { jvmTarget = JvmTarget.JVM_11 } }
 

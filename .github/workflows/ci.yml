@@ -103,4 +103,4 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/master' }}
 
       - name: Check binary API compatibility
-        run: ./gradlew :deepseek-kotlin:apiCheck --parallel
+        run: ./gradlew :deepseek-kotlin:checkKotlinAbi --parallel
