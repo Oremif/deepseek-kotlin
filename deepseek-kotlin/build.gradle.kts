@@ -1,10 +1,10 @@
 @file:OptIn(ExperimentalWasmDsl::class, ExperimentalAbiValidation::class)
 
+import java.time.Year
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
-import java.time.Year
 
 plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
