@@ -8,6 +8,7 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldEndWith
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
+import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -15,7 +16,6 @@ import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.models.*
 import org.oremif.deepseek.testing.mockEngine
 import org.oremif.deepseek.testing.testClient
-import kotlin.test.Test
 
 class ChatCompletionApiTests {
 

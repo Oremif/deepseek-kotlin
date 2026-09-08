@@ -9,6 +9,7 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.sse.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import kotlin.time.Duration
 import kotlinx.coroutines.job
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -16,7 +17,6 @@ import kotlinx.serialization.json.JsonBuilder
 import kotlinx.serialization.json.JsonNamingStrategy
 import org.oremif.deepseek.utils.computeRetryDelayMillis
 import org.oremif.deepseek.utils.isRetryableStatus
-import kotlin.time.Duration
 
 /**
  * Creates a new instance of [DeepSeekClient] with optional configuration.

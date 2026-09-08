@@ -3,8 +3,8 @@ package org.oremif.deepseek.errors
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
-import kotlinx.serialization.json.Json
 import kotlin.test.Test
+import kotlinx.serialization.json.Json
 
 class DeepSeekExceptionTests {
 

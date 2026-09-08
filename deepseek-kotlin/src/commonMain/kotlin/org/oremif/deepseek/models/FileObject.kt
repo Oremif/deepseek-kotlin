@@ -1,7 +1,7 @@
 package org.oremif.deepseek.models
 
-import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlinx.serialization.Serializable
 
 /**
  * A file stored by the DeepSeek Files API.

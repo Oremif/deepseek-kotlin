@@ -7,12 +7,12 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
+import kotlin.test.Test
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.oremif.deepseek.models.*
 import org.oremif.deepseek.testing.sseMockEngine
 import org.oremif.deepseek.testing.testStreamClient
-import kotlin.test.Test
 
 class ChatCompletionStreamApiTests {
 

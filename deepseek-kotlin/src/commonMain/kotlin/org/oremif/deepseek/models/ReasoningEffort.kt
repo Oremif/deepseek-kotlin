@@ -1,7 +1,7 @@
 package org.oremif.deepseek.models
 
-import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlinx.serialization.Serializable
 
 /**
  * How much reasoning a thinking model spends before it answers, serialized as the raw value the API
