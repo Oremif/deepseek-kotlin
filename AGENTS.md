@@ -22,7 +22,7 @@ Supported targets: JVM, Android, Apple (`iosX64`, `iosArm64`, `iosSimulatorArm64
   - `errors/` — `DeepSeekError`, `DeepSeekHeaders`
   - `utils/` — `retry.kt` (retry policy), `validate.kt`
   - `src/commonTest/kotlin/` — shared tests; mock infrastructure in `org/oremif/deepseek/testing/MockClients.kt`
-- `deepseek-kotlin/api/` — locked ABI snapshots for `apiCheck` (JVM + klib)
+- `deepseek-kotlin/api/` — locked ABI snapshots for `checkKotlinAbi` (JVM, Android, klib)
 - `example/` — standalone JVM sample consuming the published artifact
 - `gradle/libs.versions.toml` — centralized version catalog
 - `.github/workflows/` — CI (`ci.yml`) and Dokka-to-GitHub-Pages (`docs.yml`)
@@ -74,12 +74,14 @@ style debates are settled by the tool.
 
 ### Binary compatibility (ABI) validation
 
-The `binary-compatibility-validator` plugin locks the public API for JVM and klib targets. Intentional API changes must be accompanied by regenerated dumps under `deepseek-kotlin/api/`.
+ABI validation is built into the Kotlin Gradle plugin (`kotlin { abiValidation() }`, experimental DSL), so no separate `binary-compatibility-validator` plugin is applied. It locks the public API for the JVM, Android and klib targets; intentional API changes must be accompanied by regenerated dumps under `deepseek-kotlin/api/` (`jvm/`, `android/` and the shared `.klib.api`).
 
 ```bash
-./gradlew :deepseek-kotlin:apiCheck    # fails if public API drifts from the locked dumps
-./gradlew :deepseek-kotlin:apiDump     # regenerate dumps after an intentional API change
+./gradlew :deepseek-kotlin:checkKotlinAbi     # fails if public API drifts from the locked dumps
+./gradlew :deepseek-kotlin:updateKotlinAbi    # regenerate dumps after an intentional API change
 ```
+
+`checkKotlinAbi` is wired into the `check` lifecycle task. The old `checkLegacyAbi` / `updateLegacyAbi` names still exist as deprecated aliases — don't use them.
 
 ### Documentation
 
@@ -98,9 +100,9 @@ Published to GitHub Pages by `.github/workflows/docs.yml` on each release (and o
 
 ## Key Versions (see `gradle/libs.versions.toml`)
 
-- Kotlin **2.3.20**, AGP **9.1.0**, Dokka **2.2.0**
-- Ktor **3.4.2**, Kotlinx Serialization **1.11.0**, Coroutines **1.10.2**
-- Kotest **6.1.11**, binary-compatibility-validator **0.18.1**, vanniktech maven-publish **0.36.0**
+- Kotlin **2.4.20**, AGP **9.4.0**, Dokka **2.2.0**
+- Ktor **3.5.2**, Kotlinx Serialization **1.11.0**, Coroutines **1.11.0**
+- Kotest **6.2.4**, vanniktech maven-publish **0.37.0**
 - ktfmt-gradle **0.27.0** (bundles ktfmt **0.64**)
 
 ## Configuration Notes
@@ -109,7 +111,7 @@ Published to GitHub Pages by `.github/workflows/docs.yml` on each release (and o
 - Android: `minSdk 24`, `compileSdk 34`, namespace `org.oremif.deepseek`
 - `kotlin.mpp.enableCInteropCommonization=true`
 - Dokka Gradle plugin runs in V2 mode (`org.jetbrains.dokka.experimental.gradle.pluginMode=V2Enabled`)
-- `apiValidation { klib { enabled = true } }` — klib ABI is validated alongside JVM
+- `kotlin { abiValidation() }` — the KGP built-in ABI validation; klib dumps are always produced alongside the JVM/Android ones. The DSL needs `@OptIn(ExperimentalAbiValidation::class)`.
 
 ## Development Notes
 
@@ -122,7 +124,7 @@ Published to GitHub Pages by `.github/workflows/docs.yml` on each release (and o
 
 - `lint` job: Ubuntu, JDK 21, runs `./gradlew ktfmtCheck ktfmtCheckScripts --continue --parallel`.
 - `build` job: Ubuntu, JDK 21, runs `./gradlew jvmTest --continue --parallel`, uploads JUnit XML, renders a test report.
-- `api-check` job: macOS, JDK 21, runs `./gradlew :deepseek-kotlin:apiCheck --parallel` (macOS needed so klib targets resolve).
+- `api-check` job: macOS, JDK 21, runs `./gradlew :deepseek-kotlin:checkKotlinAbi --parallel` (macOS needed so klib targets resolve).
 - Both jobs trigger on PRs to `master` and pushes to `master`. Gradle cache is read-only on non-master refs.
 
 ## Maven Publishing
