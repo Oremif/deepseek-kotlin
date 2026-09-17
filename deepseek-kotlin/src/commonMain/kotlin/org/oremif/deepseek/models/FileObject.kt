@@ -60,7 +60,7 @@ public class FileObject(
         result = 31 * result + createdAt.hashCode()
         result = 31 * result + filename.hashCode()
         result = 31 * result + purpose.hashCode()
-        result = 31 * result + (expiresAt?.hashCode() ?: 0)
+        result = 31 * result + expiresAt.hashCode()
         return result
     }
 

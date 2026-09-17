@@ -152,8 +152,8 @@ public class ResponseError(
     }
 
     override fun hashCode(): Int {
-        var result = code?.hashCode() ?: 0
-        result = 31 * result + (message?.hashCode() ?: 0)
+        var result = code.hashCode()
+        result = 31 * result + message.hashCode()
         return result
     }
 
@@ -173,7 +173,7 @@ public class IncompleteDetails(public val reason: IncompleteReason? = null) {
         return reason == other.reason
     }
 
-    override fun hashCode(): Int = reason?.hashCode() ?: 0
+    override fun hashCode(): Int = reason.hashCode()
 
     override fun toString(): String = "IncompleteDetails(reason=$reason)"
 }

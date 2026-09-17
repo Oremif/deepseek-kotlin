@@ -15,7 +15,7 @@ import kotlinx.serialization.json.JsonClassDiscriminator
  * discriminator.
  *
  * Both models the API serves read images, so no separate vision model is needed. A model that
- * cannot replaces them with a placeholder text rather than failing. The API rejects image parts in
+ * cannot replace them with a placeholder text rather than failing. The API rejects image parts in
  * system and assistant messages, which is why parts are only available on [UserMessage].
  *
  * Prefer the `user { ... }` DSL over instantiating parts directly:
@@ -104,7 +104,7 @@ public class ImageUrl(
 
     override fun hashCode(): Int {
         var result = url.hashCode()
-        result = 31 * result + (detail?.hashCode() ?: 0)
+        result = 31 * result + detail.hashCode()
         return result
     }
 
@@ -162,9 +162,9 @@ public class FilePart(
     }
 
     override fun hashCode(): Int {
-        var result = fileId?.hashCode() ?: 0
-        result = 31 * result + (fileData?.hashCode() ?: 0)
-        result = 31 * result + (filename?.hashCode() ?: 0)
+        var result = fileId.hashCode()
+        result = 31 * result + fileData.hashCode()
+        result = 31 * result + filename.hashCode()
         return result
     }
 

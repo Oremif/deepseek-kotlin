@@ -81,8 +81,8 @@ private constructor(
 
     override fun hashCode(): Int {
         var result = type.hashCode()
-        result = 31 * result + (name?.hashCode() ?: 0)
-        result = 31 * result + (schema?.hashCode() ?: 0)
+        result = 31 * result + name.hashCode()
+        result = 31 * result + schema.hashCode()
         return result
     }
 

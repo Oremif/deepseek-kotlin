@@ -35,7 +35,7 @@ public class ChatChoice(
         var result = index.hashCode()
         result = 31 * result + finishReason.hashCode()
         result = 31 * result + message.hashCode()
-        result = 31 * result + (logprobs?.hashCode() ?: 0)
+        result = 31 * result + logprobs.hashCode()
         return result
     }
 

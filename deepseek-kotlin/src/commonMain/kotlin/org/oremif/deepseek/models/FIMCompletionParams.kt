@@ -288,17 +288,17 @@ internal constructor(
 
     override fun hashCode(): Int {
         var result = model.hashCode()
-        result = 31 * result + (echo?.hashCode() ?: 0)
-        result = 31 * result + (frequencyPenalty?.hashCode() ?: 0)
-        result = 31 * result + (logprobs?.hashCode() ?: 0)
-        result = 31 * result + (maxTokens?.hashCode() ?: 0)
-        result = 31 * result + (presencePenalty?.hashCode() ?: 0)
-        result = 31 * result + (stop?.hashCode() ?: 0)
-        result = 31 * result + (stream?.hashCode() ?: 0)
-        result = 31 * result + (streamOptions?.hashCode() ?: 0)
-        result = 31 * result + (suffix?.hashCode() ?: 0)
-        result = 31 * result + (temperature?.hashCode() ?: 0)
-        result = 31 * result + (topP?.hashCode() ?: 0)
+        result = 31 * result + echo.hashCode()
+        result = 31 * result + frequencyPenalty.hashCode()
+        result = 31 * result + logprobs.hashCode()
+        result = 31 * result + maxTokens.hashCode()
+        result = 31 * result + presencePenalty.hashCode()
+        result = 31 * result + stop.hashCode()
+        result = 31 * result + stream.hashCode()
+        result = 31 * result + streamOptions.hashCode()
+        result = 31 * result + suffix.hashCode()
+        result = 31 * result + temperature.hashCode()
+        result = 31 * result + topP.hashCode()
         return result
     }
 

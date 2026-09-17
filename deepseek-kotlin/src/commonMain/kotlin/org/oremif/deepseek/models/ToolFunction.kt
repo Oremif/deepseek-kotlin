@@ -52,9 +52,9 @@ public class FunctionRequest(
 
     override fun hashCode(): Int {
         var result = name.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + (parameters?.hashCode() ?: 0)
-        result = 31 * result + (strict?.hashCode() ?: 0)
+        result = 31 * result + description.hashCode()
+        result = 31 * result + parameters.hashCode()
+        result = 31 * result + strict.hashCode()
         return result
     }
 
@@ -83,7 +83,7 @@ public class FunctionResponse(
 
     override fun hashCode(): Int {
         var result = name.hashCode()
-        result = 31 * result + (arguments?.hashCode() ?: 0)
+        result = 31 * result + arguments.hashCode()
         return result
     }
 

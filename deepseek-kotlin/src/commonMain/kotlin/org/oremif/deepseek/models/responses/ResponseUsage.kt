@@ -60,7 +60,7 @@ public class InputTokensDetails(public val cachedTokens: Int? = null) {
         return cachedTokens == other.cachedTokens
     }
 
-    override fun hashCode(): Int = cachedTokens?.hashCode() ?: 0
+    override fun hashCode(): Int = cachedTokens.hashCode()
 
     override fun toString(): String = "InputTokensDetails(cachedTokens=$cachedTokens)"
 }
@@ -78,7 +78,7 @@ public class OutputTokensDetails(public val reasoningTokens: Int? = null) {
         return reasoningTokens == other.reasoningTokens
     }
 
-    override fun hashCode(): Int = reasoningTokens?.hashCode() ?: 0
+    override fun hashCode(): Int = reasoningTokens.hashCode()
 
     override fun toString(): String = "OutputTokensDetails(reasoningTokens=$reasoningTokens)"
 }

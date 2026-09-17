@@ -78,8 +78,8 @@ public class FunctionTool(
 
     override fun hashCode(): Int {
         var result = name.hashCode()
-        result = 31 * result + (description?.hashCode() ?: 0)
-        result = 31 * result + (parameters?.hashCode() ?: 0)
+        result = 31 * result + description.hashCode()
+        result = 31 * result + parameters.hashCode()
         return result
     }
 
@@ -277,7 +277,7 @@ private constructor(
 
     override fun hashCode(): Int {
         var result = type.hashCode()
-        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + name.hashCode()
         return result
     }
 

@@ -340,23 +340,23 @@ internal constructor(
     }
 
     override fun hashCode(): Int {
-        var result = frequencyPenalty?.hashCode() ?: 0
+        var result = frequencyPenalty.hashCode()
         result = 31 * result + (maxTokens ?: 0)
-        result = 31 * result + (presencePenalty?.hashCode() ?: 0)
-        result = 31 * result + (stream?.hashCode() ?: 0)
-        result = 31 * result + (temperature?.hashCode() ?: 0)
-        result = 31 * result + (topP?.hashCode() ?: 0)
-        result = 31 * result + (logprobs?.hashCode() ?: 0)
+        result = 31 * result + presencePenalty.hashCode()
+        result = 31 * result + stream.hashCode()
+        result = 31 * result + temperature.hashCode()
+        result = 31 * result + topP.hashCode()
+        result = 31 * result + logprobs.hashCode()
         result = 31 * result + (topLogprobs ?: 0)
         result = 31 * result + model.hashCode()
-        result = 31 * result + (responseFormat?.hashCode() ?: 0)
-        result = 31 * result + (stop?.hashCode() ?: 0)
-        result = 31 * result + (streamOptions?.hashCode() ?: 0)
-        result = 31 * result + (tools?.hashCode() ?: 0)
-        result = 31 * result + (toolChoice?.hashCode() ?: 0)
-        result = 31 * result + (thinking?.hashCode() ?: 0)
-        result = 31 * result + (reasoningEffort?.hashCode() ?: 0)
-        result = 31 * result + (userId?.hashCode() ?: 0)
+        result = 31 * result + responseFormat.hashCode()
+        result = 31 * result + stop.hashCode()
+        result = 31 * result + streamOptions.hashCode()
+        result = 31 * result + tools.hashCode()
+        result = 31 * result + toolChoice.hashCode()
+        result = 31 * result + thinking.hashCode()
+        result = 31 * result + reasoningEffort.hashCode()
+        result = 31 * result + userId.hashCode()
         return result
     }
 

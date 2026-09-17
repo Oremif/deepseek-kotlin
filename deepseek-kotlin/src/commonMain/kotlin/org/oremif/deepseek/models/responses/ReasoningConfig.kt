@@ -29,7 +29,7 @@ public class ReasoningConfig(public val effort: ReasoningEffort? = null) {
         return effort == other.effort
     }
 
-    override fun hashCode(): Int = effort?.hashCode() ?: 0
+    override fun hashCode(): Int = effort.hashCode()
 
     override fun toString(): String = "ReasoningConfig(effort=$effort)"
 }

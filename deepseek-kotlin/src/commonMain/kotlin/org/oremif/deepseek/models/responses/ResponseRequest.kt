@@ -494,17 +494,17 @@ public class ResponseRequest(
     override fun hashCode(): Int {
         var result = model.hashCode()
         result = 31 * result + input.hashCode()
-        result = 31 * result + (instructions?.hashCode() ?: 0)
-        result = 31 * result + (reasoning?.hashCode() ?: 0)
+        result = 31 * result + instructions.hashCode()
+        result = 31 * result + reasoning.hashCode()
         result = 31 * result + (maxOutputTokens ?: 0)
-        result = 31 * result + (stream?.hashCode() ?: 0)
-        result = 31 * result + (temperature?.hashCode() ?: 0)
-        result = 31 * result + (topP?.hashCode() ?: 0)
-        result = 31 * result + (text?.hashCode() ?: 0)
-        result = 31 * result + (tools?.hashCode() ?: 0)
-        result = 31 * result + (toolChoice?.hashCode() ?: 0)
+        result = 31 * result + stream.hashCode()
+        result = 31 * result + temperature.hashCode()
+        result = 31 * result + topP.hashCode()
+        result = 31 * result + text.hashCode()
+        result = 31 * result + tools.hashCode()
+        result = 31 * result + toolChoice.hashCode()
         result = 31 * result + (topLogprobs ?: 0)
-        result = 31 * result + (user?.hashCode() ?: 0)
+        result = 31 * result + user.hashCode()
         return result
     }
 
@@ -546,7 +546,7 @@ public sealed interface ResponseInput {
 
         override fun hashCode(): Int = text.hashCode()
 
-        override fun toString(): String = "ResponseInput.Text(text='${'$'}text')"
+        override fun toString(): String = "ResponseInput.Text(text='$text')"
     }
 
     /**
@@ -563,7 +563,7 @@ public sealed interface ResponseInput {
 
         override fun hashCode(): Int = items.hashCode()
 
-        override fun toString(): String = "ResponseInput.Items(items=${'$'}items)"
+        override fun toString(): String = "ResponseInput.Items(items=$items)"
     }
 }
 

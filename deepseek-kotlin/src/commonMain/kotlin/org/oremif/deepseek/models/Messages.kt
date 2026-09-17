@@ -53,7 +53,7 @@ public class SystemMessage(public val content: String, public val name: String? 
 
     override fun hashCode(): Int {
         var result = content.hashCode()
-        result = 31 * result + (name?.hashCode() ?: 0)
+        result = 31 * result + name.hashCode()
         return result
     }
 
@@ -151,7 +151,7 @@ public sealed interface UserContent {
 
         override fun hashCode(): Int = text.hashCode()
 
-        override fun toString(): String = "UserContent.Text(text='${'$'}text')"
+        override fun toString(): String = "UserContent.Text(text='$text')"
     }
 
     /**
@@ -168,7 +168,7 @@ public sealed interface UserContent {
 
         override fun hashCode(): Int = parts.hashCode()
 
-        override fun toString(): String = "UserContent.Parts(parts=${'$'}parts)"
+        override fun toString(): String = "UserContent.Parts(parts=$parts)"
     }
 }
 

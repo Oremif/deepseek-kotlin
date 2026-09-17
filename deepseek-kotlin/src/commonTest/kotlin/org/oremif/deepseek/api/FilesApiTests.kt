@@ -394,7 +394,7 @@ class FilesApiTests {
 
         ex.statusCode shouldBe 400
         ex.error.shouldNotBeNull().error.message shouldContain "file_id does not exist"
-        ex.error?.error?.type shouldBe "invalid_request_error"
+        ex.error.error.type shouldBe "invalid_request_error"
     }
 
     @Test

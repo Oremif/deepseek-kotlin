@@ -107,7 +107,7 @@ public class ReasoningTextPart(override val text: String) : TextContentPart() {
  * Image sent to the model, as `input_image`.
  *
  * Exactly one of [imageUrl] and [fileId] must be set — the API answers 400 to a part carrying
- * neither or both. Both models the API serves read images; a model that cannot replaces the part
+ * neither nor both. Both models the API serves read images; a model that cannot replace the part
  * with a placeholder text. Images are accepted in `user` and `developer` messages and in the output
  * of a tool call; in a `system` or `assistant` message they are rejected with 400.
  *
@@ -141,9 +141,9 @@ public class InputImagePart(
     }
 
     override fun hashCode(): Int {
-        var result = imageUrl?.hashCode() ?: 0
-        result = 31 * result + (fileId?.hashCode() ?: 0)
-        result = 31 * result + (detail?.hashCode() ?: 0)
+        var result = imageUrl.hashCode()
+        result = 31 * result + fileId.hashCode()
+        result = 31 * result + detail.hashCode()
         return result
     }
 
