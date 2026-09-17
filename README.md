@@ -53,7 +53,7 @@ A Kotlin Multiplatform SDK for the [DeepSeek REST API](https://api-docs.deepseek
 | Target   | Artifacts                                                        | HTTP engine |
 |----------|------------------------------------------------------------------|-------------|
 | JVM      | Java 11+                                                         | OkHttp      |
-| Android  | `minSdk` 24, `compileSdk` 34                                     | OkHttp      |
+| Android  | `minSdk` 24, `compileSdk` 37                                    | OkHttp      |
 | Apple    | `iosX64`, `iosArm64`, `iosSimulatorArm64`, `macosArm64`          | Darwin      |
 | Linux    | `linuxX64`, `linuxArm64`                                         | CIO         |
 | Windows  | `mingwX64`                                                       | CIO         |

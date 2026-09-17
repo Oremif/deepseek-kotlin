@@ -110,7 +110,7 @@ Published to GitHub Pages by `.github/workflows/docs.yml` on each release (and o
 ## Configuration Notes
 
 - Minimum JVM target: Java 11 (CI builds with JDK 21)
-- Android: `minSdk 24`, `compileSdk 34`, namespace `org.oremif.deepseek`
+- Android: `minSdk 24`, `compileSdk 37`, namespace `org.oremif.deepseek`
 - `kotlin.mpp.enableCInteropCommonization=true`
 - Dokka Gradle plugin runs in V2 mode (`org.jetbrains.dokka.experimental.gradle.pluginMode=V2Enabled`)
 - `kotlin { abiValidation() }` — the KGP built-in ABI validation; klib dumps are always produced alongside the JVM/Android ones. The DSL needs `@OptIn(ExperimentalAbiValidation::class)`.
