@@ -80,7 +80,7 @@ class EndpointApiTests {
                     {
                         "object": "list",
                         "data": [
-                            {"id": "deepseek-v4-flash", "object": "model", "owned_by": "deepseek"},
+                            {"id": "deepseek-flash", "object": "model", "owned_by": "deepseek"},
                             {"id": "deepseek-v4-pro", "object": "model", "owned_by": "deepseek"}
                         ]
                     }
@@ -99,6 +99,6 @@ class EndpointApiTests {
         capturedPath.shouldNotBeNull().shouldEndWith("/models")
         models.`object` shouldBe "list"
         models.data shouldHaveSize 2
-        models.data.map { it.id } shouldBe listOf("deepseek-v4-flash", "deepseek-v4-pro")
+        models.data.map { it.id } shouldBe listOf("deepseek-flash", "deepseek-v4-pro")
     }
 }

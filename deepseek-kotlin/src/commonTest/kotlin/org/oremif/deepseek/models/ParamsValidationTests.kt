@@ -106,21 +106,19 @@ class ParamsValidationTests {
     }
 
     @Test
-    fun `fim params default to the only model the endpoint accepts`() {
+    fun `fim params default to the model the reference documents`() {
         fimCompletionParams {}.model shouldBe ChatModel.DEEPSEEK_V4_PRO
         fimCompletionStreamParams {}.model shouldBe ChatModel.DEEPSEEK_V4_PRO
     }
 
     @Test
-    fun `fim params reject the vision model`() {
-        val ex =
-            shouldThrow<IllegalArgumentException> {
-                fimCompletionParams { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
-            }
-        ex.message!! shouldContain "deepseek-v4-flash-vision-exp"
-        shouldThrow<IllegalArgumentException> {
-            fimCompletionStreamParams { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
-        }
+    fun `fim params accept any model and leave the choice to the server`() {
+        // The live API serves FIM from deepseek-flash as well as deepseek-v4-pro, so the SDK no
+        // longer second-guesses the slug — the same reasoning as the retired 8192 maxTokens cap.
+        fimCompletionParams { model = ChatModel.DEEPSEEK_FLASH }.model shouldBe
+            ChatModel.DEEPSEEK_FLASH
+        fimCompletionStreamParams { model = ChatModel.DEEPSEEK_FLASH }.model shouldBe
+            ChatModel.DEEPSEEK_FLASH
     }
 
     @Test
@@ -157,7 +155,7 @@ class ParamsValidationTests {
 
     @Test
     fun `chat params default to the flash model`() {
-        chatCompletionParams {}.model shouldBe ChatModel.DEEPSEEK_V4_FLASH
-        chatCompletionStreamParams {}.model shouldBe ChatModel.DEEPSEEK_V4_FLASH
+        chatCompletionParams {}.model shouldBe ChatModel.DEEPSEEK_FLASH
+        chatCompletionStreamParams {}.model shouldBe ChatModel.DEEPSEEK_FLASH
     }
 }

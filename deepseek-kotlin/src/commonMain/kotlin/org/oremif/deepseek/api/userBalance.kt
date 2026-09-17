@@ -29,6 +29,6 @@ import org.oremif.deepseek.utils.validateResponse
  */
 public suspend fun DeepSeekClientBase.userBalance(): UserBalance {
     val response = client.get("user/balance")
-    validateResponse(response)
+    validateResponse(response, config.jsonConfig)
     return response.body()
 }

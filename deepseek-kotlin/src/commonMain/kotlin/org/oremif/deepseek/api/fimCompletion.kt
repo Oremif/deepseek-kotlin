@@ -35,7 +35,7 @@ public suspend fun DeepSeekClientBase.fimCompletion(request: FIMCompletionReques
             setBody(request)
             timeout { requestTimeoutMillis = config.fimCompletionTimeout }
         }
-    validateResponse(response)
+    validateResponse(response, config.jsonConfig)
     return response.body()
 }
 

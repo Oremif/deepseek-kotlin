@@ -22,7 +22,7 @@ import org.oremif.deepseek.models.*
  *
  * Example:
  * ```kotlin
- * val request = chatCompletionStreamParams { model = ChatModel.DEEPSEEK_V4_FLASH }
+ * val request = chatCompletionStreamParams { model = ChatModel.DEEPSEEK_FLASH }
  *     .createRequest(listOf(UserMessage("Write a story")))
  *
  * client.chatCompletionStream(request).collect { chunk ->
@@ -121,7 +121,7 @@ public fun DeepSeekClientStream.chat(
 /**
  * Streams chat responses using default parameters.
  *
- * This simplified function uses the default [ChatModel.DEEPSEEK_V4_FLASH] model with streaming
+ * This simplified function uses the default [ChatModel.DEEPSEEK_FLASH] model with streaming
  * enabled, providing a clean way to get streaming responses with minimal configuration.
  *
  * Example:
@@ -142,7 +142,7 @@ public fun DeepSeekClientStream.chat(
  *   status
  */
 public fun DeepSeekClientStream.chat(messages: List<ChatMessage>): Flow<ChatCompletionChunk> =
-    chat(ChatCompletionParams(ChatModel.DEEPSEEK_V4_FLASH, stream = true), messages)
+    chat(ChatCompletionParams(ChatModel.DEEPSEEK_FLASH, stream = true), messages)
 
 /**
  * Streams chat responses for a single user message.

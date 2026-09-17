@@ -45,8 +45,8 @@ public class FileList(
         var result = `object`.hashCode()
         result = 31 * result + data.hashCode()
         result = 31 * result + hasMore.hashCode()
-        result = 31 * result + (firstId?.hashCode() ?: 0)
-        result = 31 * result + (lastId?.hashCode() ?: 0)
+        result = 31 * result + firstId.hashCode()
+        result = 31 * result + lastId.hashCode()
         return result
     }
 

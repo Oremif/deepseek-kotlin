@@ -31,7 +31,7 @@ internal fun ChatCompletionRequest.chatCompletionsPath(): String =
  *
  * Example:
  * ```kotlin
- * val request = chatCompletionParams { model = ChatModel.DEEPSEEK_V4_FLASH }
+ * val request = chatCompletionParams { model = ChatModel.DEEPSEEK_FLASH }
  *     .createRequest(listOf(UserMessage("Hello!")))
  * val response = client.chatCompletion(request)
  * ```
@@ -48,7 +48,7 @@ public suspend fun DeepSeekClientBase.chatCompletion(
             setBody(request)
             timeout { requestTimeoutMillis = config.chatCompletionTimeout }
         }
-    validateResponse(response)
+    validateResponse(response, config.jsonConfig)
     return response.body()
 }
 
@@ -111,7 +111,7 @@ public suspend fun DeepSeekClient.chat(
  * @throws DeepSeekException if the API returns a non-2xx status
  */
 public suspend fun DeepSeekClient.chat(messages: List<ChatMessage>): ChatCompletion =
-    chat(ChatCompletionParams(ChatModel.DEEPSEEK_V4_FLASH), messages)
+    chat(ChatCompletionParams(ChatModel.DEEPSEEK_FLASH), messages)
 
 /**
  * Sends a single user message to the chat API.

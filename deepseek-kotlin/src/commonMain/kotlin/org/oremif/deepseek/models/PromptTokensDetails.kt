@@ -20,7 +20,7 @@ public class PromptTokensDetails(public val cachedTokens: Int? = null) {
         return cachedTokens == other.cachedTokens
     }
 
-    override fun hashCode(): Int = cachedTokens?.hashCode() ?: 0
+    override fun hashCode(): Int = cachedTokens.hashCode()
 
     override fun toString(): String = "PromptTokensDetails(cachedTokens=$cachedTokens)"
 }

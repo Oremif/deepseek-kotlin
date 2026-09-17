@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  * ```kotlin
  * val uploaded = client.uploadFile(imageBytes, "cat.jpg")
  * client.chatCompletion {
- *     params { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
+ *     params { model = ChatModel.DEEPSEEK_FLASH }
  *     messages {
  *         user {
  *             text("What is in this image?")
@@ -60,7 +60,7 @@ public class FileObject(
         result = 31 * result + createdAt.hashCode()
         result = 31 * result + filename.hashCode()
         result = 31 * result + purpose.hashCode()
-        result = 31 * result + (expiresAt?.hashCode() ?: 0)
+        result = 31 * result + expiresAt.hashCode()
         return result
     }
 

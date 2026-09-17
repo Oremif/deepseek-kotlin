@@ -38,7 +38,7 @@ internal constructor(
      * Example:
      * ```kotlin
      * val params = existingParams.chat {
-     *     model = ChatModel.DEEPSEEK_V4_FLASH
+     *     model = ChatModel.DEEPSEEK_FLASH
      *     temperature = 0.8
      *     maxTokens = 2000
      * }

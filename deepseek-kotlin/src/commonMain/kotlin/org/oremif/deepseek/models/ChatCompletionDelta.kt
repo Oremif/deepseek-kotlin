@@ -34,10 +34,10 @@ public class ChatCompletionDelta(
     }
 
     override fun hashCode(): Int {
-        var result = role?.hashCode() ?: 0
-        result = 31 * result + (content?.hashCode() ?: 0)
-        result = 31 * result + (reasoningContent?.hashCode() ?: 0)
-        result = 31 * result + (toolCalls?.hashCode() ?: 0)
+        var result = role.hashCode()
+        result = 31 * result + content.hashCode()
+        result = 31 * result + reasoningContent.hashCode()
+        result = 31 * result + toolCalls.hashCode()
         return result
     }
 
@@ -76,9 +76,9 @@ public class ToolCallDelta(
 
     override fun hashCode(): Int {
         var result = index.hashCode()
-        result = 31 * result + (id?.hashCode() ?: 0)
-        result = 31 * result + (type?.hashCode() ?: 0)
-        result = 31 * result + (function?.hashCode() ?: 0)
+        result = 31 * result + id.hashCode()
+        result = 31 * result + type.hashCode()
+        result = 31 * result + function.hashCode()
         return result
     }
 
@@ -107,8 +107,8 @@ public class FunctionDelta(
     }
 
     override fun hashCode(): Int {
-        var result = name?.hashCode() ?: 0
-        result = 31 * result + (arguments?.hashCode() ?: 0)
+        var result = name.hashCode()
+        result = 31 * result + arguments.hashCode()
         return result
     }
 

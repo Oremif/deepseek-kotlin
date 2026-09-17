@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @property messages A list of messages comprising the conversation so far.
  * @property model ID of the model to use.
  *
- * **Possible values: {`deepseek-v4-flash`, `deepseek-v4-pro`, `deepseek-v4-flash-vision-exp`}.**
+ * **Possible values: {`deepseek-flash`, `deepseek-v4-pro`, `deepseek-flash`}.**
  *
  * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API.
  * @property maxTokens The maximum number of tokens that can be generated in the chat completion.
@@ -116,7 +116,7 @@ public class ChatCompletionRequest(
     public class Builder {
         private var messages = mutableListOf<ChatMessage>()
         private var params: ChatCompletionParams =
-            ChatCompletionParams(model = ChatModel.DEEPSEEK_V4_FLASH)
+            ChatCompletionParams(model = ChatModel.DEEPSEEK_FLASH)
 
         /**
          * Builds the conversation history via a [MessageBuilder] DSL.
@@ -151,7 +151,7 @@ public class ChatCompletionRequest(
     public class StreamBuilder {
         private var messages = mutableListOf<ChatMessage>()
         private var params: ChatCompletionParams =
-            ChatCompletionParams(model = ChatModel.DEEPSEEK_V4_FLASH)
+            ChatCompletionParams(model = ChatModel.DEEPSEEK_FLASH)
 
         /**
          * Builds the conversation history via a [MessageBuilder] DSL.
@@ -256,8 +256,8 @@ public class ChatCompletionRequest(
     /**
      * DSL for building the multimodal content of a single [UserMessage].
      *
-     * Appends [ContentPart]s in call order; at least one part is required. Images are only
-     * interpreted by [ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP].
+     * Appends [ContentPart]s in call order; at least one part is required. Images are only read by
+     * both models the API serves.
      *
      * Example:
      * ```kotlin

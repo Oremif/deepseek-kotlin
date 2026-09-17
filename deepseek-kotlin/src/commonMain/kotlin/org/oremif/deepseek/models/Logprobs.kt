@@ -23,8 +23,8 @@ public class LogProbs(
     }
 
     override fun hashCode(): Int {
-        var result = content?.hashCode() ?: 0
-        result = 31 * result + (reasoningContent?.hashCode() ?: 0)
+        var result = content.hashCode()
+        result = 31 * result + reasoningContent.hashCode()
         return result
     }
 
@@ -60,7 +60,7 @@ public class LogProb(
     override fun hashCode(): Int {
         var result = token.hashCode()
         result = 31 * result + logprob.hashCode()
-        result = 31 * result + (bytes?.hashCode() ?: 0)
+        result = 31 * result + bytes.hashCode()
         result = 31 * result + topLogprobs.hashCode()
         return result
     }
@@ -91,7 +91,7 @@ public class TopLogProb(
     override fun hashCode(): Int {
         var result = token.hashCode()
         result = 31 * result + logprob.hashCode()
-        result = 31 * result + (bytes?.hashCode() ?: 0)
+        result = 31 * result + bytes.hashCode()
         return result
     }
 
@@ -135,7 +135,7 @@ public class FIMLogProbs(
         var result = textOffset.hashCode()
         result = 31 * result + tokenLogprobs.hashCode()
         result = 31 * result + tokens.hashCode()
-        result = 31 * result + (topLogprobs?.hashCode() ?: 0)
+        result = 31 * result + topLogprobs.hashCode()
         return result
     }
 

@@ -56,13 +56,6 @@ public fun fimCompletionStreamParams(
     return FIMCompletionParams.StreamBuilder().apply(block).build()
 }
 
-/** Rejects [ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP]; any other slug is left to the server. */
-internal fun requireFimModel(model: ChatModel) {
-    require(model != ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP) {
-        "FIM completion is not supported by ${ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP}, use ChatModel.DEEPSEEK_V4_PRO"
-    }
-}
-
 /**
  * Parameters for configuring Fill-in-the-Middle (FIM) completion requests to DeepSeek models.
  *
@@ -81,9 +74,12 @@ internal fun requireFimModel(model: ChatModel) {
  * println(completion.choices.first().text)
  * ```
  *
- * @property model The DeepSeek model to use; the FIM endpoint only accepts
- *   [ChatModel.DEEPSEEK_V4_PRO], which is the default
- * @property echo Whether to include the prompt in the returned completion
+ * @property model The DeepSeek model to use. The reference documents only
+ *   [ChatModel.DEEPSEEK_V4_PRO], which is the default, but the endpoint also serves
+ *   [ChatModel.DEEPSEEK_FLASH]
+ * @property echo Whether to include the prompt in the returned completion. Cannot be combined with
+ *   [suffix] or [logprobs] — the API answers 400 `echo should not be used with suffix` / `echo
+ *   should not be used with logprobs`
  * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API
  * @property logprobs Maximum number of log probabilities to return (up to 20)
  * @property maxTokens Maximum number of tokens to generate; at least 1 and otherwise bounded by the
@@ -128,7 +124,6 @@ internal constructor(
         public var topP: Double? = null
 
         internal fun build(): FIMCompletionParams {
-            requireFimModel(model)
             maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
             temperature?.let {
                 require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" }
@@ -170,7 +165,6 @@ internal constructor(
         public var topP: Double? = null
 
         internal fun build(): FIMCompletionParams {
-            requireFimModel(model)
             maxTokens?.let { require(it >= 1) { "maxTokens must be >= 1" } }
             temperature?.let {
                 require(it in 0.0..2.0) { "temperature must be between 0.0 and 2.0" }
@@ -294,17 +288,17 @@ internal constructor(
 
     override fun hashCode(): Int {
         var result = model.hashCode()
-        result = 31 * result + (echo?.hashCode() ?: 0)
-        result = 31 * result + (frequencyPenalty?.hashCode() ?: 0)
-        result = 31 * result + (logprobs?.hashCode() ?: 0)
-        result = 31 * result + (maxTokens?.hashCode() ?: 0)
-        result = 31 * result + (presencePenalty?.hashCode() ?: 0)
-        result = 31 * result + (stop?.hashCode() ?: 0)
-        result = 31 * result + (stream?.hashCode() ?: 0)
-        result = 31 * result + (streamOptions?.hashCode() ?: 0)
-        result = 31 * result + (suffix?.hashCode() ?: 0)
-        result = 31 * result + (temperature?.hashCode() ?: 0)
-        result = 31 * result + (topP?.hashCode() ?: 0)
+        result = 31 * result + echo.hashCode()
+        result = 31 * result + frequencyPenalty.hashCode()
+        result = 31 * result + logprobs.hashCode()
+        result = 31 * result + maxTokens.hashCode()
+        result = 31 * result + presencePenalty.hashCode()
+        result = 31 * result + stop.hashCode()
+        result = 31 * result + stream.hashCode()
+        result = 31 * result + streamOptions.hashCode()
+        result = 31 * result + suffix.hashCode()
+        result = 31 * result + temperature.hashCode()
+        result = 31 * result + topP.hashCode()
         return result
     }
 

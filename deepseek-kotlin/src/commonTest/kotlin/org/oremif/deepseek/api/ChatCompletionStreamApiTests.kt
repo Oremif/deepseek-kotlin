@@ -19,7 +19,7 @@ class ChatCompletionStreamApiTests {
     private val request =
         ChatCompletionRequest(
             messages = listOf(UserMessage("Hi")),
-            model = ChatModel.DEEPSEEK_V4_FLASH,
+            model = ChatModel.DEEPSEEK_FLASH,
             stream = true,
         )
 
@@ -30,9 +30,9 @@ class ChatCompletionStreamApiTests {
     fun `chat stream delivers chunks and ignores DONE marker`() = runTest {
         val chunks =
             arrayOf(
-                """{"id":"c1","choices":[{"delta":{"role":"assistant","content":""},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-                """{"id":"c1","choices":[{"delta":{"content":"Hello"},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-                """{"id":"c1","choices":[{"delta":{"content":"!"},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[{"delta":{"role":"assistant","content":""},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[{"delta":{"content":"Hello"},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[{"delta":{"content":"!"},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-flash","object":"chat.completion.chunk"}""",
                 "[DONE]",
             )
         val engine = sseMockEngine {
@@ -58,8 +58,8 @@ class ChatCompletionStreamApiTests {
     fun `chat stream with include_usage reports usage on the final content chunk`() = runTest {
         val chunks =
             arrayOf(
-                """{"id":"c1","choices":[{"delta":{"content":"Hi"},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk","usage":null}""",
-                """{"id":"c1","choices":[{"delta":{},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk","usage":{"prompt_tokens":3,"completion_tokens":2,"prompt_cache_hit_tokens":0,"prompt_cache_miss_tokens":3,"total_tokens":5,"completion_tokens_details":{"reasoning_tokens":1}}}""",
+                """{"id":"c1","choices":[{"delta":{"content":"Hi"},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-flash","object":"chat.completion.chunk","usage":null}""",
+                """{"id":"c1","choices":[{"delta":{},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-flash","object":"chat.completion.chunk","usage":{"prompt_tokens":3,"completion_tokens":2,"prompt_cache_hit_tokens":0,"prompt_cache_miss_tokens":3,"total_tokens":5,"completion_tokens_details":{"reasoning_tokens":1}}}""",
                 "[DONE]",
             )
         val engine = sseMockEngine {
@@ -155,8 +155,8 @@ class ChatCompletionStreamApiTests {
     fun `chat stream still accepts a legacy usage-only chunk with empty choices`() = runTest {
         val chunks =
             arrayOf(
-                """{"id":"c1","choices":[{"delta":{"content":"Hi"},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-                """{"id":"c1","choices":[],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk","usage":{"prompt_tokens":3,"completion_tokens":2,"total_tokens":5}}""",
+                """{"id":"c1","choices":[{"delta":{"content":"Hi"},"index":0,"finish_reason":"stop"}],"created":1,"model":"deepseek-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[],"created":1,"model":"deepseek-flash","object":"chat.completion.chunk","usage":{"prompt_tokens":3,"completion_tokens":2,"total_tokens":5}}""",
                 "[DONE]",
             )
         val engine = sseMockEngine {
@@ -216,7 +216,7 @@ class ChatCompletionStreamApiTests {
                             UserMessage("Write a haiku"),
                             AssistantMessage("Silent code compiles", prefix = true),
                         ),
-                    model = ChatModel.DEEPSEEK_V4_FLASH,
+                    model = ChatModel.DEEPSEEK_FLASH,
                     stream = true,
                 )
             )
@@ -248,9 +248,9 @@ class ChatCompletionStreamApiTests {
     fun `chat stream preserves tool_calls delta fields`() = runTest {
         val chunks =
             arrayOf(
-                """{"id":"c1","choices":[{"delta":{"role":"assistant","tool_calls":[{"index":0,"id":"call_1","type":"function","function":{"name":"sum","arguments":""}}]},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-                """{"id":"c1","choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"a\":1,\"b\":2}"}}]},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
-                """{"id":"c1","choices":[{"delta":{},"index":0,"finish_reason":"tool_calls"}],"created":1,"model":"deepseek-v4-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[{"delta":{"role":"assistant","tool_calls":[{"index":0,"id":"call_1","type":"function","function":{"name":"sum","arguments":""}}]},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"a\":1,\"b\":2}"}}]},"index":0,"finish_reason":null}],"created":1,"model":"deepseek-flash","object":"chat.completion.chunk"}""",
+                """{"id":"c1","choices":[{"delta":{},"index":0,"finish_reason":"tool_calls"}],"created":1,"model":"deepseek-flash","object":"chat.completion.chunk"}""",
                 "[DONE]",
             )
         val engine = sseMockEngine {
