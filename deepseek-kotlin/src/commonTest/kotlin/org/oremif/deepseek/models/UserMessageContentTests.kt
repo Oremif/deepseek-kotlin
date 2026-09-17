@@ -4,8 +4,8 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
-import org.oremif.deepseek.testing.TestJson
 import kotlin.test.Test
+import org.oremif.deepseek.testing.TestJson
 
 class UserMessageContentTests {
 

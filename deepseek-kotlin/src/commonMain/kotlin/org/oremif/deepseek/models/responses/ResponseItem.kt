@@ -1,12 +1,12 @@
 package org.oremif.deepseek.models.responses
 
+import kotlin.jvm.JvmInline
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
-import kotlin.jvm.JvmInline
 
 /**
  * One entry of the conversation handed to — or produced by — the Responses API.

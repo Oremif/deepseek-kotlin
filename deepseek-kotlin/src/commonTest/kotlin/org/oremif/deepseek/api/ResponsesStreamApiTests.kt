@@ -10,6 +10,7 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
+import kotlin.test.Test
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.jsonPrimitive
@@ -18,7 +19,6 @@ import org.oremif.deepseek.models.ChatModel
 import org.oremif.deepseek.models.responses.*
 import org.oremif.deepseek.testing.sseMockEngine
 import org.oremif.deepseek.testing.testStreamClient
-import kotlin.test.Test
 
 class ResponsesStreamApiTests {
 

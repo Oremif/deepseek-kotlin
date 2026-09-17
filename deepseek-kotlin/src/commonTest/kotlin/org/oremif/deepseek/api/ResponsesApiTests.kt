@@ -12,6 +12,7 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import io.ktor.client.engine.mock.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.jsonPrimitive
@@ -24,7 +25,6 @@ import org.oremif.deepseek.models.ReasoningEffort
 import org.oremif.deepseek.models.responses.*
 import org.oremif.deepseek.testing.mockEngine
 import org.oremif.deepseek.testing.testClient
-import kotlin.test.Test
 
 class ResponsesApiTests {
 

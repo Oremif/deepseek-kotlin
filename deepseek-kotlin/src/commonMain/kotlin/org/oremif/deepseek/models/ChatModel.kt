@@ -1,7 +1,7 @@
 package org.oremif.deepseek.models
 
-import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmInline
+import kotlinx.serialization.Serializable
 
 /**
  * Identifier of a DeepSeek model, serialized as the raw slug the API expects.

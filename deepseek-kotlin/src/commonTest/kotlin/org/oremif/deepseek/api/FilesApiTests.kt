@@ -13,6 +13,7 @@ import io.kotest.matchers.string.shouldNotContain
 import io.ktor.client.engine.mock.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.models.ChatModel
@@ -20,7 +21,6 @@ import org.oremif.deepseek.models.FilePurpose
 import org.oremif.deepseek.models.SortOrder
 import org.oremif.deepseek.testing.mockEngine
 import org.oremif.deepseek.testing.testClient
-import kotlin.test.Test
 
 class FilesApiTests {
 
