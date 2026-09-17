@@ -17,7 +17,7 @@ plugins {
 
 group = "org.oremif"
 
-version = "0.4.0"
+version = "0.5.0"
 
 ktfmt { kotlinLangStyle() }
 
@@ -55,9 +55,9 @@ kotlin {
                 api(libs.coroutines.core)
                 api(libs.ktor.client.core)
                 api(libs.ktor.client.auth)
+                api(libs.serialization.json)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.client.serialization.json)
-                implementation(libs.serialization.json)
                 implementation(libs.ktor.client.logging)
             }
         }

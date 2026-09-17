@@ -7,7 +7,7 @@ This file provides guidance to coding agents (Claude Code, Codex, and other AI a
 Kotlin Multiplatform SDK for the DeepSeek REST API.
 
 - Published coordinates: `org.oremif:deepseek-kotlin`
-- Module version in source: `0.4.0`
+- Module version in source: `0.5.0`
 - Root Gradle build includes only `:deepseek-kotlin`
 - `example/` is a separate standalone Gradle project with its own wrapper and `settings.gradle.kts`
 
@@ -16,9 +16,10 @@ Supported targets: JVM, Android, Apple (`iosX64`, `iosArm64`, `iosSimulatorArm64
 ## Project Structure
 
 - `deepseek-kotlin/` — main published library module (Kotlin sources under `src/commonMain/kotlin/org/oremif/deepseek/`)
-  - `api/` — endpoint free functions: `chat.kt`, `chatStream.kt`, `fimCompletion.kt`, `fimCompletionStream.kt`, `userBalance.kt`, `models.kt`
+  - `api/` — endpoint free functions: `chat.kt`, `chatStream.kt`, `responses.kt`, `responsesStream.kt`, `files.kt`, `fimCompletion.kt`, `fimCompletionStream.kt`, `userBalance.kt`, `models.kt`
   - `client/` — `DeepSeekClient`, `DeepSeekClientStream`, `DeepSeekClientConfig`, `LoggingConfig`
-  - `models/` — request/response data classes, enums, message types
+  - `models/` — request/response data classes, enums, message types, content parts (`ContentPart.kt`), file objects
+  - `models/responses/` — the Responses API surface: `ResponseRequest`/`ResponseParams`, `ModelResponse`, `ResponseItem`, `ResponseContentPart`, `ResponseTool`, `ResponseStreamEvent`
   - `errors/` — `DeepSeekError`, `DeepSeekHeaders`
   - `utils/` — `retry.kt` (retry policy), `validate.kt`
   - `src/commonTest/kotlin/` — shared tests; mock infrastructure in `org/oremif/deepseek/testing/MockClients.kt`
@@ -35,6 +36,7 @@ Supported targets: JVM, Android, Apple (`iosX64`, `iosArm64`, `iosSimulatorArm64
 4. **Per-platform HTTP engines** — JVM/Android: OkHttp; Apple (iOS + macOS): Darwin; Linux/MinGW: CIO; wasmJs: JS. Engine deps are declared in `deepseek-kotlin/build.gradle.kts` source sets.
 5. **Endpoint files are free functions** on `DeepSeekClient` / `DeepSeekClientStream` (not methods) — look them up in `api/*.kt` rather than on the client class.
 6. **`explicitApi()` is enabled** — every public declaration must have an explicit visibility and return type.
+7. **Unknown wire values never throw** — the Responses API hand-written serializers wrap anything they cannot map in `UnknownItem` / `UnknownResponseContentPart` / `UnknownTool` / `UnknownResponseStreamEvent` instead of failing the call.
 
 ## Common Commands
 
@@ -116,8 +118,8 @@ Published to GitHub Pages by `.github/workflows/docs.yml` on each release (and o
 ## Development Notes
 
 - **Do not** use `:example:*` task paths from the repository root; `example/` is not in the root build. Invoke its tasks with `-p example` (e.g. `./gradlew -p example test`).
-- The example project depends on the **published** artifact `org.oremif:deepseek-kotlin:0.4.0`, not the local `:deepseek-kotlin` module. To exercise local SDK changes from the example, first run `publishToMavenLocal` or update the example's dependency.
-- The example project uses Kotlin `2.3.20` and `jvmToolchain(17)`.
+- The example project depends on the **published** artifact `org.oremif:deepseek-kotlin:0.5.0`, not the local `:deepseek-kotlin` module. To compile it against local SDK changes, run it as a composite build: `./gradlew -p example build --include-build ..` (Gradle substitutes the coordinates with the local module). `publishToMavenLocal` also works, but needs a signing key because `signAllPublications()` is on.
+- The example project uses Kotlin `2.4.20` and `jvmToolchain(17)`.
 - Examples and sample code expect `DEEPSEEK_API_KEY` in the environment.
 
 ## CI (`.github/workflows/ci.yml`)
