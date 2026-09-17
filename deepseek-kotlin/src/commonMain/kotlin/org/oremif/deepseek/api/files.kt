@@ -31,7 +31,7 @@ private val LIMIT_RANGE = 1..1000
  * ```kotlin
  * val uploaded = client.uploadFile(imageBytes, "cat.jpg", expiresAfterSeconds = 3600)
  * client.chatCompletion {
- *     params { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
+ *     params { model = ChatModel.DEEPSEEK_FLASH }
  *     messages {
  *         user {
  *             text("What is in this image?")
@@ -84,7 +84,7 @@ public suspend fun DeepSeekClientBase.uploadFile(
             setBody(MultiPartFormDataContent(parts))
             timeout { requestTimeoutMillis = config.uploadTimeout }
         }
-    validateResponse(response)
+    validateResponse(response, config.jsonConfig)
     return response.body()
 }
 
@@ -130,7 +130,7 @@ public suspend fun DeepSeekClientBase.listFiles(
             parameter("order", order?.value)
             parameter("purpose", purpose?.value)
         }
-    validateResponse(response)
+    validateResponse(response, config.jsonConfig)
     return response.body()
 }
 
@@ -152,7 +152,7 @@ public suspend fun DeepSeekClientBase.retrieveFile(fileId: String): FileObject {
     require(fileId.isNotBlank()) { "fileId must not be blank" }
 
     val response = client.get("files/${fileId.encodeURLPathPart()}")
-    validateResponse(response)
+    validateResponse(response, config.jsonConfig)
     return response.body()
 }
 
@@ -173,7 +173,7 @@ public suspend fun DeepSeekClientBase.deleteFile(fileId: String): FileDeleted {
     require(fileId.isNotBlank()) { "fileId must not be blank" }
 
     val response = client.delete("files/${fileId.encodeURLPathPart()}")
-    validateResponse(response)
+    validateResponse(response, config.jsonConfig)
     return response.body()
 }
 

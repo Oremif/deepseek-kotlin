@@ -7,10 +7,7 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.descriptors.buildClassSerialDescriptor
-import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
@@ -24,14 +21,11 @@ import kotlinx.serialization.json.*
  * The `MessageBuilder` DSL (available via `client.chat { ... }`) offers shorter syntax for building
  * a list of [ChatMessage] than instantiating these classes directly.
  *
- * @property content Message text; `null` is allowed for assistant/user messages that only carry
- *   tool calls, and for a [UserMessage] built from multimodal [parts][UserMessage.parts].
+ * The interface itself declares no `content`: the four subtypes disagree on its shape — required
+ * text for [SystemMessage] and [ToolMessage], optional text for [AssistantMessage], and text or
+ * multimodal parts for [UserMessage] — so each declares its own. Match on the subtype to read it.
  */
-@Serializable
-@JsonClassDiscriminator("role")
-public sealed interface ChatMessage {
-    public val content: String?
-}
+@Serializable @JsonClassDiscriminator("role") public sealed interface ChatMessage
 
 /**
  * System-role message — sets the assistant's behavior for the rest of the conversation.
@@ -49,7 +43,7 @@ public sealed interface ChatMessage {
  */
 @Serializable
 @SerialName("system")
-public class SystemMessage(override val content: String, public val name: String? = null) :
+public class SystemMessage(public val content: String, public val name: String? = null) :
     ChatMessage {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -69,27 +63,30 @@ public class SystemMessage(override val content: String, public val name: String
 /**
  * User-role message — the end-user's input to the conversation.
  *
- * Carries either plain text or a list of multimodal [ContentPart]s, never both: the two
- * constructors pick the form, and the unused accessor reads back as `null`.
+ * Carries either plain text or a list of multimodal [ContentPart]s; [UserContent] says which.
  *
  * ```kotlin
  * val text = UserMessage("What is Kotlin?")
  * val multimodal = UserMessage(listOf(TextPart("What is in this image?"), ImageUrlPart(url)))
+ *
+ * when (val content = multimodal.content) {
+ *     is UserContent.Text -> println(content.text)
+ *     is UserContent.Parts -> println(content.parts)
+ *     null -> println("no content")
+ * }
  * ```
  *
  * The `user { ... }` DSL builds the multimodal form more compactly — see
  * [ChatCompletionRequest.UserContentBuilder].
  *
- * @property content User's message text, or `null` when the message carries [parts] instead (or no
- *   new text at all).
- * @property parts Multimodal content of the message, or `null` when it is plain [content].
+ * @property content User's message text or multimodal parts; `null` when the message carries no new
+ *   content at all.
  * @property name Optional participant name forwarded to the model.
  */
 @Serializable
 @SerialName("user")
-public class UserMessage
-private constructor(
-    @SerialName("content") internal val rawContent: UserContent?,
+public class UserMessage(
+    public val content: UserContent?,
     public val name: String? = null,
 ) : ChatMessage {
 
@@ -115,38 +112,64 @@ private constructor(
         name: String? = null,
     ) : this(UserContent.Parts(parts), name)
 
-    override val content: String?
-        get() = (rawContent as? UserContent.Text)?.text
-
-    public val parts: List<ContentPart>?
-        get() = (rawContent as? UserContent.Parts)?.parts
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is UserMessage) return false
-        return content == other.content && parts == other.parts && name == other.name
+        return content == other.content && name == other.name
     }
 
     override fun hashCode(): Int {
         var result = content.hashCode()
-        result = 31 * result + parts.hashCode()
         result = 31 * result + name.hashCode()
         return result
     }
 
-    override fun toString(): String = "UserMessage(content=$content, parts=$parts, name=$name)"
+    override fun toString(): String = "UserMessage(content=$content, name=$name)"
 }
 
 /**
  * The two shapes the `content` of a [UserMessage] takes on the wire: a bare string, or an array of
- * [ContentPart]s. Kept internal — callers reach it through [UserMessage.content] and
- * [UserMessage.parts].
+ * [ContentPart]s.
+ *
+ * The [UserMessage] constructors wrap a `String` or a `List<ContentPart>` for you, so this type
+ * mostly shows up when reading a message back.
  */
 @Serializable(with = UserContentSerializer::class)
-internal sealed interface UserContent {
-    class Text(val text: String) : UserContent
+public sealed interface UserContent {
 
-    class Parts(val parts: List<ContentPart>) : UserContent
+    /**
+     * Plain text, sent and received as a bare JSON string.
+     *
+     * @property text The text itself.
+     */
+    public class Text(public val text: String) : UserContent {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Text) return false
+            return text == other.text
+        }
+
+        override fun hashCode(): Int = text.hashCode()
+
+        override fun toString(): String = "UserContent.Text(text='${'$'}text')"
+    }
+
+    /**
+     * Multimodal content, sent and received as a JSON array of parts.
+     *
+     * @property parts The parts, in the order the model sees them.
+     */
+    public class Parts(public val parts: List<ContentPart>) : UserContent {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Parts) return false
+            return parts == other.parts
+        }
+
+        override fun hashCode(): Int = parts.hashCode()
+
+        override fun toString(): String = "UserContent.Parts(parts=${'$'}parts)"
+    }
 }
 
 /**
@@ -184,28 +207,40 @@ internal object UserContentSerializer : KSerializer<UserContent> {
 }
 
 /**
- * Assistant-role message — either a prior model response replayed as context, or a seed for prefix
- * completion.
+ * Assistant-role message — a model response, whether produced by the API or replayed as context.
  *
- * Model responses returned by the API are represented by the specialised [ChatCompletionMessage]
- * subclass, which additionally carries [ToolCall]s.
+ * The same class travels in both directions, which is what makes the tool-calling loop a plain list
+ * append: take the message off a [ChatChoice] and put it straight back into the next request.
  *
- * @property content Assistant message text; may be `null` when the message only carries tool calls.
+ * ```kotlin
+ * val first = client.chat(params, messages)
+ * val call = first.choices.single().message.toolCalls?.single()
+ * val next = messages +
+ *     first.choices.single().message +
+ *     ToolMessage(runTool(call), call.id)
+ * ```
+ *
+ * @property content Assistant message text; `null` when the message only carries [toolCalls].
  * @property name Optional participant name forwarded to the model.
  * @property prefix When `true`, marks this message as a partial assistant response that the model
  *   should continue generating from. Prefix completion is only served from the beta base path: a
  *   request ending in such a message is routed to `beta/chat/completions` automatically, so the
  *   client needs no extra configuration.
- * @property reasoningContent Chain-of-thought that precedes [content] in thinking mode. Seeds the
- *   model's reasoning for the continuation, so it takes effect only alongside `prefix = true`.
+ * @property reasoningContent Chain-of-thought that precedes [content] in thinking mode. On a
+ *   response it is what the model thought; on a request it seeds the continuation, and so takes
+ *   effect only alongside `prefix = true`.
+ * @property toolCalls Tool calls the model emitted on this turn, or `null` if none. Answer each one
+ *   with a [ToolMessage] carrying the matching [ToolCall.id].
  */
 @Serializable
 @SerialName("assistant")
-public open class AssistantMessage(
-    override val content: String?,
+@JsonIgnoreUnknownKeys
+public class AssistantMessage(
+    public val content: String?,
     public val name: String? = null,
     public val prefix: Boolean? = null,
     public val reasoningContent: String? = null,
+    public val toolCalls: List<ToolCall>? = null,
 ) : ChatMessage {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -213,7 +248,8 @@ public open class AssistantMessage(
         return content == other.content &&
             name == other.name &&
             prefix == other.prefix &&
-            reasoningContent == other.reasoningContent
+            reasoningContent == other.reasoningContent &&
+            toolCalls == other.toolCalls
     }
 
     override fun hashCode(): Int {
@@ -221,45 +257,13 @@ public open class AssistantMessage(
         result = 31 * result + name.hashCode()
         result = 31 * result + prefix.hashCode()
         result = 31 * result + reasoningContent.hashCode()
+        result = 31 * result + toolCalls.hashCode()
         return result
     }
 
     override fun toString(): String =
-        "AssistantMessage(content=$content, name=$name, prefix=$prefix, reasoningContent=$reasoningContent)"
-}
-
-/**
- * Assistant-role message as returned by the DeepSeek API inside a [ChatChoice].
- *
- * Uses a custom serializer so that the `role` field is always present and `tool_calls` is emitted
- * only when non-null.
- *
- * @property toolCalls Tool calls the model emitted on this turn, or `null` if none.
- */
-@Serializable(with = ChatCompletionMessageSerializer::class)
-@SerialName("assistant")
-public class ChatCompletionMessage(
-    content: String?,
-    reasoningContent: String? = null,
-    public val toolCalls: List<ToolCall>? = null,
-) : AssistantMessage(content = content, reasoningContent = reasoningContent) {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is ChatCompletionMessage) return false
-        return content == other.content &&
-            reasoningContent == other.reasoningContent &&
-            toolCalls == other.toolCalls
-    }
-
-    override fun hashCode(): Int {
-        var result = content?.hashCode() ?: 0
-        result = 31 * result + (reasoningContent?.hashCode() ?: 0)
-        result = 31 * result + (toolCalls?.hashCode() ?: 0)
-        return result
-    }
-
-    override fun toString(): String =
-        "ChatCompletionMessage(content=$content, reasoningContent=$reasoningContent, toolCalls=$toolCalls)"
+        "AssistantMessage(content=$content, name=$name, prefix=$prefix, " +
+            "reasoningContent=$reasoningContent, toolCalls=$toolCalls)"
 }
 
 /**
@@ -281,8 +285,7 @@ public class ChatCompletionMessage(
  */
 @Serializable
 @SerialName("tool")
-public class ToolMessage(override val content: String, public val toolCallId: String) :
-    ChatMessage {
+public class ToolMessage(public val content: String, public val toolCallId: String) : ChatMessage {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is ToolMessage) return false
@@ -296,63 +299,4 @@ public class ToolMessage(override val content: String, public val toolCallId: St
     }
 
     override fun toString(): String = "ToolMessage(content='$content', toolCallId='$toolCallId')"
-}
-
-/**
- * Custom serializer for [ChatCompletionMessage] that enforces the assistant role on the wire and
- * omits `null` `tool_calls` fields from the output.
- *
- * Exposed publicly because it is referenced from the `@Serializable(with = ...)` annotation on
- * [ChatCompletionMessage]; callers do not normally invoke it directly.
- */
-public object ChatCompletionMessageSerializer : KSerializer<ChatCompletionMessage> {
-    override val descriptor: SerialDescriptor =
-        buildClassSerialDescriptor("ChatCompletionMessage") {
-            element<String?>("content")
-            element<String?>("reasoning_content")
-            element<List<ToolCall>?>("tool_calls")
-            element("role", String.serializer().descriptor)
-        }
-
-    override fun deserialize(decoder: Decoder): ChatCompletionMessage {
-        val jsonInput = decoder as? JsonDecoder ?: error("Can be deserialized only by JSON")
-        val json = jsonInput.decodeJsonElement().jsonObject
-        return ChatCompletionMessage(
-            content = json["content"]?.takeIf { it !is JsonNull }?.jsonPrimitive?.content,
-            reasoningContent =
-                json["reasoning_content"]?.takeIf { it !is JsonNull }?.jsonPrimitive?.content,
-            toolCalls =
-                json["tool_calls"]
-                    ?.takeIf { it !is JsonNull }
-                    ?.let {
-                        jsonInput.json.decodeFromJsonElement(
-                            ListSerializer(ToolCall.serializer()),
-                            it,
-                        )
-                    },
-        )
-    }
-
-    override fun serialize(encoder: Encoder, value: ChatCompletionMessage) {
-        val composite = encoder.beginStructure(descriptor)
-        composite.encodeNullableSerializableElement(
-            descriptor,
-            0,
-            String.serializer(),
-            value.content,
-        )
-        value.reasoningContent?.let {
-            composite.encodeNullableSerializableElement(descriptor, 1, String.serializer(), it)
-        }
-        value.toolCalls?.let {
-            composite.encodeNullableSerializableElement(
-                descriptor,
-                2,
-                ListSerializer(ToolCall.serializer()),
-                it,
-            )
-        }
-        composite.encodeStringElement(descriptor, 3, "assistant")
-        composite.endStructure(descriptor)
-    }
 }

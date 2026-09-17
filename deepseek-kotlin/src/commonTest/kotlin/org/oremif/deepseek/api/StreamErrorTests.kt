@@ -7,7 +7,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldNotBeInstanceOf
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
-import kotlin.test.Test
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runTest
 import org.oremif.deepseek.errors.DeepSeekException
@@ -17,19 +16,20 @@ import org.oremif.deepseek.models.FIMCompletionRequest
 import org.oremif.deepseek.models.UserMessage
 import org.oremif.deepseek.testing.sseMockEngine
 import org.oremif.deepseek.testing.testStreamClient
+import kotlin.test.Test
 
 class StreamErrorTests {
 
     private val chatRequest =
         ChatCompletionRequest(
             messages = listOf(UserMessage("Hi")),
-            model = ChatModel.DEEPSEEK_V4_FLASH,
+            model = ChatModel.DEEPSEEK_FLASH,
             stream = true,
         )
 
     private val fimRequest =
         FIMCompletionRequest(
-            model = ChatModel.DEEPSEEK_V4_FLASH,
+            model = ChatModel.DEEPSEEK_FLASH,
             prompt = "def foo():",
             stream = true,
         )

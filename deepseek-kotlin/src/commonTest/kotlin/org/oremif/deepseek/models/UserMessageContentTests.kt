@@ -1,13 +1,11 @@
 package org.oremif.deepseek.models
 
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.matchers.nulls.shouldBeNull
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.shouldBeInstanceOf
-import kotlin.test.Test
 import org.oremif.deepseek.testing.TestJson
+import kotlin.test.Test
 
 class UserMessageContentTests {
 
@@ -59,8 +57,7 @@ class UserMessageContentTests {
         val text =
             TestJson.decodeFromString<ChatMessage>("""{"role":"user","content":"Hi"}""")
                 .shouldBeInstanceOf<UserMessage>()
-        text.content shouldBe "Hi"
-        text.parts.shouldBeNull()
+        text.content.shouldBeInstanceOf<UserContent.Text>().text shouldBe "Hi"
 
         val multimodal =
             TestJson.decodeFromString<ChatMessage>(
@@ -69,8 +66,7 @@ class UserMessageContentTests {
                         """{"type":"file","file_id":"file-api-1"}]}"""
                 )
                 .shouldBeInstanceOf<UserMessage>()
-        multimodal.content.shouldBeNull()
-        multimodal.parts.shouldNotBeNull() shouldBe
+        multimodal.content.shouldBeInstanceOf<UserContent.Parts>().parts shouldBe
             listOf(
                 TextPart("hey"),
                 ImageUrlPart("https://example.com/a.jpg", ImageDetail.ORIGINAL),

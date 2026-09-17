@@ -45,6 +45,26 @@ public final class org/oremif/deepseek/api/ModelsKt {
 	public static final fun models (Lorg/oremif/deepseek/client/DeepSeekClientBase;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
+public final class org/oremif/deepseek/api/ResponsesKt {
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClient;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClient;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClient;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClient;Lorg/oremif/deepseek/models/responses/ResponseParams;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClient;Lorg/oremif/deepseek/models/responses/ResponseParams;Ljava/util/List;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClient;Lorg/oremif/deepseek/models/responses/ResponseParams;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClientBase;Lorg/oremif/deepseek/models/responses/ResponseRequest;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class org/oremif/deepseek/api/ResponsesStreamKt {
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClientStream;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClientStream;Ljava/util/List;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lorg/oremif/deepseek/models/responses/ResponseParams;Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lorg/oremif/deepseek/models/responses/ResponseParams;Ljava/util/List;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun createResponse (Lorg/oremif/deepseek/client/DeepSeekClientStream;Lorg/oremif/deepseek/models/responses/ResponseParams;Lkotlin/jvm/functions/Function1;)Lkotlinx/coroutines/flow/Flow;
+	public static final fun createResponseStream (Lorg/oremif/deepseek/client/DeepSeekClientBase;Lorg/oremif/deepseek/models/responses/ResponseRequest;)Lkotlinx/coroutines/flow/Flow;
+}
+
 public final class org/oremif/deepseek/api/UserBalanceKt {
 	public static final fun userBalance (Lorg/oremif/deepseek/client/DeepSeekClientBase;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
@@ -80,6 +100,7 @@ public abstract class org/oremif/deepseek/client/DeepSeekClientBase$Builder {
 	protected final fun getDeepSeekBaseUrl ()Ljava/lang/String;
 	protected final fun getFimCompletionTimeout ()J
 	protected final fun getJsonConfig ()Lkotlinx/serialization/json/Json;
+	protected final fun getResponseTimeout ()J
 	protected final fun getToken ()Ljava/lang/String;
 	protected final fun getUploadTimeout ()J
 	public final fun httpClient (Lio/ktor/client/HttpClient;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
@@ -88,10 +109,13 @@ public abstract class org/oremif/deepseek/client/DeepSeekClientBase$Builder {
 	public final fun jsonConfig (Lkotlinx/serialization/json/Json;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	public final fun logging (Lkotlin/jvm/functions/Function1;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	public static synthetic fun logging$default (Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
+	public final fun responseTimeout (I)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
+	public final fun responseTimeout-LRDsOJo (J)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	protected final fun setChatCompletionTimeout (J)V
 	protected final fun setDeepSeekBaseUrl (Ljava/lang/String;)V
 	protected final fun setFimCompletionTimeout (J)V
 	protected final fun setJsonConfig (Lkotlinx/serialization/json/Json;)V
+	protected final fun setResponseTimeout (J)V
 	protected final fun setUploadTimeout (J)V
 	public final fun uploadTimeout (I)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
 	public final fun uploadTimeout-LRDsOJo (J)Lorg/oremif/deepseek/client/DeepSeekClientBase$Builder;
@@ -99,11 +123,12 @@ public abstract class org/oremif/deepseek/client/DeepSeekClientBase$Builder {
 
 public final class org/oremif/deepseek/client/DeepSeekClientConfig {
 	public fun <init> ()V
-	public fun <init> (Lkotlinx/serialization/json/Json;JJJ)V
-	public synthetic fun <init> (Lkotlinx/serialization/json/Json;JJJILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lkotlinx/serialization/json/Json;JJJJ)V
+	public synthetic fun <init> (Lkotlinx/serialization/json/Json;JJJJILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public final fun getChatCompletionTimeout ()J
 	public final fun getFimCompletionTimeout ()J
 	public final fun getJsonConfig ()Lkotlinx/serialization/json/Json;
+	public final fun getResponseTimeout ()J
 	public final fun getUploadTimeout ()J
 }
 
@@ -250,19 +275,18 @@ public final class org/oremif/deepseek/errors/DeepSeekHeaders$Companion {
 	public final fun getEmpty ()Lorg/oremif/deepseek/errors/DeepSeekHeaders;
 }
 
-public class org/oremif/deepseek/models/AssistantMessage : org/oremif/deepseek/models/ChatMessage {
+public final class org/oremif/deepseek/models/AssistantMessage : org/oremif/deepseek/models/ChatMessage {
 	public static final field Companion Lorg/oremif/deepseek/models/AssistantMessage$Companion;
-	public synthetic fun <init> (ILjava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Lkotlinx/serialization/internal/SerializationConstructorMarker;)V
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Boolean;Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getContent ()Ljava/lang/String;
+	public final fun getContent ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;
 	public final fun getPrefix ()Ljava/lang/Boolean;
 	public final fun getReasoningContent ()Ljava/lang/String;
+	public final fun getToolCalls ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
-	public static final synthetic fun write$Self (Lorg/oremif/deepseek/models/AssistantMessage;Lkotlinx/serialization/encoding/CompositeEncoder;Lkotlinx/serialization/descriptors/SerialDescriptor;)V
 }
 
 public final synthetic class org/oremif/deepseek/models/AssistantMessage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
@@ -309,13 +333,13 @@ public final class org/oremif/deepseek/models/BalanceInfo$Companion {
 
 public final class org/oremif/deepseek/models/ChatChoice {
 	public static final field Companion Lorg/oremif/deepseek/models/ChatChoice$Companion;
-	public fun <init> (Lorg/oremif/deepseek/models/FinishReason;JLorg/oremif/deepseek/models/ChatCompletionMessage;Lorg/oremif/deepseek/models/LogProbs;)V
-	public synthetic fun <init> (Lorg/oremif/deepseek/models/FinishReason;JLorg/oremif/deepseek/models/ChatCompletionMessage;Lorg/oremif/deepseek/models/LogProbs;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/oremif/deepseek/models/FinishReason;JLorg/oremif/deepseek/models/AssistantMessage;Lorg/oremif/deepseek/models/LogProbs;)V
+	public synthetic fun <init> (Lorg/oremif/deepseek/models/FinishReason;JLorg/oremif/deepseek/models/AssistantMessage;Lorg/oremif/deepseek/models/LogProbs;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getFinishReason ()Lorg/oremif/deepseek/models/FinishReason;
 	public final fun getIndex ()J
 	public final fun getLogprobs ()Lorg/oremif/deepseek/models/LogProbs;
-	public final fun getMessage ()Lorg/oremif/deepseek/models/ChatCompletionMessage;
+	public final fun getMessage ()Lorg/oremif/deepseek/models/AssistantMessage;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -452,29 +476,6 @@ public final synthetic class org/oremif/deepseek/models/ChatCompletionDelta$$ser
 
 public final class org/oremif/deepseek/models/ChatCompletionDelta$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public final class org/oremif/deepseek/models/ChatCompletionMessage : org/oremif/deepseek/models/AssistantMessage {
-	public static final field Companion Lorg/oremif/deepseek/models/ChatCompletionMessage$Companion;
-	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
-	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getToolCalls ()Ljava/util/List;
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class org/oremif/deepseek/models/ChatCompletionMessage$Companion {
-	public final fun serializer ()Lkotlinx/serialization/KSerializer;
-}
-
-public final class org/oremif/deepseek/models/ChatCompletionMessageSerializer : kotlinx/serialization/KSerializer {
-	public static final field INSTANCE Lorg/oremif/deepseek/models/ChatCompletionMessageSerializer;
-	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
-	public fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/ChatCompletionMessage;
-	public fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
-	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
-	public fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/ChatCompletionMessage;)V
 }
 
 public final class org/oremif/deepseek/models/ChatCompletionNamedToolChoice : org/oremif/deepseek/models/ToolChoice {
@@ -686,7 +687,6 @@ public final class org/oremif/deepseek/models/ChatCompletionToolChoice$Companion
 
 public abstract interface class org/oremif/deepseek/models/ChatMessage {
 	public static final field Companion Lorg/oremif/deepseek/models/ChatMessage$Companion;
-	public abstract fun getContent ()Ljava/lang/String;
 }
 
 public final class org/oremif/deepseek/models/ChatMessage$Companion {
@@ -721,9 +721,8 @@ public final synthetic class org/oremif/deepseek/models/ChatModel$$serializer : 
 
 public final class org/oremif/deepseek/models/ChatModel$Companion {
 	public final fun getDEEPSEEK_CHAT-GojUQW0 ()Ljava/lang/String;
+	public final fun getDEEPSEEK_FLASH-GojUQW0 ()Ljava/lang/String;
 	public final fun getDEEPSEEK_REASONER-GojUQW0 ()Ljava/lang/String;
-	public final fun getDEEPSEEK_V4_FLASH-GojUQW0 ()Ljava/lang/String;
-	public final fun getDEEPSEEK_V4_FLASH_VISION_EXP-GojUQW0 ()Ljava/lang/String;
 	public final fun getDEEPSEEK_V4_PRO-GojUQW0 ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
@@ -1468,6 +1467,10 @@ public final class org/oremif/deepseek/models/ReasoningEffort$Companion {
 	public final fun getHIGH-lFkEgO0 ()Ljava/lang/String;
 	public final fun getLOW-lFkEgO0 ()Ljava/lang/String;
 	public final fun getMAX-lFkEgO0 ()Ljava/lang/String;
+	public final fun getMEDIUM-lFkEgO0 ()Ljava/lang/String;
+	public final fun getMINIMAL-lFkEgO0 ()Ljava/lang/String;
+	public final fun getNONE-lFkEgO0 ()Ljava/lang/String;
+	public final fun getXHIGH-lFkEgO0 ()Ljava/lang/String;
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
@@ -1552,7 +1555,7 @@ public final class org/oremif/deepseek/models/SystemMessage : org/oremif/deepsee
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getContent ()Ljava/lang/String;
+	public final fun getContent ()Ljava/lang/String;
 	public final fun getName ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1751,7 +1754,7 @@ public final class org/oremif/deepseek/models/ToolMessage : org/oremif/deepseek/
 	public static final field Companion Lorg/oremif/deepseek/models/ToolMessage$Companion;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getContent ()Ljava/lang/String;
+	public final fun getContent ()Ljava/lang/String;
 	public final fun getToolCallId ()Ljava/lang/String;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
@@ -1854,16 +1857,41 @@ public final class org/oremif/deepseek/models/UserBalance$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
 }
 
+public abstract interface class org/oremif/deepseek/models/UserContent {
+	public static final field Companion Lorg/oremif/deepseek/models/UserContent$Companion;
+}
+
+public final class org/oremif/deepseek/models/UserContent$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/UserContent$Parts : org/oremif/deepseek/models/UserContent {
+	public fun <init> (Ljava/util/List;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getParts ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/UserContent$Text : org/oremif/deepseek/models/UserContent {
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
 public final class org/oremif/deepseek/models/UserMessage : org/oremif/deepseek/models/ChatMessage {
 	public static final field Companion Lorg/oremif/deepseek/models/UserMessage$Companion;
 	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Ljava/util/List;Ljava/lang/String;)V
 	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/oremif/deepseek/models/UserContent;Ljava/lang/String;)V
+	public synthetic fun <init> (Lorg/oremif/deepseek/models/UserContent;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun equals (Ljava/lang/Object;)Z
-	public fun getContent ()Ljava/lang/String;
+	public final fun getContent ()Lorg/oremif/deepseek/models/UserContent;
 	public final fun getName ()Ljava/lang/String;
-	public final fun getParts ()Ljava/util/List;
 	public fun hashCode ()I
 	public fun toString ()Ljava/lang/String;
 }
@@ -1881,5 +1909,1320 @@ public final synthetic class org/oremif/deepseek/models/UserMessage$$serializer 
 
 public final class org/oremif/deepseek/models/UserMessage$Companion {
 	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ContentPartAddedEvent : org/oremif/deepseek/models/responses/ContentPartEvent {
+	public fun <init> (ILjava/lang/String;IILorg/oremif/deepseek/models/responses/ResponseContentPart;)V
+	public fun getContentIndex ()I
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getPart ()Lorg/oremif/deepseek/models/responses/ResponseContentPart;
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ContentPartDoneEvent : org/oremif/deepseek/models/responses/ContentPartEvent {
+	public fun <init> (ILjava/lang/String;IILorg/oremif/deepseek/models/responses/ResponseContentPart;)V
+	public fun getContentIndex ()I
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getPart ()Lorg/oremif/deepseek/models/responses/ResponseContentPart;
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public abstract class org/oremif/deepseek/models/responses/ContentPartEvent : org/oremif/deepseek/models/responses/ResponseStreamEvent {
+	public fun equals (Ljava/lang/Object;)Z
+	public abstract fun getContentIndex ()I
+	public abstract fun getItemId ()Ljava/lang/String;
+	public abstract fun getOutputIndex ()I
+	public abstract fun getPart ()Lorg/oremif/deepseek/models/responses/ResponseContentPart;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/CustomTool : org/oremif/deepseek/models/responses/ResponseTool {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/CustomTool$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/CustomTool$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/CustomTool$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/CustomTool;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/CustomTool;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/CustomTool$Companion {
+	public final fun getApplyPatch ()Lorg/oremif/deepseek/models/responses/CustomTool;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/CustomToolCallInputDeltaEvent : org/oremif/deepseek/models/responses/ToolInputDeltaEvent {
+	public fun <init> (ILjava/lang/String;ILjava/lang/String;)V
+	public fun getDelta ()Ljava/lang/String;
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/CustomToolCallInputDoneEvent : org/oremif/deepseek/models/responses/ToolInputDoneEvent {
+	public fun <init> (ILjava/lang/String;ILjava/lang/String;)V
+	public final fun getInput ()Ljava/lang/String;
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getToolInput ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/CustomToolCallItem : org/oremif/deepseek/models/responses/ResponseItem {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/CustomToolCallItem$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCallId ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getInput ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getStatus-7cK_r5I ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/CustomToolCallItem$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/CustomToolCallItem$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/CustomToolCallItem;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/CustomToolCallItem;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/CustomToolCallItem$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/CustomToolCallOutputItem : org/oremif/deepseek/models/responses/ResponseItem {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/CustomToolCallOutputItem$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public fun <init> (Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ResponseContent;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCallId ()Ljava/lang/String;
+	public final fun getOutput ()Lorg/oremif/deepseek/models/responses/ResponseContent;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/CustomToolCallOutputItem$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/CustomToolCallOutputItem$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/CustomToolCallOutputItem;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/CustomToolCallOutputItem;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/CustomToolCallOutputItem$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/FunctionCallArgumentsDeltaEvent : org/oremif/deepseek/models/responses/ToolInputDeltaEvent {
+	public fun <init> (ILjava/lang/String;ILjava/lang/String;)V
+	public fun getDelta ()Ljava/lang/String;
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/FunctionCallArgumentsDoneEvent : org/oremif/deepseek/models/responses/ToolInputDoneEvent {
+	public fun <init> (ILjava/lang/String;ILjava/lang/String;)V
+	public final fun getArguments ()Ljava/lang/String;
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getToolInput ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/FunctionCallItem : org/oremif/deepseek/models/responses/ResponseItem {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/FunctionCallItem$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArguments ()Ljava/lang/String;
+	public final fun getCallId ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getStatus-7cK_r5I ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/FunctionCallItem$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/FunctionCallItem$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/FunctionCallItem;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/FunctionCallItem;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/FunctionCallItem$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/FunctionCallOutputItem : org/oremif/deepseek/models/responses/ResponseItem {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/FunctionCallOutputItem$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public fun <init> (Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ResponseContent;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCallId ()Ljava/lang/String;
+	public final fun getOutput ()Lorg/oremif/deepseek/models/responses/ResponseContent;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/FunctionCallOutputItem$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/FunctionCallOutputItem$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/FunctionCallOutputItem;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/FunctionCallOutputItem;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/FunctionCallOutputItem$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/FunctionTool : org/oremif/deepseek/models/responses/ResponseTool {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/FunctionTool$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getParameters ()Lkotlinx/serialization/json/JsonObject;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/FunctionTool$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/FunctionTool$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/FunctionTool;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/FunctionTool;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/FunctionTool$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/IncompleteDetails {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/IncompleteDetails$Companion;
+	public fun <init> ()V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getReason-E9l32CU ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/IncompleteDetails$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/IncompleteDetails$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/IncompleteDetails;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/IncompleteDetails;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/IncompleteDetails$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/IncompleteReason {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/IncompleteReason$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lorg/oremif/deepseek/models/responses/IncompleteReason;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/IncompleteReason$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/IncompleteReason$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-vqpHBpo (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-CYSPARI (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/IncompleteReason$Companion {
+	public final fun getCONTENT_FILTER-wS04W_E ()Ljava/lang/String;
+	public final fun getMAX_OUTPUT_TOKENS-wS04W_E ()Ljava/lang/String;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/InputImagePart : org/oremif/deepseek/models/responses/ResponseContentPart {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/InputImagePart$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lorg/oremif/deepseek/models/ImageDetail;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lorg/oremif/deepseek/models/ImageDetail;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDetail ()Lorg/oremif/deepseek/models/ImageDetail;
+	public final fun getFileId ()Ljava/lang/String;
+	public final fun getImageUrl ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/InputImagePart$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/InputImagePart$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/InputImagePart;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/InputImagePart;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/InputImagePart$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/InputTextPart : org/oremif/deepseek/models/responses/TextContentPart {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/InputTextPart$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public fun getText ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/InputTextPart$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/InputTextPart$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/InputTextPart;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/InputTextPart;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/InputTextPart$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/InputTokensDetails {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/InputTokensDetails$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCachedTokens ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/InputTokensDetails$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/InputTokensDetails$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/InputTokensDetails;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/InputTokensDetails;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/InputTokensDetails$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/MessageItem : org/oremif/deepseek/models/responses/ResponseItem {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/MessageItem$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ResponseContent;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ResponseContent;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Lorg/oremif/deepseek/models/responses/ResponseContent;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getRole-PGA6Vms ()Ljava/lang/String;
+	public final fun getStatus-7cK_r5I ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/MessageItem$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/MessageItem$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/MessageItem;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/MessageItem;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/MessageItem$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ModelResponse {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ModelResponse$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lorg/oremif/deepseek/models/responses/ResponseError;Lorg/oremif/deepseek/models/responses/IncompleteDetails;Ljava/lang/String;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseUsage;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;JLjava/lang/String;Lorg/oremif/deepseek/models/responses/ResponseError;Lorg/oremif/deepseek/models/responses/IncompleteDetails;Ljava/lang/String;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseUsage;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCreatedAt ()J
+	public final fun getError ()Lorg/oremif/deepseek/models/responses/ResponseError;
+	public final fun getFunctionCalls ()Ljava/util/List;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getIncompleteDetails ()Lorg/oremif/deepseek/models/responses/IncompleteDetails;
+	public final fun getModel ()Ljava/lang/String;
+	public final fun getObject ()Ljava/lang/String;
+	public final fun getOutput ()Ljava/util/List;
+	public final fun getOutputText ()Ljava/lang/String;
+	public final fun getStatus-qR0eUcM ()Ljava/lang/String;
+	public final fun getUsage ()Lorg/oremif/deepseek/models/responses/ResponseUsage;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/ModelResponse$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/ModelResponse$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/ModelResponse;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/ModelResponse;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ModelResponse$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/NamedResponseToolChoice : org/oremif/deepseek/models/responses/ResponseToolChoice {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/NamedResponseToolChoice$Companion;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/NamedResponseToolChoice$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/NamedResponseToolChoice$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/NamedResponseToolChoice;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/NamedResponseToolChoice;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/NamedResponseToolChoice$Companion {
+	public final fun function (Ljava/lang/String;)Lorg/oremif/deepseek/models/responses/NamedResponseToolChoice;
+	public final fun getWebSearch ()Lorg/oremif/deepseek/models/responses/NamedResponseToolChoice;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/OutputItemAddedEvent : org/oremif/deepseek/models/responses/OutputItemEvent {
+	public fun <init> (IILorg/oremif/deepseek/models/responses/ResponseItem;)V
+	public fun getItem ()Lorg/oremif/deepseek/models/responses/ResponseItem;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/OutputItemDoneEvent : org/oremif/deepseek/models/responses/OutputItemEvent {
+	public fun <init> (IILorg/oremif/deepseek/models/responses/ResponseItem;)V
+	public fun getItem ()Lorg/oremif/deepseek/models/responses/ResponseItem;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public abstract class org/oremif/deepseek/models/responses/OutputItemEvent : org/oremif/deepseek/models/responses/ResponseStreamEvent {
+	public fun equals (Ljava/lang/Object;)Z
+	public abstract fun getItem ()Lorg/oremif/deepseek/models/responses/ResponseItem;
+	public abstract fun getOutputIndex ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/OutputTextDeltaEvent : org/oremif/deepseek/models/responses/TextDeltaEvent {
+	public fun <init> (ILjava/lang/String;IILjava/lang/String;)V
+	public fun getContentIndex ()I
+	public fun getDelta ()Ljava/lang/String;
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/OutputTextDoneEvent : org/oremif/deepseek/models/responses/TextDoneEvent {
+	public fun <init> (ILjava/lang/String;IILjava/lang/String;)V
+	public fun getContentIndex ()I
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getText ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/OutputTextPart : org/oremif/deepseek/models/responses/TextContentPart {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/OutputTextPart$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public fun getText ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/OutputTextPart$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/OutputTextPart$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/OutputTextPart;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/OutputTextPart;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/OutputTextPart$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/OutputTokensDetails {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/OutputTokensDetails$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/Integer;)V
+	public synthetic fun <init> (Ljava/lang/Integer;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getReasoningTokens ()Ljava/lang/Integer;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/OutputTokensDetails$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/OutputTokensDetails$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/OutputTokensDetails;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/OutputTokensDetails;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/OutputTokensDetails$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ReasoningConfig {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ReasoningConfig$Companion;
+	public fun <init> ()V
+	public synthetic fun <init> (Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEffort-EJCfyis ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/ReasoningConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/ReasoningConfig$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/ReasoningConfig;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/ReasoningConfig;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ReasoningConfig$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ReasoningItem : org/oremif/deepseek/models/responses/ResponseItem {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ReasoningItem$Companion;
+	public fun <init> ()V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getContent ()Ljava/util/List;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getStatus-7cK_r5I ()Ljava/lang/String;
+	public final fun getText ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/ReasoningItem$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/ReasoningItem$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/ReasoningItem;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/ReasoningItem;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ReasoningItem$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ReasoningTextDeltaEvent : org/oremif/deepseek/models/responses/TextDeltaEvent {
+	public fun <init> (ILjava/lang/String;IILjava/lang/String;)V
+	public fun getContentIndex ()I
+	public fun getDelta ()Ljava/lang/String;
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ReasoningTextDoneEvent : org/oremif/deepseek/models/responses/TextDoneEvent {
+	public fun <init> (ILjava/lang/String;IILjava/lang/String;)V
+	public fun getContentIndex ()I
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getText ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ReasoningTextPart : org/oremif/deepseek/models/responses/TextContentPart {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ReasoningTextPart$Companion;
+	public fun <init> (Ljava/lang/String;)V
+	public fun getText ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/ReasoningTextPart$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/ReasoningTextPart$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/ReasoningTextPart;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/ReasoningTextPart;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ReasoningTextPart$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseCompletedEvent : org/oremif/deepseek/models/responses/ResponseSnapshotEvent {
+	public fun <init> (ILorg/oremif/deepseek/models/responses/ModelResponse;)V
+	public fun getResponse ()Lorg/oremif/deepseek/models/responses/ModelResponse;
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public abstract interface class org/oremif/deepseek/models/responses/ResponseContent {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseContent$Companion;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseContent$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseContent$Parts : org/oremif/deepseek/models/responses/ResponseContent {
+	public fun <init> (Ljava/util/List;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getParts ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseContent$Text : org/oremif/deepseek/models/responses/ResponseContent {
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/oremif/deepseek/models/responses/ResponseContentPart {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseContentPart$Companion;
+	public abstract fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseContentPart$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseCreatedEvent : org/oremif/deepseek/models/responses/ResponseSnapshotEvent {
+	public fun <init> (ILorg/oremif/deepseek/models/responses/ModelResponse;)V
+	public fun getResponse ()Lorg/oremif/deepseek/models/responses/ModelResponse;
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseError {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseError$Companion;
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCode ()Ljava/lang/String;
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/ResponseError$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/ResponseError$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/ResponseError;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/ResponseError;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseError$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseFailedEvent : org/oremif/deepseek/models/responses/ResponseSnapshotEvent {
+	public fun <init> (ILorg/oremif/deepseek/models/responses/ModelResponse;)V
+	public fun getResponse ()Lorg/oremif/deepseek/models/responses/ModelResponse;
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseInProgressEvent : org/oremif/deepseek/models/responses/ResponseSnapshotEvent {
+	public fun <init> (ILorg/oremif/deepseek/models/responses/ModelResponse;)V
+	public fun getResponse ()Lorg/oremif/deepseek/models/responses/ModelResponse;
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseIncompleteEvent : org/oremif/deepseek/models/responses/ResponseSnapshotEvent {
+	public fun <init> (ILorg/oremif/deepseek/models/responses/ModelResponse;)V
+	public fun getResponse ()Lorg/oremif/deepseek/models/responses/ModelResponse;
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public abstract interface class org/oremif/deepseek/models/responses/ResponseInput {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseInput$Companion;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseInput$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseInput$Items : org/oremif/deepseek/models/responses/ResponseInput {
+	public fun <init> (Ljava/util/List;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getItems ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseInput$Text : org/oremif/deepseek/models/responses/ResponseInput {
+	public fun <init> (Ljava/lang/String;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class org/oremif/deepseek/models/responses/ResponseItem {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseItem$Companion;
+	public abstract fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseItem$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseItemKt {
+	public static final fun argumentsAsJsonOrNull (Lorg/oremif/deepseek/models/responses/FunctionCallItem;Lkotlinx/serialization/json/Json;)Lkotlinx/serialization/json/JsonObject;
+	public static synthetic fun argumentsAsJsonOrNull$default (Lorg/oremif/deepseek/models/responses/FunctionCallItem;Lkotlinx/serialization/json/Json;ILjava/lang/Object;)Lkotlinx/serialization/json/JsonObject;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseParams {
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ReasoningConfig;Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Double;Ljava/lang/Double;Lorg/oremif/deepseek/models/responses/TextConfig;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseToolChoice;Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun copy-th2XUKc (Ljava/lang/String;Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ReasoningConfig;Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Double;Ljava/lang/Double;Lorg/oremif/deepseek/models/responses/TextConfig;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseToolChoice;Ljava/lang/Integer;Ljava/lang/String;)Lorg/oremif/deepseek/models/responses/ResponseParams;
+	public static synthetic fun copy-th2XUKc$default (Lorg/oremif/deepseek/models/responses/ResponseParams;Ljava/lang/String;Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ReasoningConfig;Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Double;Ljava/lang/Double;Lorg/oremif/deepseek/models/responses/TextConfig;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseToolChoice;Ljava/lang/Integer;Ljava/lang/String;ILjava/lang/Object;)Lorg/oremif/deepseek/models/responses/ResponseParams;
+	public final fun createRequest ()Lorg/oremif/deepseek/models/responses/ResponseRequest;
+	public final fun createRequest (Ljava/lang/String;)Lorg/oremif/deepseek/models/responses/ResponseRequest;
+	public final fun createRequest (Ljava/util/List;)Lorg/oremif/deepseek/models/responses/ResponseRequest;
+	public final fun createRequest (Lorg/oremif/deepseek/models/responses/ResponseInput;)Lorg/oremif/deepseek/models/responses/ResponseRequest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInstructions ()Ljava/lang/String;
+	public final fun getMaxOutputTokens ()Ljava/lang/Integer;
+	public final fun getModel-GojUQW0 ()Ljava/lang/String;
+	public final fun getReasoning ()Lorg/oremif/deepseek/models/responses/ReasoningConfig;
+	public final fun getStream ()Ljava/lang/Boolean;
+	public final fun getTemperature ()Ljava/lang/Double;
+	public final fun getText ()Lorg/oremif/deepseek/models/responses/TextConfig;
+	public final fun getToolChoice ()Lorg/oremif/deepseek/models/responses/ResponseToolChoice;
+	public final fun getTools ()Ljava/util/List;
+	public final fun getTopLogprobs ()Ljava/lang/Integer;
+	public final fun getTopP ()Ljava/lang/Double;
+	public final fun getUser ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseParams$Builder {
+	public fun <init> ()V
+	public final fun getInstructions ()Ljava/lang/String;
+	public final fun getMaxOutputTokens ()Ljava/lang/Integer;
+	public final fun getModel-GojUQW0 ()Ljava/lang/String;
+	public final fun getReasoning ()Lorg/oremif/deepseek/models/responses/ReasoningConfig;
+	public final fun getTemperature ()Ljava/lang/Double;
+	public final fun getText ()Lorg/oremif/deepseek/models/responses/TextConfig;
+	public final fun getToolChoice ()Lorg/oremif/deepseek/models/responses/ResponseToolChoice;
+	public final fun getTools ()Ljava/util/List;
+	public final fun getTopLogprobs ()Ljava/lang/Integer;
+	public final fun getTopP ()Ljava/lang/Double;
+	public final fun getUser ()Ljava/lang/String;
+	public final fun setInstructions (Ljava/lang/String;)V
+	public final fun setMaxOutputTokens (Ljava/lang/Integer;)V
+	public final fun setModel-n9SmoFs (Ljava/lang/String;)V
+	public final fun setReasoning (Lorg/oremif/deepseek/models/responses/ReasoningConfig;)V
+	public final fun setTemperature (Ljava/lang/Double;)V
+	public final fun setText (Lorg/oremif/deepseek/models/responses/TextConfig;)V
+	public final fun setToolChoice (Lorg/oremif/deepseek/models/responses/ResponseToolChoice;)V
+	public final fun setTools (Ljava/util/List;)V
+	public final fun setTopLogprobs (Ljava/lang/Integer;)V
+	public final fun setTopP (Ljava/lang/Double;)V
+	public final fun setUser (Ljava/lang/String;)V
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseParams$StreamBuilder {
+	public fun <init> ()V
+	public final fun getInstructions ()Ljava/lang/String;
+	public final fun getMaxOutputTokens ()Ljava/lang/Integer;
+	public final fun getModel-GojUQW0 ()Ljava/lang/String;
+	public final fun getReasoning ()Lorg/oremif/deepseek/models/responses/ReasoningConfig;
+	public final fun getTemperature ()Ljava/lang/Double;
+	public final fun getText ()Lorg/oremif/deepseek/models/responses/TextConfig;
+	public final fun getToolChoice ()Lorg/oremif/deepseek/models/responses/ResponseToolChoice;
+	public final fun getTools ()Ljava/util/List;
+	public final fun getTopLogprobs ()Ljava/lang/Integer;
+	public final fun getTopP ()Ljava/lang/Double;
+	public final fun getUser ()Ljava/lang/String;
+	public final fun setInstructions (Ljava/lang/String;)V
+	public final fun setMaxOutputTokens (Ljava/lang/Integer;)V
+	public final fun setModel-n9SmoFs (Ljava/lang/String;)V
+	public final fun setReasoning (Lorg/oremif/deepseek/models/responses/ReasoningConfig;)V
+	public final fun setTemperature (Ljava/lang/Double;)V
+	public final fun setText (Lorg/oremif/deepseek/models/responses/TextConfig;)V
+	public final fun setToolChoice (Lorg/oremif/deepseek/models/responses/ResponseToolChoice;)V
+	public final fun setTools (Ljava/util/List;)V
+	public final fun setTopLogprobs (Ljava/lang/Integer;)V
+	public final fun setTopP (Ljava/lang/Double;)V
+	public final fun setUser (Ljava/lang/String;)V
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseParamsKt {
+	public static final fun responseParams (Lkotlin/jvm/functions/Function1;)Lorg/oremif/deepseek/models/responses/ResponseParams;
+	public static final fun responseStreamParams (Lkotlin/jvm/functions/Function1;)Lorg/oremif/deepseek/models/responses/ResponseParams;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseRequest {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseRequest$Companion;
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ReasoningConfig;Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Double;Ljava/lang/Double;Lorg/oremif/deepseek/models/responses/TextConfig;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseToolChoice;Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ReasoningConfig;Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Double;Ljava/lang/Double;Lorg/oremif/deepseek/models/responses/TextConfig;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseToolChoice;Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ReasoningConfig;Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Double;Ljava/lang/Double;Lorg/oremif/deepseek/models/responses/TextConfig;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseToolChoice;Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ReasoningConfig;Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Double;Ljava/lang/Double;Lorg/oremif/deepseek/models/responses/TextConfig;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseToolChoice;Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ResponseInput;Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ReasoningConfig;Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Double;Ljava/lang/Double;Lorg/oremif/deepseek/models/responses/TextConfig;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseToolChoice;Ljava/lang/Integer;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ResponseInput;Ljava/lang/String;Lorg/oremif/deepseek/models/responses/ReasoningConfig;Ljava/lang/Integer;Ljava/lang/Boolean;Ljava/lang/Double;Ljava/lang/Double;Lorg/oremif/deepseek/models/responses/TextConfig;Ljava/util/List;Lorg/oremif/deepseek/models/responses/ResponseToolChoice;Ljava/lang/Integer;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInput ()Lorg/oremif/deepseek/models/responses/ResponseInput;
+	public final fun getInstructions ()Ljava/lang/String;
+	public final fun getMaxOutputTokens ()Ljava/lang/Integer;
+	public final fun getModel-GojUQW0 ()Ljava/lang/String;
+	public final fun getReasoning ()Lorg/oremif/deepseek/models/responses/ReasoningConfig;
+	public final fun getStream ()Ljava/lang/Boolean;
+	public final fun getTemperature ()Ljava/lang/Double;
+	public final fun getText ()Lorg/oremif/deepseek/models/responses/TextConfig;
+	public final fun getToolChoice ()Lorg/oremif/deepseek/models/responses/ResponseToolChoice;
+	public final fun getTools ()Ljava/util/List;
+	public final fun getTopLogprobs ()Ljava/lang/Integer;
+	public final fun getTopP ()Ljava/lang/Double;
+	public final fun getUser ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/ResponseRequest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/ResponseRequest$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/ResponseRequest;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/ResponseRequest;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseRequest$Builder {
+	public fun <init> ()V
+	public final fun input (Ljava/lang/String;)V
+	public final fun input (Ljava/util/List;)V
+	public final fun input (Lkotlin/jvm/functions/Function1;)V
+	public final fun params (Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseRequest$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseRequest$ContentBuilder {
+	public fun <init> ()V
+	public final fun image (Ljava/lang/String;Lorg/oremif/deepseek/models/ImageDetail;)V
+	public static synthetic fun image$default (Lorg/oremif/deepseek/models/responses/ResponseRequest$ContentBuilder;Ljava/lang/String;Lorg/oremif/deepseek/models/ImageDetail;ILjava/lang/Object;)V
+	public final fun imageFile (Ljava/lang/String;)V
+	public final fun outputText (Ljava/lang/String;)V
+	public final fun part (Lorg/oremif/deepseek/models/responses/ResponseContentPart;)V
+	public final fun text (Ljava/lang/String;)V
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseRequest$InputBuilder {
+	public fun <init> ()V
+	public final fun assistant (Ljava/lang/String;)V
+	public final fun developer (Ljava/lang/String;)V
+	public final fun functionCall (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public final fun functionCallOutput (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun functionCallOutput (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)V
+	public final fun item (Lorg/oremif/deepseek/models/responses/ResponseItem;)V
+	public final fun items (Ljava/util/List;)V
+	public final fun message-zk7GbVU (Ljava/lang/String;Ljava/lang/String;)V
+	public final fun reasoning (Ljava/lang/String;)V
+	public final fun system (Ljava/lang/String;)V
+	public final fun user (Ljava/lang/String;)V
+	public final fun user (Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseRequest$StreamBuilder {
+	public fun <init> ()V
+	public final fun input (Ljava/lang/String;)V
+	public final fun input (Ljava/util/List;)V
+	public final fun input (Lkotlin/jvm/functions/Function1;)V
+	public final fun params (Lkotlin/jvm/functions/Function1;)V
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseRole {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseRole$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lorg/oremif/deepseek/models/responses/ResponseRole;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/ResponseRole$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/ResponseRole$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-H5X9f3s (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-oseWLMw (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseRole$Companion {
+	public final fun getASSISTANT-PGA6Vms ()Ljava/lang/String;
+	public final fun getDEVELOPER-PGA6Vms ()Ljava/lang/String;
+	public final fun getSYSTEM-PGA6Vms ()Ljava/lang/String;
+	public final fun getUSER-PGA6Vms ()Ljava/lang/String;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract class org/oremif/deepseek/models/responses/ResponseSnapshotEvent : org/oremif/deepseek/models/responses/ResponseStreamEvent {
+	public fun equals (Ljava/lang/Object;)Z
+	public abstract fun getResponse ()Lorg/oremif/deepseek/models/responses/ModelResponse;
+	public fun hashCode ()I
+	public final fun isTerminal ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseStatus {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseStatus$Companion;
+	public static final synthetic fun box-impl (Ljava/lang/String;)Lorg/oremif/deepseek/models/responses/ResponseStatus;
+	public static fun constructor-impl (Ljava/lang/String;)Ljava/lang/String;
+	public fun equals (Ljava/lang/Object;)Z
+	public static fun equals-impl (Ljava/lang/String;Ljava/lang/Object;)Z
+	public static final fun equals-impl0 (Ljava/lang/String;Ljava/lang/String;)Z
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public static fun hashCode-impl (Ljava/lang/String;)I
+	public fun toString ()Ljava/lang/String;
+	public static fun toString-impl (Ljava/lang/String;)Ljava/lang/String;
+	public final synthetic fun unbox-impl ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/ResponseStatus$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/ResponseStatus$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize-pNvbD3A (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/String;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize-DKrPNII (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/String;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseStatus$Companion {
+	public final fun getCOMPLETED-qR0eUcM ()Ljava/lang/String;
+	public final fun getFAILED-qR0eUcM ()Ljava/lang/String;
+	public final fun getINCOMPLETE-qR0eUcM ()Ljava/lang/String;
+	public final fun getIN_PROGRESS-qR0eUcM ()Ljava/lang/String;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class org/oremif/deepseek/models/responses/ResponseStreamEvent {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseStreamEvent$Companion;
+	public abstract fun getSequenceNumber ()I
+	public abstract fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseStreamEvent$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class org/oremif/deepseek/models/responses/ResponseTool {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseTool$Companion;
+	public abstract fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseTool$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class org/oremif/deepseek/models/responses/ResponseToolChoice {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseToolChoice$Companion;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseToolChoice$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseToolChoiceMode : java/lang/Enum, org/oremif/deepseek/models/responses/ResponseToolChoice {
+	public static final field AUTO Lorg/oremif/deepseek/models/responses/ResponseToolChoiceMode;
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseToolChoiceMode$Companion;
+	public static final field NONE Lorg/oremif/deepseek/models/responses/ResponseToolChoiceMode;
+	public static final field REQUIRED Lorg/oremif/deepseek/models/responses/ResponseToolChoiceMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lorg/oremif/deepseek/models/responses/ResponseToolChoiceMode;
+	public static fun values ()[Lorg/oremif/deepseek/models/responses/ResponseToolChoiceMode;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseToolChoiceMode$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseUsage {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/ResponseUsage$Companion;
+	public fun <init> (ILorg/oremif/deepseek/models/responses/InputTokensDetails;ILorg/oremif/deepseek/models/responses/OutputTokensDetails;I)V
+	public synthetic fun <init> (ILorg/oremif/deepseek/models/responses/InputTokensDetails;ILorg/oremif/deepseek/models/responses/OutputTokensDetails;IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInputTokens ()I
+	public final fun getInputTokensDetails ()Lorg/oremif/deepseek/models/responses/InputTokensDetails;
+	public final fun getOutputTokens ()I
+	public final fun getOutputTokensDetails ()Lorg/oremif/deepseek/models/responses/OutputTokensDetails;
+	public final fun getTotalTokens ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/ResponseUsage$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/ResponseUsage$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/ResponseUsage;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/ResponseUsage;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/ResponseUsage$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/TextConfig {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/TextConfig$Companion;
+	public fun <init> (Lorg/oremif/deepseek/models/responses/TextFormat;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFormat ()Lorg/oremif/deepseek/models/responses/TextFormat;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/TextConfig$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/TextConfig$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/TextConfig;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/TextConfig;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/TextConfig$Companion {
+	public final fun getJsonObject ()Lorg/oremif/deepseek/models/responses/TextConfig;
+	public final fun getText ()Lorg/oremif/deepseek/models/responses/TextConfig;
+	public final fun jsonSchema (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)Lorg/oremif/deepseek/models/responses/TextConfig;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract class org/oremif/deepseek/models/responses/TextContentPart : org/oremif/deepseek/models/responses/ResponseContentPart {
+	public fun equals (Ljava/lang/Object;)Z
+	public abstract fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class org/oremif/deepseek/models/responses/TextDeltaEvent : org/oremif/deepseek/models/responses/ResponseStreamEvent {
+	public fun equals (Ljava/lang/Object;)Z
+	public abstract fun getContentIndex ()I
+	public abstract fun getDelta ()Ljava/lang/String;
+	public abstract fun getItemId ()Ljava/lang/String;
+	public abstract fun getOutputIndex ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class org/oremif/deepseek/models/responses/TextDoneEvent : org/oremif/deepseek/models/responses/ResponseStreamEvent {
+	public fun equals (Ljava/lang/Object;)Z
+	public abstract fun getContentIndex ()I
+	public abstract fun getItemId ()Ljava/lang/String;
+	public abstract fun getOutputIndex ()I
+	public abstract fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/TextFormat {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/TextFormat$Companion;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getName ()Ljava/lang/String;
+	public final fun getSchema ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/TextFormat$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/TextFormat$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/TextFormat;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/TextFormat;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/TextFormat$Companion {
+	public final fun getJsonObject ()Lorg/oremif/deepseek/models/responses/TextFormat;
+	public final fun getText ()Lorg/oremif/deepseek/models/responses/TextFormat;
+	public final fun jsonSchema (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)Lorg/oremif/deepseek/models/responses/TextFormat;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract class org/oremif/deepseek/models/responses/ToolInputDeltaEvent : org/oremif/deepseek/models/responses/ResponseStreamEvent {
+	public fun equals (Ljava/lang/Object;)Z
+	public abstract fun getDelta ()Ljava/lang/String;
+	public abstract fun getItemId ()Ljava/lang/String;
+	public abstract fun getOutputIndex ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class org/oremif/deepseek/models/responses/ToolInputDoneEvent : org/oremif/deepseek/models/responses/ResponseStreamEvent {
+	public fun equals (Ljava/lang/Object;)Z
+	public abstract fun getItemId ()Ljava/lang/String;
+	public abstract fun getOutputIndex ()I
+	public abstract fun getToolInput ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/UnknownItem : org/oremif/deepseek/models/responses/ResponseItem {
+	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRaw ()Lkotlinx/serialization/json/JsonObject;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/UnknownResponseContentPart : org/oremif/deepseek/models/responses/ResponseContentPart {
+	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRaw ()Lkotlinx/serialization/json/JsonObject;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/UnknownResponseStreamEvent : org/oremif/deepseek/models/responses/ResponseStreamEvent {
+	public fun <init> (Ljava/lang/String;ILkotlinx/serialization/json/JsonObject;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRaw ()Lkotlinx/serialization/json/JsonObject;
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/UnknownTool : org/oremif/deepseek/models/responses/ResponseTool {
+	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getRaw ()Lkotlinx/serialization/json/JsonObject;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/WebSearchCallCompletedEvent : org/oremif/deepseek/models/responses/WebSearchCallEvent {
+	public fun <init> (ILjava/lang/String;I)V
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public abstract class org/oremif/deepseek/models/responses/WebSearchCallEvent : org/oremif/deepseek/models/responses/ResponseStreamEvent {
+	public fun equals (Ljava/lang/Object;)Z
+	public abstract fun getItemId ()Ljava/lang/String;
+	public abstract fun getOutputIndex ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/WebSearchCallInProgressEvent : org/oremif/deepseek/models/responses/WebSearchCallEvent {
+	public fun <init> (ILjava/lang/String;I)V
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/WebSearchCallItem : org/oremif/deepseek/models/responses/ResponseItem {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/WebSearchCallItem$Companion;
+	public fun <init> ()V
+	public synthetic fun <init> (Lkotlinx/serialization/json/JsonObject;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (Lkotlinx/serialization/json/JsonObject;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAction ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getStatus-7cK_r5I ()Ljava/lang/String;
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class org/oremif/deepseek/models/responses/WebSearchCallItem$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lorg/oremif/deepseek/models/responses/WebSearchCallItem$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lorg/oremif/deepseek/models/responses/WebSearchCallItem;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lorg/oremif/deepseek/models/responses/WebSearchCallItem;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/WebSearchCallItem$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class org/oremif/deepseek/models/responses/WebSearchCallSearchingEvent : org/oremif/deepseek/models/responses/WebSearchCallEvent {
+	public fun <init> (ILjava/lang/String;I)V
+	public fun getItemId ()Ljava/lang/String;
+	public fun getOutputIndex ()I
+	public fun getSequenceNumber ()I
+	public fun getType ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/WebSearchTool : org/oremif/deepseek/models/responses/ResponseTool {
+	public static final field Companion Lorg/oremif/deepseek/models/responses/WebSearchTool$Companion;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getType ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class org/oremif/deepseek/models/responses/WebSearchTool$Companion {
+	public final fun getWebSearch ()Lorg/oremif/deepseek/models/responses/WebSearchTool;
+	public final fun getWebSearch20250826 ()Lorg/oremif/deepseek/models/responses/WebSearchTool;
+	public final fun of (Ljava/lang/String;)Lorg/oremif/deepseek/models/responses/WebSearchTool;
 }
 

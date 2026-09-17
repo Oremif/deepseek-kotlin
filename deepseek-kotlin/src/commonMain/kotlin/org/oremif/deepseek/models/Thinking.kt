@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
  * Switches a model between its thinking and non-thinking mode.
  *
  * Omitting this field is equivalent to [ThinkingType.ENABLED]. A thinking response carries its
- * chain-of-thought in [ChatCompletionMessage.reasoningContent] and bills the extra tokens under
+ * chain-of-thought in [AssistantMessage.reasoningContent] and bills the extra tokens under
  * [CompletionTokenDetails.reasoningTokens]; the non-thinking mode answers faster and cheaper.
  * Either way [ChatCompletion.model] echoes the slug that was sent.
  *
@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
  * Example:
  * ```kotlin
  * val params = chatCompletionParams {
- *     model = ChatModel.DEEPSEEK_V4_FLASH
+ *     model = ChatModel.DEEPSEEK_FLASH
  *     thinking = Thinking(ThinkingType.DISABLED) // skip the reasoning pass
  * }
  * ```

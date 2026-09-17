@@ -17,8 +17,9 @@ import kotlinx.serialization.Serializable
  * @property promptCacheMissTokens Number of prompt tokens not served from the context cache, or
  *   `null` when caching does not apply.
  * @property promptTokensDetails Breakdown of [promptTokens] under the OpenAI-compatible
- *   `prompt_tokens_details` key. `null` unless the server sends that key, which current responses
- *   do not — read [promptCacheHitTokens] / [promptCacheMissTokens] instead.
+ *   `prompt_tokens_details` key. The current API reference leaves it out, but live responses still
+ *   carry it alongside [promptCacheHitTokens] / [promptCacheMissTokens], so it is kept and stays
+ *   nullable.
  * @property totalTokens Total tokens billed for the request (prompt + completion).
  * @property completionTokensDetails Breakdown of how [completionTokens] was spent — in particular
  *   the tokens spent on reasoning in thinking mode.

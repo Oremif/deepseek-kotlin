@@ -23,6 +23,6 @@ import org.oremif.deepseek.utils.validateResponse
  */
 public suspend fun DeepSeekClientBase.models(): ListsModels {
     val response = client.get("models")
-    validateResponse(response)
+    validateResponse(response, config.jsonConfig)
     return response.body()
 }

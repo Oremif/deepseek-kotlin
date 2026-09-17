@@ -13,7 +13,6 @@ import io.kotest.matchers.string.shouldNotContain
 import io.ktor.client.engine.mock.*
 import io.ktor.client.request.*
 import io.ktor.http.*
-import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.models.ChatModel
@@ -21,6 +20,7 @@ import org.oremif.deepseek.models.FilePurpose
 import org.oremif.deepseek.models.SortOrder
 import org.oremif.deepseek.testing.mockEngine
 import org.oremif.deepseek.testing.testClient
+import kotlin.test.Test
 
 class FilesApiTests {
 
@@ -341,7 +341,7 @@ class FilesApiTests {
                             }
                         ],
                         "created": 1705651092,
-                        "model": "deepseek-v4-flash-vision-exp",
+                        "model": "deepseek-flash",
                         "object": "chat.completion",
                         "usage": {"completion_tokens": 3, "prompt_tokens": 8, "total_tokens": 11}
                     }
@@ -354,7 +354,7 @@ class FilesApiTests {
 
         val uploaded = client.uploadFile(imageBytes, "cat.jpg")
         client.chatCompletion {
-            params { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
+            params { model = ChatModel.DEEPSEEK_FLASH }
             messages {
                 user {
                     text("What is in this image?")
@@ -366,6 +366,55 @@ class FilesApiTests {
         val body = capturedChatBody.shouldNotBeNull()
         body shouldContain "\"type\":\"file\""
         body shouldContain "\"file_id\":\"file-api-abc123\""
+    }
+
+    @Test
+    fun `an error body labelled with a non-JSON content type still parses`() = runTest {
+        // The live API answers a missing file_id with a JSON body under application/octet-stream;
+        // decoding that through content negotiation throws Ktor's NoTransformationFoundException
+        // instead of the SDK's own exception.
+        val engine = mockEngine {
+            respond(
+                content =
+                    """{"error": {"message": "file_id does not exist or is not created under your account", "type": "invalid_request_error", "code": "invalid_request_error"}}""",
+                status = HttpStatusCode.BadRequest,
+                headers =
+                    headersOf(
+                        HttpHeaders.ContentType,
+                        ContentType.Application.OctetStream.toString(),
+                    ),
+            )
+        }
+        val client = testClient(engine)
+
+        val ex =
+            shouldThrow<DeepSeekException.BadRequestException> {
+                client.retrieveFile("file-api-deleted")
+            }
+
+        ex.statusCode shouldBe 400
+        ex.error.shouldNotBeNull().error.message shouldContain "file_id does not exist"
+        ex.error?.error?.type shouldBe "invalid_request_error"
+    }
+
+    @Test
+    fun `an error body that is not JSON at all still surfaces as a DeepSeekException`() = runTest {
+        val engine = mockEngine {
+            respond(
+                content = "<html><body>502 Bad Gateway</body></html>",
+                status = HttpStatusCode.BadGateway,
+                headers = headersOf(HttpHeaders.ContentType, ContentType.Text.Html.toString()),
+            )
+        }
+        val client = testClient(engine)
+
+        val ex =
+            shouldThrow<DeepSeekException.UnexpectedStatusCodeException> {
+                client.retrieveFile("file-api-abc123")
+            }
+
+        ex.statusCode shouldBe 502
+        ex.error.shouldBeNull()
     }
 
     @Test

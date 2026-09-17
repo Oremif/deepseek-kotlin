@@ -11,7 +11,7 @@ package org.oremif.deepseek.models
  * Example:
  * ```kotlin
  * val params = chatCompletionParams {
- *     model = ChatModel.DEEPSEEK_V4_FLASH
+ *     model = ChatModel.DEEPSEEK_FLASH
  *     temperature = 0.8
  *     maxTokens = 500
  *     responseFormat = ResponseFormat.jsonObject
@@ -37,7 +37,7 @@ public fun chatCompletionParams(
  * Example:
  * ```kotlin
  * val streamParams = chatCompletionStreamParams {
- *     model = ChatModel.DEEPSEEK_V4_FLASH
+ *     model = ChatModel.DEEPSEEK_FLASH
  *     temperature = 0.7
  *     streamOptions = StreamOptions(includeUsage = true)
  * }
@@ -65,7 +65,7 @@ public fun chatCompletionStreamParams(
  * Example:
  * ```kotlin
  * val params = chatCompletionParams {
- *     model = ChatModel.DEEPSEEK_V4_FLASH
+ *     model = ChatModel.DEEPSEEK_FLASH
  *     temperature = 0.7
  *     maxTokens = 1000
  * }
@@ -74,7 +74,7 @@ public fun chatCompletionStreamParams(
  * ```
  *
  * @property model The DeepSeek model to use for chat completion; defaults to
- *   [ChatModel.DEEPSEEK_V4_FLASH]
+ *   [ChatModel.DEEPSEEK_FLASH]
  * @property frequencyPenalty Sent as `frequency_penalty`, ignored by the API
  * @property maxTokens Maximum number of tokens to generate; at least 1 and otherwise bounded by the
  *   model's context length
@@ -119,7 +119,7 @@ internal constructor(
 
     /** Builder for creating [ChatCompletionParams] with standard (non-streaming) configuration. */
     public class Builder {
-        public var model: ChatModel = ChatModel.DEEPSEEK_V4_FLASH
+        public var model: ChatModel = ChatModel.DEEPSEEK_FLASH
 
         @Deprecated(DEPRECATED_PENALTY) public var frequencyPenalty: Double? = null
         public var maxTokens: Int? = null
@@ -170,7 +170,7 @@ internal constructor(
      * Builder for creating [ChatCompletionParams] specifically configured for streaming responses.
      */
     public class StreamBuilder {
-        public var model: ChatModel = ChatModel.DEEPSEEK_V4_FLASH
+        public var model: ChatModel = ChatModel.DEEPSEEK_FLASH
 
         @Deprecated(DEPRECATED_PENALTY) public var frequencyPenalty: Double? = null
         public var maxTokens: Int? = null
@@ -369,10 +369,10 @@ internal constructor(
 private val USER_ID_REGEX = Regex("^[a-zA-Z0-9\\-_]+$")
 
 /**
- * Fails fast on a `user_id` the API would reject: the documented limit is 512 characters drawn from
- * `[a-zA-Z0-9\-_]`.
+ * Fails fast on an end-user identifier the API would reject: the documented limit is 512 characters
+ * drawn from `[a-zA-Z0-9\-_]`. Shared with the Responses API, which spells the same field `user`.
  */
-private fun requireValidUserId(userId: String) {
+internal fun requireValidUserId(userId: String) {
     require(userId.length <= 512) {
         "userId must be at most 512 characters long, was ${userId.length}"
     }

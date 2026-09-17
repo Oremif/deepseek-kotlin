@@ -18,7 +18,7 @@ import kotlinx.serialization.Serializable
 public class ChatChoice(
     public val finishReason: FinishReason,
     public val index: Long,
-    public val message: ChatCompletionMessage,
+    public val message: AssistantMessage,
     public val logprobs: LogProbs? = null,
 ) {
     override fun equals(other: Any?): Boolean {

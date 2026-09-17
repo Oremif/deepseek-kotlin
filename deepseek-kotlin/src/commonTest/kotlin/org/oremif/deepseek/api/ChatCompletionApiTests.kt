@@ -8,7 +8,6 @@ import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldEndWith
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
-import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -16,6 +15,7 @@ import org.oremif.deepseek.errors.DeepSeekException
 import org.oremif.deepseek.models.*
 import org.oremif.deepseek.testing.mockEngine
 import org.oremif.deepseek.testing.testClient
+import kotlin.test.Test
 
 class ChatCompletionApiTests {
 
@@ -34,7 +34,7 @@ class ChatCompletionApiTests {
                 }
             ],
             "created": 1705651092,
-            "model": "deepseek-v4-flash",
+            "model": "deepseek-flash",
             "object": "chat.completion",
             "usage": {
                 "completion_tokens": 3,
@@ -68,7 +68,7 @@ class ChatCompletionApiTests {
         capturedMethod shouldBe HttpMethod.Post
         capturedPath.shouldNotBeNull().shouldEndWith("/chat/completions")
         val body = capturedBody.shouldNotBeNull()
-        body shouldContain "\"model\":\"deepseek-v4-flash\""
+        body shouldContain "\"model\":\"deepseek-flash\""
         body shouldContain "\"content\":\"Hi\""
     }
 
@@ -87,7 +87,7 @@ class ChatCompletionApiTests {
         val response = client.chat(listOf(UserMessage("Hi")))
 
         response.id shouldBe "abc-123"
-        response.model shouldBe "deepseek-v4-flash"
+        response.model shouldBe "deepseek-flash"
         response.choices shouldHaveSize 1
         response.choices[0].finishReason shouldBe FinishReason.STOP
         response.choices[0].message.content shouldBe "Hello!"

@@ -7,9 +7,9 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.types.shouldBeInstanceOf
-import kotlin.test.Test
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
+import kotlin.test.Test
 
 class ChatCompletionTests {
 
@@ -75,6 +75,38 @@ class ChatCompletionTests {
         """
             .trimIndent()
 
+    /**
+     * What the SDK writes back out.
+     *
+     * [ChatChoice.message] is a concrete [AssistantMessage], not a polymorphic [ChatMessage], so
+     * encoding it does not repeat the `role` discriminator the API sends. Decoding [jsonResponse],
+     * which does carry it, still works.
+     */
+    val jsonResponseEncoded =
+        """
+        {
+            "id": "930c60df-bf64-41c9-a88e-3ec75f81e00e",
+            "choices": [
+                {
+                    "finish_reason": "stop",
+                    "index": 0,
+                    "message": {
+                        "content": "Hello! How can I help you today?"
+                    }
+                }
+            ],
+            "created": 1705651092,
+            "model": "deepseek-v4-pro",
+            "object": "chat.completion",
+            "usage": {
+                "completion_tokens": 10,
+                "prompt_tokens": 16,
+                "total_tokens": 26
+            }
+        }
+        """
+            .trimIndent()
+
     @Test
     fun `chat completion request model test`() {
         val request =
@@ -118,7 +150,7 @@ class ChatCompletionTests {
                         ChatChoice(
                             finishReason = FinishReason.STOP,
                             index = 0,
-                            message = ChatCompletionMessage("Hello! How can I help you today?"),
+                            message = AssistantMessage("Hello! How can I help you today?"),
                         )
                     ),
                 created = 1705651092L,
@@ -137,7 +169,7 @@ class ChatCompletionTests {
         expected.choices[0].finishReason shouldBe FinishReason.STOP
         expected.choices[0].message.content shouldBe "Hello! How can I help you today?"
         expected.created shouldBe 1705651092L
-        jsonConfig.encodeToString(response).trimIndent() shouldBe jsonResponse
+        jsonConfig.encodeToString(response).trimIndent() shouldBe jsonResponseEncoded
     }
 
     @OptIn(ExperimentalSerializationApi::class)
@@ -218,7 +250,7 @@ class ChatCompletionTests {
                     }
                 ],
                 "created": 1705651092,
-                "model": "deepseek-v4-flash",
+                "model": "deepseek-flash",
                 "object": "chat.completion.chunk"
             }
             """
@@ -257,7 +289,7 @@ class ChatCompletionTests {
                     }
                 ],
                 "created": 1705651092,
-                "model": "deepseek-v4-flash",
+                "model": "deepseek-flash",
                 "object": "chat.completion.chunk"
             }
             """
@@ -285,7 +317,7 @@ class ChatCompletionTests {
                     }
                 ],
                 "created": 1705651092,
-                "model": "deepseek-v4-flash",
+                "model": "deepseek-flash",
                 "object": "chat.completion.chunk"
             }
             """
@@ -323,7 +355,7 @@ class ChatCompletionTests {
     }
 
     @Test
-    fun `ChatCompletionMessage toolCalls is null when tool_calls key is absent`() {
+    fun `AssistantMessage toolCalls is null when tool_calls key is absent`() {
         val json =
             """
             {
@@ -333,13 +365,13 @@ class ChatCompletionTests {
             """
                 .trimIndent()
 
-        val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
+        val message = jsonConfig.decodeFromString<AssistantMessage>(json)
         message.content shouldBe "Hello!"
         message.toolCalls.shouldBeNull()
     }
 
     @Test
-    fun `ChatCompletionMessage toolCalls is null when tool_calls is JsonNull`() {
+    fun `AssistantMessage toolCalls is null when tool_calls is JsonNull`() {
         val json =
             """
             {
@@ -350,13 +382,13 @@ class ChatCompletionTests {
             """
                 .trimIndent()
 
-        val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
+        val message = jsonConfig.decodeFromString<AssistantMessage>(json)
         message.content shouldBe "Hello!"
         message.toolCalls.shouldBeNull()
     }
 
     @Test
-    fun `ChatCompletionMessage toolCalls is deserialized when present`() {
+    fun `AssistantMessage toolCalls is deserialized when present`() {
         val json =
             """
             {
@@ -373,7 +405,7 @@ class ChatCompletionTests {
             """
                 .trimIndent()
 
-        val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
+        val message = jsonConfig.decodeFromString<AssistantMessage>(json)
         val toolCalls = message.toolCalls.shouldNotBeNull()
         toolCalls.size shouldBe 1
         toolCalls[0].id shouldBe "call_abc"
@@ -400,11 +432,7 @@ class ChatCompletionTests {
                 .trimIndent()
 
         val call =
-            jsonConfig
-                .decodeFromString<ChatCompletionMessage>(json)
-                .toolCalls
-                .shouldNotBeNull()
-                .single()
+            jsonConfig.decodeFromString<AssistantMessage>(json).toolCalls.shouldNotBeNull().single()
         call.function.arguments shouldBe """{"location": "Tokyo"}"""
         call.function
             .argumentsAsJsonOrNull()
@@ -427,7 +455,7 @@ class ChatCompletionTests {
     }
 
     @Test
-    fun `ChatCompletionMessage content stays null instead of the string null`() {
+    fun `AssistantMessage content stays null instead of the string null`() {
         val json =
             """
             {
@@ -445,10 +473,56 @@ class ChatCompletionTests {
             """
                 .trimIndent()
 
-        val message = jsonConfig.decodeFromString<ChatCompletionMessage>(json)
+        val message = jsonConfig.decodeFromString<AssistantMessage>(json)
         message.content.shouldBeNull()
         message.reasoningContent.shouldBeNull()
         message.toolCalls.shouldNotBeNull().size shouldBe 1
+    }
+
+    @Test
+    fun `an assistant message from a response replays inside a request`() {
+        // The tool-calling loop is: read the assistant message off a choice, append the tool
+        // result, send both back. That only works if the response type serializes as a ChatMessage.
+        val message =
+            AssistantMessage(
+                content = null,
+                toolCalls =
+                    listOf(
+                        ToolCall(
+                            id = "call_abc",
+                            type = ToolCallType.FUNCTION,
+                            function = FunctionResponse("get_weather", """{"city":"Tokyo"}"""),
+                        )
+                    ),
+            )
+
+        val encoded =
+            jsonConfig.encodeToString<List<ChatMessage>>(
+                listOf(
+                    UserMessage("What is the weather in Tokyo?"),
+                    message,
+                    ToolMessage("""{"temp_c":21}""", "call_abc"),
+                )
+            )
+
+        encoded shouldContain "\"role\": \"assistant\""
+        encoded shouldContain "\"tool_calls\""
+        encoded shouldContain "\"call_abc\""
+        encoded shouldContain "\"role\": \"tool\""
+
+        jsonConfig.decodeFromString<List<ChatMessage>>(encoded)[1] shouldBe message
+    }
+
+    @Test
+    fun `an assistant message decodes from a choice payload carrying its role`() {
+        val message =
+            jsonConfig.decodeFromString<AssistantMessage>(
+                """{"role":"assistant","content":"Hi","reasoning_content":null,"tool_calls":null}"""
+            )
+
+        message.content shouldBe "Hi"
+        message.reasoningContent.shouldBeNull()
+        message.toolCalls.shouldBeNull()
     }
 
     @Test
@@ -501,13 +575,13 @@ class ChatCompletionTests {
         clientJsonConfig.encodeToString(
             ChatCompletionRequest(
                 messages = messages,
-                model = ChatModel.DEEPSEEK_V4_FLASH,
+                model = ChatModel.DEEPSEEK_FLASH,
                 userId = "user_42-a",
             )
         ) shouldContain """"user_id":"user_42-a""""
 
         clientJsonConfig.encodeToString(
-            ChatCompletionRequest(messages = messages, model = ChatModel.DEEPSEEK_V4_FLASH)
+            ChatCompletionRequest(messages = messages, model = ChatModel.DEEPSEEK_FLASH)
         ) shouldNotContain "user_id"
     }
 

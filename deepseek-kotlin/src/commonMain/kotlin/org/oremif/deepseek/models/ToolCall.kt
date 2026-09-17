@@ -50,7 +50,7 @@ public class Tool(
 }
 
 /**
- * A tool invocation emitted by the model inside a [ChatCompletionMessage].
+ * A tool invocation emitted by the model inside an [AssistantMessage].
  *
  * Echo [id] back in a follow-up [ToolMessage] so the model can correlate the tool result with its
  * original call.

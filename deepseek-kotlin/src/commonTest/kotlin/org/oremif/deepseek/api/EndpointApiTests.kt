@@ -7,11 +7,11 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldEndWith
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*
-import kotlin.test.Test
 import kotlinx.coroutines.test.runTest
 import org.oremif.deepseek.models.CurrencyType
 import org.oremif.deepseek.testing.mockEngine
 import org.oremif.deepseek.testing.testClient
+import kotlin.test.Test
 
 class EndpointApiTests {
 
@@ -80,7 +80,7 @@ class EndpointApiTests {
                     {
                         "object": "list",
                         "data": [
-                            {"id": "deepseek-v4-flash", "object": "model", "owned_by": "deepseek"},
+                            {"id": "deepseek-flash", "object": "model", "owned_by": "deepseek"},
                             {"id": "deepseek-v4-pro", "object": "model", "owned_by": "deepseek"}
                         ]
                     }
@@ -99,6 +99,6 @@ class EndpointApiTests {
         capturedPath.shouldNotBeNull().shouldEndWith("/models")
         models.`object` shouldBe "list"
         models.data shouldHaveSize 2
-        models.data.map { it.id } shouldBe listOf("deepseek-v4-flash", "deepseek-v4-pro")
+        models.data.map { it.id } shouldBe listOf("deepseek-flash", "deepseek-v4-pro")
     }
 }

@@ -9,7 +9,6 @@ import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.sse.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import kotlin.time.Duration
 import kotlinx.coroutines.job
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
@@ -17,6 +16,7 @@ import kotlinx.serialization.json.JsonBuilder
 import kotlinx.serialization.json.JsonNamingStrategy
 import org.oremif.deepseek.utils.computeRetryDelayMillis
 import org.oremif.deepseek.utils.isRetryableStatus
+import kotlin.time.Duration
 
 /**
  * Creates a new instance of [DeepSeekClient] with optional configuration.
@@ -118,6 +118,12 @@ public abstract class DeepSeekClientBase(
 
         /** Timeout in milliseconds for Files API uploads. */
         protected var uploadTimeout: Long = 300_000
+
+        /**
+         * Timeout in milliseconds for Responses API requests. Defaults to 5 minutes, for the same
+         * reason as [chatCompletionTimeout].
+         */
+        protected var responseTimeout: Long = 300_000
 
         private val httpClientConfigBlocks: MutableList<HttpClientConfig<*>.() -> Unit> =
             mutableListOf()
@@ -254,6 +260,28 @@ public abstract class DeepSeekClientBase(
          */
         public fun uploadTimeout(timeout: Duration): Builder {
             uploadTimeout = timeout.inWholeMilliseconds
+            return this
+        }
+
+        /**
+         * Sets the timeout for Responses API requests.
+         *
+         * @param timeout Timeout in milliseconds
+         * @return This builder for chaining
+         */
+        public fun responseTimeout(timeout: Int): Builder {
+            responseTimeout = timeout.toLong()
+            return this
+        }
+
+        /**
+         * Sets the timeout for Responses API requests.
+         *
+         * @param timeout Timeout to allow; [Duration.INFINITE] disables it
+         * @return This builder for chaining
+         */
+        public fun responseTimeout(timeout: Duration): Builder {
+            responseTimeout = timeout.inWholeMilliseconds
             return this
         }
 
@@ -435,8 +463,8 @@ public abstract class DeepSeekClientBase(
  * Client for unary (non-streaming) interactions with the DeepSeek API.
  *
  * Use the [DeepSeekClient] top-level function to create instances. The client exposes chat
- * completion, Fill-In-the-Middle completion, user balance, model listing and Files endpoints as
- * extension functions declared in the `org.oremif.deepseek.api` package.
+ * completion, Responses, Fill-In-the-Middle completion, user balance, model listing and Files
+ * endpoints as extension functions declared in the `org.oremif.deepseek.api` package.
  *
  * The client is designed to be long-lived — create one instance and reuse it. Calling [close] is
  * usually unnecessary.
@@ -473,6 +501,7 @@ internal constructor(
                         chatCompletionTimeout,
                         fimCompletionTimeout,
                         uploadTimeout,
+                        responseTimeout,
                     ),
             )
         }
@@ -522,6 +551,7 @@ internal constructor(
                         chatCompletionTimeout,
                         fimCompletionTimeout,
                         uploadTimeout,
+                        responseTimeout,
                     ),
             )
         }

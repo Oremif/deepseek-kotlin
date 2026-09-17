@@ -1,7 +1,7 @@
 package org.oremif.deepseek.models
 
-import kotlin.jvm.JvmInline
 import kotlinx.serialization.Serializable
+import kotlin.jvm.JvmInline
 
 /**
  * A file stored by the DeepSeek Files API.
@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  * ```kotlin
  * val uploaded = client.uploadFile(imageBytes, "cat.jpg")
  * client.chatCompletion {
- *     params { model = ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP }
+ *     params { model = ChatModel.DEEPSEEK_FLASH }
  *     messages {
  *         user {
  *             text("What is in this image?")

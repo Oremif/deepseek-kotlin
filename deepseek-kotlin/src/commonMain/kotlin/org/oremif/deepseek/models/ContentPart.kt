@@ -14,9 +14,9 @@ import kotlinx.serialization.json.JsonClassDiscriminator
  * [TextPart], [ImageUrlPart], [FilePart] — are distinguished on the wire by the `type`
  * discriminator.
  *
- * Images are only interpreted by [ChatModel.DEEPSEEK_V4_FLASH_VISION_EXP]; other models replace
- * them with a placeholder text. The API rejects image parts in system and assistant messages, which
- * is why parts are only available on [UserMessage].
+ * Both models the API serves read images, so no separate vision model is needed. A model that
+ * cannot replaces them with a placeholder text rather than failing. The API rejects image parts in
+ * system and assistant messages, which is why parts are only available on [UserMessage].
  *
  * Prefer the `user { ... }` DSL over instantiating parts directly:
  * ```kotlin
