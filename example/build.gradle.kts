@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.oremif:deepseek-kotlin:0.4.0")
+    implementation("org.oremif:deepseek-kotlin:0.5.0")
     implementation("org.slf4j:slf4j-simple:2.0.19")
 }
 

@@ -94,8 +94,9 @@ public suspend fun DeepSeekClientBase.uploadFile(
  * Example — walk every page:
  * ```kotlin
  * var page = client.listFiles(limit = 100)
- * while (page.hasMore) {
+ * while (true) {
  *     page.data.forEach { println("${it.id} ${it.filename}") }
+ *     if (!page.hasMore) break
  *     page = client.listFiles(after = page.lastId, limit = 100)
  * }
  * ```

@@ -1,10 +1,10 @@
 @file:OptIn(ExperimentalWasmDsl::class, ExperimentalAbiValidation::class)
 
-import java.time.Year
 import org.jetbrains.dokka.gradle.engine.parameters.VisibilityModifier
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.abi.ExperimentalAbiValidation
+import java.time.Year
 
 plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -17,7 +17,7 @@ plugins {
 
 group = "org.oremif"
 
-version = "0.4.0"
+version = "0.5.0"
 
 ktfmt { kotlinLangStyle() }
 
@@ -55,9 +55,9 @@ kotlin {
                 api(libs.coroutines.core)
                 api(libs.ktor.client.core)
                 api(libs.ktor.client.auth)
+                api(libs.serialization.json)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.client.serialization.json)
-                implementation(libs.serialization.json)
                 implementation(libs.ktor.client.logging)
             }
         }
